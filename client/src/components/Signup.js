@@ -1,15 +1,47 @@
-import React, { useState } from 'react';
+
+import React, { useRef } from 'react';
+import emailjs from '@emailjs/browser';
 
 const Signup = () => {
+  const form = useRef();
+  
+  
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    
+
+    emailjs
+      .sendForm('service_debeiyt', 'template_4wzuql7', form.current, {
+        publicKey: '9B_G4UOwgNSsEHZiJ',
+      })
+      .then(
+        () => {
+          console.log('SUCCESS!');
+          alert('Email sent successfully!');
+          e.target.reset();
+
+        },
+        (error) => {
+          console.log('FAILED...', error.text);
+          alert('Failed to send email.');
+          e.target.reset();
+
+        },
+      );
+  };
   return (
     <div style={styles.container}>
       <h3>Sign Up</h3>
-      <form className="signup-form">
+      <form ref={form} onSubmit={sendEmail} className="signup-form" >
         <div style={styles.formGroup}>
           <label>Username</label>
           <input 
             type="text" 
+            name= "username"
             placeholder="Enter your username" 
+            
             style={styles.input}
           />
         </div>
@@ -18,6 +50,8 @@ const Signup = () => {
           <label>Email Address</label>
           <input 
             type="email" 
+            name="email"
+            
             placeholder="Enter your email" 
             style={styles.input}
           />
@@ -27,6 +61,7 @@ const Signup = () => {
           <label>Password</label>
           <input 
             type="password" 
+            
             placeholder="Enter your password" 
             style={styles.input}
           />
@@ -36,12 +71,13 @@ const Signup = () => {
           <label>Confirm Password</label>
           <input 
             type="password" 
+            
             placeholder="Confirm your password" 
             style={styles.input}
           />
         </div>
 
-        <button type="submit" style={styles.button}>Sign Up</button>
+        <button type="submit" value="Send" style={styles.button}>Sign Up</button>
       </form>
     </div>
   );
