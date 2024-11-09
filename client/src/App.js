@@ -1,12 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';  // Import Router components
-import Signup from './components/Signup';  // Import the Signup component
+import Signup from './components/Signup';
+import HomePage from './components/Homepage1';  
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/signup" element={<Signup />} />  {/* Make Signup the default route */}
+        <Route exact path='/' element={<HomePage />}/>
+        <Route exact path="/signup" element={<Signup />} />  {/* Make Signup the default route */}
       </Routes>
     </Router>
   );
