@@ -6,7 +6,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Signup />} />  {/* Make Signup the default route */}
+        <Route path="/signup" element={<Signup />} />  {/* Make Signup the default route */}
       </Routes>
     </Router>
   );
