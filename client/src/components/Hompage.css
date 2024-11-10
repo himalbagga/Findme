@@ -1,4 +1,4 @@
-/* body {
+body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
@@ -21,7 +21,7 @@ nav {
 nav a {
     color: #fff;
     margin: 0 10px;
-    text-decoration: none;
+    text-decoration: none; 
 }
 
 .body_container {
@@ -106,4 +106,4 @@ footer {
     background-color: #333;
     color: #fff;
     margin-top: 20px;
-} */
+}
