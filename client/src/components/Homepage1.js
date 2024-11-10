@@ -20,9 +20,9 @@ function HomePage() {
       </header>
       <nav>
         <a href="/">Home</a>
-        <a href="#">Categories</a>
-        <a href="#">Post a Service</a>
-        <a href="#">Services Available</a>
+        <a href="#">Why Find Me</a>
+        <a href="#">Find Talent</a>
+        
         <a href="#">Contact</a>
         <a href="/signup">Login/Sign Up</a>
       </nav>
