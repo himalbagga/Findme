@@ -9,7 +9,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route exact path='/' element={<HomePage />}/>
-        <Route exact path="/signup" element={<Signup />} />  {/* Make Signup the default route */}
+        <Route exact path="/signup" element={<Signup />} />  
         <Route exact path='/search-results' element={<SearchResultsPage />}/>
       </Routes>
     </Router>
