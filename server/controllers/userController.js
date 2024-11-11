@@ -27,7 +27,7 @@ exports.registerUser = async (req, res) => {
     console.log('Request Body:', req.body); // Log the entire request body to see the incoming data
 
     // Validate required fields
-    if (/*!username ||*/ !email || !password || !mobileNumber) {
+    if (!username || !email || !password || !mobileNumber) {
       console.log('Validation failed. Missing required fields.');
       return res.status(400).json({ message: 'Missing required fields' });
     }

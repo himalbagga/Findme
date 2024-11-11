@@ -25,7 +25,7 @@ const Signup = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    // if (!formData.username) newErrors.username = "Username is required";
+     if (!formData.username) newErrors.username = "Username is required";
     if (!formData.email) newErrors.email = "Email is required";
     if (!formData.password) newErrors.password = "Password is required";
     if (formData.confirmPassword !== formData.password) newErrors.confirmPassword = "Passwords do not match";
@@ -106,6 +106,20 @@ const Signup = () => {
     <div style={styles.container}>
       <h3>Sign Up</h3>
       <form ref={form} onSubmit={sendEmail} className="signup-form">
+
+        <div style={styles.formGroup}>
+          <label>Username</label>
+          <input
+            type="text"
+            name="username"
+            placeholder="Enter your username"
+            style={styles.input}
+            value={formData.username}
+            onChange={handleChange}
+          />
+          {errors.username && <p style={styles.error}>{errors.username}</p>}
+        </div>
+
         <div style={styles.formGroup}>
           <label>Email Address</label>
           <input
