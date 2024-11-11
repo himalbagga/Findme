@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 
 const Signup = () => {
   const form = useRef();
+  const navigate = useNavigate(); // Initialize navigate hook
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -53,27 +54,48 @@ const Signup = () => {
     }));
   };
 
-  const sendEmail = (e) => {
+  const sendEmail = async (e) => {
     e.preventDefault();
+
     if (validateForm()) {
-      emailjs
-        .sendForm("service_debeiyt", "template_4wzuql7", form.current, {
-          publicKey: "9B_G4UOwgNSsEHZiJ",
-        })
-        .then(
-          () => {
-            alert("Email sent successfully!");
-            e.target.reset();
-            setFormData({
-              username: "",
-              email: "",
-              password: "",
-              confirmPassword: "",
-            });
-            setErrors({});
+      try {
+        const response = await fetch('http://localhost:5000/api/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-          (error) => alert("Failed to send email.")
-        );
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          alert('Signup successful!');
+          setFormData({
+            username: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            mobileNumber: "",
+            userType: "",
+            serviceType: "",
+            serviceName: "",
+            location: "",
+            resume: null,
+            availableDays: [],
+            startTime: "",
+            endTime: "",
+            price: "",
+            languages: [],
+          });
+
+          // Navigate to homepage after successful signup
+          navigate("/"); // Navigating to the homepage route ("/")
+        } else {
+          alert('Failed to sign up');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred during signup.');
+      }
     }
   };
 
@@ -266,75 +288,81 @@ const Signup = () => {
               >
                 <option value="English">English</option>
                 <option value="French">French</option>
+                <option value="Spanish">Spanish</option>
+                <option value="German">German</option>
+                <option value="Mandarin">Mandarin</option>
               </select>
             </div>
           </>
         )}
 
-        <button type="submit" value="Send" style={styles.button}>
-          Sign Up
-        </button>
-        <p style={styles.loginText}>
-          Already have a profile? <a href="/login">Login</a>
-        </p>
+        <div style={styles.formGroup}>
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter your password"
+            style={styles.input}
+            value={formData.password}
+            onChange={handleChange}
+          />
+          {errors.password && <p style={styles.error}>{errors.password}</p>}
+        </div>
+
+        <div style={styles.formGroup}>
+          <label>Confirm Password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm your password"
+            style={styles.input}
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+          {errors.confirmPassword && <p style={styles.error}>{errors.confirmPassword}</p>}
+        </div>
+
+        <button type="submit" style={styles.submitButton}>Submit</button>
       </form>
     </div>
   );
 };
 
-// Updated styles for wider form and input fields
 const styles = {
   container: {
-    width: "100%",
-    maxWidth: "600px",
-    margin: "0 auto",
-    marginTop: "30px",
-    marginBottom: "40px",
-    padding: "30px",
-    textAlign: "center",
-    border: "1px solid #ccc",
-    borderRadius: "8px",
-    backgroundColor: "#f9f9f9",
+    width: '300px',
+    margin: '0 auto',
   },
   formGroup: {
-    marginBottom: "20px",
-    textAlign: "left",
+    marginBottom: '10px',
   },
   input: {
-    width: "100%",
-    padding: "10px",
-    marginTop: "8px",
-    marginBottom: "10px",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-    boxSizing: "border-box",
+    width: '100%',
+    padding: '8px',
+    marginTop: '5px',
+    boxSizing: 'border-box',
   },
   radioGroup: {
-    display: "flex",
-    gap: "15px",
+    display: 'flex',
+    gap: '10px',
   },
   checkboxGroup: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "10px",
-  },
-  button: {
-    width: "100%",
-    padding: "12px",
-    backgroundColor: "#4CAF50",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    fontSize: "16px",
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '10px',
   },
   error: {
-    color: "red",
-    fontSize: "14px",
+    color: 'red',
+    fontSize: '12px',
+    marginTop: '5px',
   },
-  loginText: {
-    marginTop: "20px",
-    fontSize: "14px",
+  submitButton: {
+    width: '100%',
+    padding: '10px',
+    backgroundColor: '#007BFF',
+    color: 'white',
+    border: 'none',
+    cursor: 'pointer',
   },
 };
 
