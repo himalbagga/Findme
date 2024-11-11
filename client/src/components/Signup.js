@@ -25,13 +25,15 @@ const Signup = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.username) newErrors.username = "Username is required";
+    // if (!formData.username) newErrors.username = "Username is required";
     if (!formData.email) newErrors.email = "Email is required";
     if (!formData.password) newErrors.password = "Password is required";
     if (formData.confirmPassword !== formData.password) newErrors.confirmPassword = "Passwords do not match";
     if (!formData.mobileNumber) newErrors.mobileNumber = "Mobile number is required";
 
     setErrors(newErrors);
+    
+
     return Object.keys(newErrors).length === 0;
   };
 
@@ -56,9 +58,10 @@ const Signup = () => {
 
   const sendEmail = async (e) => {
     e.preventDefault();
-
+    console.log("inside sendEmail");
     if (validateForm()) {
       try {
+        console.log("submit successful");
         const response = await fetch('http://localhost:5000/api/signup', {
           method: 'POST',
           headers: {
