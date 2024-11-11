@@ -286,8 +286,10 @@ const Signup = () => {
 const styles = {
   container: {
     width: "100%",
-    maxWidth: "500px",
+    maxWidth: "600px",
     margin: "0 auto",
+    marginTop: "30px",
+    marginBottom: "40px",
     padding: "30px",
     textAlign: "center",
     border: "1px solid #ccc",
@@ -302,8 +304,10 @@ const styles = {
     width: "100%",
     padding: "10px",
     marginTop: "8px",
-    border: "1px solid #ccc",
+    marginBottom: "10px",
     borderRadius: "4px",
+    border: "1px solid #ccc",
+    boxSizing: "border-box",
   },
   radioGroup: {
     display: "flex",
