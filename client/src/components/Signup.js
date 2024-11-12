@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
+import emailjs from '@emailjs/browser';
 
 const Signup = () => {
   const form = useRef();
@@ -58,10 +59,11 @@ const Signup = () => {
 
   const sendEmail = async (e) => {
     e.preventDefault();
+
     console.log("inside sendEmail");
     if (validateForm()) {
       try {
-        console.log("submit successful");
+        //console.log("submit successful");
         const response = await fetch('http://localhost:5000/api/signup', {
           method: 'POST',
           headers: {
@@ -89,6 +91,21 @@ const Signup = () => {
             price: "",
             languages: [],
           });
+          
+          emailjs
+          .sendForm('service_debeiyt', 'template_4wzuql7', form.current, {
+            publicKey: '9B_G4UOwgNSsEHZiJ',
+          })
+          .then(
+            () => {
+              console.log('SUCCESS!');
+              alert('Email sent successfully!');
+            },
+            (error) => {
+              console.log('FAILED...', error.text);
+              alert('Email confirmation Failed...',error.text);
+            },
+          );
 
           // Navigate to homepage after successful signup
           navigate("/"); // Navigating to the homepage route ("/")
