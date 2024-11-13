@@ -6,11 +6,13 @@ import './SearchResultsPage.css';
 function SearchResultsPage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [maxPrice, setMaxPrice] = useState('');
   const location = useLocation();
   
 
   // Extract query parameter from URL
   const query = new URLSearchParams(location.search).get('q');
+  //maxPrice = new URLSearchParams(location.search).get('maxPrice');
 
   useEffect(() => {
     if (query) {
@@ -23,9 +25,18 @@ function SearchResultsPage() {
     try {
     //here is where the API for the data base will be
     console.log(typeof query);
-      const response = await fetch(`http://localhost:5000/api/services/search?q=${query}`); 
-      console.log(typeof query);
+
+    const url = new URL('http://localhost:5000/api/services/search');
+    const params = new URLSearchParams();
+    params.set('q', query);
+    
+    if (maxPrice) params.set('maxPrice', maxPrice);
+    url.search = params.toString();
+
+      const response = await fetch(url); 
+      //console.log(typeof query);
       const data = await response.json();
+      console.log(data.results);
       setResults(data.results);
     } catch (error) {
       console.error("Error fetching search results:", error);
@@ -58,9 +69,16 @@ function SearchResultsPage() {
             value={query}
              //onChange={(e) => setQuery(e.target.value)}
           />
-          <select>
+          {/* <select>
             <option value="">Filter</option>
             <option value="option">#Option#</option>
+          </select> */}
+          <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
+            <option value="">Max Price</option>
+            <option value="25">25/hour</option>
+            <option value="35">35/hour</option>
+            <option value="45">45/hour</option>
+            <option value="60">60/hour</option>
           </select>
           <button type="button" onClick={handleSearch}>Search</button>
         </div>
