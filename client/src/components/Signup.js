@@ -61,8 +61,8 @@ const Signup = () => {
     if (validateForm()) {
       try {
         //console.log("submit successful");
-        const response = await fetch("http://localhost:5000/api/signup", {
-          method: "POST",
+        const response = await fetch('http://localhost:5000/api/signup', {
+          method: 'POST',
           headers: {
             "Content-Type": "application/json",
           },
