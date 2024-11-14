@@ -6,6 +6,7 @@ import "./Hompage.css";
 function HomePage() {
   const [query, setQuery] = useState("");
   const [services, setServices] = useState([]); // State to store services data
+  const [maxPrice, setMaxPrice] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,6 +56,11 @@ function HomePage() {
 
   const handleSearch = () => {
     // Redirect to search results page, passing the query as a URL parameter
+
+    // const url = maxPrice ? `/search-results?q=${query}&maxPrice=${maxPrice}` : `/search-results?q=${query}`;
+    // console.log()
+    // navigate(url);
+
     navigate(`/search-results?q=${query}`);
   };
 
@@ -75,10 +81,19 @@ function HomePage() {
         {/* Search Bar */}
         <div className="search-bar">
           <input type="text" placeholder="Search services by keyword" value={query} onChange={(e) => setQuery(e.target.value)} />
-          <select>
+          {/* <select>
             <option value="">Filter</option>
             <option value="option">#Option#</option>
-          </select>
+          </select> */}
+
+          {/* <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
+            <option value="">Max Price</option>
+            <option value="25">25/hour</option>
+            <option value="35">35/hour</option>
+            <option value="45">45/hour</option>
+            <option value="60">60/hour</option>
+          </select> */}
+
           <button type="button" onClick={handleSearch}>
             Search
           </button>
