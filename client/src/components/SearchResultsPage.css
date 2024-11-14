@@ -37,3 +37,44 @@
 .service a:hover {
   background-color: #0056b3;
 }
+
+/* SearchResultsPage.css */
+
+/* .search-results-page {
+  padding: 20px;
+} */
+
+.search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px; /* Add spacing below the search bar */
+}
+
+.search-bar input {
+  width: 300px;
+  padding: 8px;
+}
+
+.search-bar select {
+  padding: 8px;
+}
+
+.results-container {
+  margin-top: 20px;
+}
+
+.result-item {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.result-item h3 {
+  margin: 0 0 5px 0;
+}
+
+.result-item p {
+  margin: 5px 0;
+}
