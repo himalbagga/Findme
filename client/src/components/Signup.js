@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
-import emailjs from '@emailjs/browser';
+import emailjs from "@emailjs/browser";
 
 const Signup = () => {
   const form = useRef();
@@ -26,14 +26,13 @@ const Signup = () => {
 
   const validateForm = () => {
     const newErrors = {};
-     if (!formData.username) newErrors.username = "Username is required";
+    if (!formData.username) newErrors.username = "Username is required";
     if (!formData.email) newErrors.email = "Email is required";
     if (!formData.password) newErrors.password = "Password is required";
     if (formData.confirmPassword !== formData.password) newErrors.confirmPassword = "Passwords do not match";
     if (!formData.mobileNumber) newErrors.mobileNumber = "Mobile number is required";
 
     setErrors(newErrors);
-    
 
     return Object.keys(newErrors).length === 0;
   };
@@ -51,9 +50,7 @@ const Signup = () => {
     const { value, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      availableDays: checked
-        ? [...prev.availableDays, value]
-        : prev.availableDays.filter((day) => day !== value),
+      availableDays: checked ? [...prev.availableDays, value] : prev.availableDays.filter((day) => day !== value),
     }));
   };
 
@@ -64,16 +61,16 @@ const Signup = () => {
     if (validateForm()) {
       try {
         //console.log("submit successful");
-        const response = await fetch('http://localhost:5000/api/signup', {
-          method: 'POST',
+        const response = await fetch("http://localhost:5000/api/signup", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
         });
 
         if (response.ok) {
-          alert('Signup successful!');
+          alert("Signup successful!");
           setFormData({
             username: "",
             email: "",
@@ -91,30 +88,30 @@ const Signup = () => {
             price: "",
             languages: [],
           });
-          
+
           emailjs
-          .sendForm('service_debeiyt', 'template_4wzuql7', form.current, {
-            publicKey: '9B_G4UOwgNSsEHZiJ',
-          })
-          .then(
-            () => {
-              console.log('SUCCESS!');
-              alert('Email sent successfully!');
-            },
-            (error) => {
-              console.log('FAILED...', error.text);
-              alert('Email confirmation Failed...',error.text);
-            },
-          );
+            .sendForm("service_debeiyt", "template_4wzuql7", form.current, {
+              publicKey: "9B_G4UOwgNSsEHZiJ",
+            })
+            .then(
+              () => {
+                console.log("SUCCESS!");
+                alert("Email sent successfully!");
+              },
+              (error) => {
+                console.log("FAILED...", error.text);
+                alert("Email confirmation Failed...", error.text);
+              }
+            );
 
           // Navigate to homepage after successful signup
           navigate("/"); // Navigating to the homepage route ("/")
         } else {
-          alert('Failed to sign up');
+          alert("Failed to sign up");
         }
       } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred during signup.');
+        console.error("Error:", error);
+        alert("An error occurred during signup.");
       }
     }
   };
@@ -123,30 +120,15 @@ const Signup = () => {
     <div style={styles.container}>
       <h3>Sign Up</h3>
       <form ref={form} onSubmit={sendEmail} className="signup-form">
-
         <div style={styles.formGroup}>
           <label>Username</label>
-          <input
-            type="text"
-            name="username"
-            placeholder="Enter your username"
-            style={styles.input}
-            value={formData.username}
-            onChange={handleChange}
-          />
+          <input type="text" name="username" placeholder="Enter your username" style={styles.input} value={formData.username} onChange={handleChange} />
           {errors.username && <p style={styles.error}>{errors.username}</p>}
         </div>
 
         <div style={styles.formGroup}>
           <label>Email Address</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            style={styles.input}
-            value={formData.email}
-            onChange={handleChange}
-          />
+          <input type="email" name="email" placeholder="Enter your email" style={styles.input} value={formData.email} onChange={handleChange} />
           {errors.email && <p style={styles.error}>{errors.email}</p>}
         </div>
 
@@ -170,23 +152,11 @@ const Signup = () => {
           <label>User Type</label>
           <div style={styles.radioGroup}>
             <label>
-              <input
-                type="radio"
-                name="userType"
-                value="ServiceProvider"
-                onChange={handleChange}
-                checked={formData.userType === "ServiceProvider"}
-              />
+              <input type="radio" name="userType" value="ServiceProvider" onChange={handleChange} checked={formData.userType === "ServiceProvider"} />
               Service Provider
             </label>
             <label>
-              <input
-                type="radio"
-                name="userType"
-                value="ServiceSeeker"
-                onChange={handleChange}
-                checked={formData.userType === "ServiceSeeker"}
-              />
+              <input type="radio" name="userType" value="ServiceSeeker" onChange={handleChange} checked={formData.userType === "ServiceSeeker"} />
               Service Seeker
             </label>
           </div>
@@ -196,12 +166,7 @@ const Signup = () => {
           <>
             <div style={styles.formGroup}>
               <label>Service Type</label>
-              <select
-                name="serviceType"
-                style={styles.input}
-                value={formData.serviceType}
-                onChange={handleChange}
-              >
+              <select name="serviceType" style={styles.input} value={formData.serviceType} onChange={handleChange}>
                 <option value="">Select Service Type</option>
                 <option value="Full-time worker">Full-time worker</option>
                 <option value="Part-time worker">Part-time worker</option>
@@ -215,24 +180,12 @@ const Signup = () => {
 
             <div style={styles.formGroup}>
               <label>Service Name</label>
-              <input
-                type="text"
-                name="serviceName"
-                placeholder="Enter service name"
-                style={styles.input}
-                value={formData.serviceName}
-                onChange={handleChange}
-              />
+              <input type="text" name="serviceName" placeholder="Enter service name" style={styles.input} value={formData.serviceName} onChange={handleChange} />
             </div>
 
             <div style={styles.formGroup}>
               <label>Location</label>
-              <select
-                name="location"
-                style={styles.input}
-                value={formData.location}
-                onChange={handleChange}
-              >
+              <select name="location" style={styles.input} value={formData.location} onChange={handleChange}>
                 <option value="">Select Location</option>
                 <option value="Toronto">Toronto</option>
                 <option value="Vancouver">Vancouver</option>
@@ -244,12 +197,7 @@ const Signup = () => {
 
             <div style={styles.formGroup}>
               <label>Upload Resume</label>
-              <input
-                type="file"
-                name="resume"
-                style={styles.input}
-                onChange={handleFileChange}
-              />
+              <input type="file" name="resume" style={styles.input} onChange={handleFileChange} />
             </div>
 
             {/* Available Days */}
@@ -258,13 +206,7 @@ const Signup = () => {
               <div style={styles.checkboxGroup}>
                 {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
                   <label key={day}>
-                    <input
-                      type="checkbox"
-                      name="availableDays"
-                      value={day}
-                      checked={formData.availableDays.includes(day)}
-                      onChange={handleCheckboxChange}
-                    />
+                    <input type="checkbox" name="availableDays" value={day} checked={formData.availableDays.includes(day)} onChange={handleCheckboxChange} />
                     {day}
                   </label>
                 ))}
@@ -275,35 +217,14 @@ const Signup = () => {
             <div style={styles.formGroup}>
               <label>Available Time</label>
               <div style={{ display: "flex", gap: "10px" }}>
-                <input
-                  type="time"
-                  name="startTime"
-                  style={styles.input}
-                  value={formData.startTime}
-                  onChange={handleChange}
-                  placeholder="From"
-                />
-                <input
-                  type="time"
-                  name="endTime"
-                  style={styles.input}
-                  value={formData.endTime}
-                  onChange={handleChange}
-                  placeholder="To"
-                />
+                <input type="time" name="startTime" style={styles.input} value={formData.startTime} onChange={handleChange} placeholder="From" />
+                <input type="time" name="endTime" style={styles.input} value={formData.endTime} onChange={handleChange} placeholder="To" />
               </div>
             </div>
 
             <div style={styles.formGroup}>
               <label>Price (CAD)</label>
-              <input
-                type="number"
-                name="price"
-                placeholder="Enter price in CAD"
-                style={styles.input}
-                value={formData.price}
-                onChange={handleChange}
-              />
+              <input type="number" name="price" placeholder="Enter price in CAD" style={styles.input} value={formData.price} onChange={handleChange} />
             </div>
 
             <div style={styles.formGroup}>
@@ -318,8 +239,7 @@ const Signup = () => {
                     languages: [...e.target.selectedOptions].map((o) => o.value),
                   })
                 }
-                multiple
-              >
+                multiple>
                 <option value="English">English</option>
                 <option value="French">French</option>
                 <option value="Spanish">Spanish</option>
@@ -332,31 +252,19 @@ const Signup = () => {
 
         <div style={styles.formGroup}>
           <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter your password"
-            style={styles.input}
-            value={formData.password}
-            onChange={handleChange}
-          />
+          <input type="password" name="password" placeholder="Enter your password" style={styles.input} value={formData.password} onChange={handleChange} />
           {errors.password && <p style={styles.error}>{errors.password}</p>}
         </div>
 
         <div style={styles.formGroup}>
           <label>Confirm Password</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm your password"
-            style={styles.input}
-            value={formData.confirmPassword}
-            onChange={handleChange}
-          />
+          <input type="password" name="confirmPassword" placeholder="Confirm your password" style={styles.input} value={formData.confirmPassword} onChange={handleChange} />
           {errors.confirmPassword && <p style={styles.error}>{errors.confirmPassword}</p>}
         </div>
 
-        <button type="submit" style={styles.submitButton}>Submit</button>
+        <button type="submit" style={styles.submitButton}>
+          Submit
+        </button>
       </form>
     </div>
   );
@@ -364,39 +272,39 @@ const Signup = () => {
 
 const styles = {
   container: {
-    width: '300px',
-    margin: '0 auto',
+    width: "300px",
+    margin: "0 auto",
   },
   formGroup: {
-    marginBottom: '10px',
+    marginBottom: "10px",
   },
   input: {
-    width: '100%',
-    padding: '8px',
-    marginTop: '5px',
-    boxSizing: 'border-box',
+    width: "100%",
+    padding: "8px",
+    marginTop: "5px",
+    boxSizing: "border-box",
   },
   radioGroup: {
-    display: 'flex',
-    gap: '10px',
+    display: "flex",
+    gap: "10px",
   },
   checkboxGroup: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '10px',
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "10px",
   },
   error: {
-    color: 'red',
-    fontSize: '12px',
-    marginTop: '5px',
+    color: "red",
+    fontSize: "12px",
+    marginTop: "5px",
   },
   submitButton: {
-    width: '100%',
-    padding: '10px',
-    backgroundColor: '#007BFF',
-    color: 'white',
-    border: 'none',
-    cursor: 'pointer',
+    width: "100%",
+    padding: "10px",
+    backgroundColor: "#007BFF",
+    color: "white",
+    border: "none",
+    cursor: "pointer",
   },
 };
 
