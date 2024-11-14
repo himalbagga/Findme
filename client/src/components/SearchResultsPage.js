@@ -8,7 +8,7 @@ function SearchResultsPage() {
   const [loading, setLoading] = useState(false);
   const [maxPrice, setMaxPrice] = useState('');
   const location = useLocation();
-  
+
 
   // Extract query parameter from URL
   const query = new URLSearchParams(location.search).get('q');
@@ -23,17 +23,17 @@ function SearchResultsPage() {
   const handleSearch = async (query) => {
     setLoading(true);
     try {
-    //here is where the API for the data base will be
-    console.log(typeof query);
+      //here is where the API for the data base will be
+      console.log(typeof query);
 
-    const url = new URL('http://localhost:5000/api/services/search');
-    const params = new URLSearchParams();
-    params.set('q', query);
-    
-    if (maxPrice) params.set('maxPrice', maxPrice);
-    url.search = params.toString();
+      const url = new URL('http://localhost:5000/api/services/search');
+      const params = new URLSearchParams();
+      params.set('q', query);
 
-      const response = await fetch(url); 
+      if (maxPrice) params.set('maxPrice', maxPrice);
+      url.search = params.toString();
+
+      const response = await fetch(url);
       //console.log(typeof query);
       const data = await response.json();
       console.log(data.results);
@@ -56,35 +56,35 @@ function SearchResultsPage() {
         <a href="/">Home</a>
         <a href="#">Why Find Me</a>
         <a href="#">Find Talent</a>
-        
+
         <a href="#">Contact</a>
         <a href="/signup">Login/Sign Up</a>
       </nav>
 
-       {/* Search Bar */}
-       <div className="search-bar">
-          <input
-            type="text"
-            placeholder="Search jobs by keyword"
-            value={query}
-             //onChange={(e) => setQuery(e.target.value)}
-          />
-          {/* <select>
+      {/* Search Bar */}
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search jobs by keyword"
+          value={query}
+        //onChange={(e) => setQuery(e.target.value)}
+        />
+        {/* <select>
             <option value="">Filter</option>
             <option value="option">#Option#</option>
           </select> */}
-          <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
-            <option value="">Max Price</option>
-            <option value="25">25/hour</option>
-            <option value="35">35/hour</option>
-            <option value="45">45/hour</option>
-            <option value="60">60/hour</option>
-          </select>
-          <button type="button" onClick={handleSearch}>Search</button>
-        </div>
+        <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
+          <option value="">Max Price</option>
+          <option value="25">25/hour</option>
+          <option value="35">35/hour</option>
+          <option value="45">45/hour</option>
+          <option value="60">60/hour</option>
+        </select>
+        <button type="button" onClick={handleSearch}>Search</button>
+      </div>
 
 
-      
+
       <div className="results-container">
         {loading ? (
           <p>Loading...</p>
