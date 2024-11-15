@@ -1,4 +1,3 @@
-// HomePage.js
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Hompage.css";
@@ -75,7 +74,9 @@ function HomePage() {
         <Link to="/why-find-me">Why Find Me</Link>
         <Link to="/find-talent">Find Talent</Link>
         <Link to="/contact">Contact</Link>
-        <Link to="/signup">Login/Sign Up</Link>
+        <Link to="/signup">Sign Up</Link>
+        <Link to="/login">Login</Link>
+        <Link to="/profile">Profile</Link>
       </nav>
       <div className="body_container">
         {/* Search Bar */}

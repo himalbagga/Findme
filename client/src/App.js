@@ -5,6 +5,8 @@ import HomePage from "./components/Homepage1";
 import SearchResultsPage from "./components/SearchResultsPage";
 import Login from "./components/LogIn";
 import ServiceDetailsPage from "./components/ServiceDetailsPage";
+import UserProfile from "./components/UserProfile";
+
 
 const App = () => {
   return (
@@ -16,6 +18,7 @@ const App = () => {
         <Route exact path="/search-results" element={<SearchResultsPage />} />
         <Route exact path="/services/:serviceId" element={<ServiceDetailsPage />} />
         <Route exact path="**" element={<HomePage />} />
+        <Route exact path="/profile" element={<UserProfile />} />
       </Routes>
     </Router>
   );
