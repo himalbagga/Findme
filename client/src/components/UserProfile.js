@@ -51,7 +51,7 @@ const ProfileDisplay = ({ user, onEdit, onDelete }) => (
   <div className="profile-display">
     <div className="profile-header">
       <h2>User Profile</h2>
-      <button onClick={onEdit}>Edit</button>
+
     </div>
     <div className="profile-content">
       <div className="profile-avatar">
@@ -76,6 +76,7 @@ const ProfileDisplay = ({ user, onEdit, onDelete }) => (
       </div>
     </div>
     <div className="profile-footer">
+      <button className="edit-button" onClick={onEdit}>Edit Profile</button>
       <button onClick={onDelete} className="delete-button">Delete Profile</button>
     </div>
   </div>
