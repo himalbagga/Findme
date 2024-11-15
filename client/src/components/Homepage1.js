@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./Hompage.css";
+import "./Homepage.css";
 
 function HomePage() {
   const [query, setQuery] = useState("");
