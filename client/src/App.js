@@ -5,9 +5,6 @@ import HomePage from "./components/Homepage1";
 import SearchResultsPage from "./components/SearchResultsPage";
 import Login from "./components/LogIn";
 import ServiceDetailsPage from "./components/ServiceDetailsPage";
-import UserProfile from "./components/UserProfile";
-import ListOfServices from "./components/ListOfServices";
-
 
 const App = () => {
   return (
