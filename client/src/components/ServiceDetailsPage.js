@@ -8,7 +8,7 @@ import { faArrowLeft, faMapMarkerAlt, faFileDownload, faLanguage, faCalendarAlt,
 
 function ServiceDetailsPage() {
   const { serviceId } = useParams(); // Get the service ID from the URL parameters
-  const {navigate} = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate(); // Initialize navigate function
   const [serviceData, setServiceData] = useState(null); // State to store fetched service data
   const [selectedDays, setSelectedDays] = useState([]);
   const [dayTimes, setDayTimes] = useState({});
