@@ -60,14 +60,14 @@ const ProfileDisplay = ({ user, onEdit, onDelete }) => (
       <div className="profile-details">
         <h3>{user.username}</h3>
         <p>{user.email}</p>
-        <p><strong>Mobile:</strong> {user.mobileNumber}</p>
-        <p><strong>User Type:</strong> {user.userType}</p>
-        <p><strong>Service Type:</strong> {user.serviceType}</p>
-        <p><strong>Service Name:</strong> {user.serviceName}</p>
-        <p><strong>Location:</strong> {user.location}</p>
-        <p><strong>Available Days:</strong> {user.availableDays.join(", ")}</p>
-        <p><strong>Hours:</strong> {user.startTime} - {user.endTime}</p>
-        <p><strong>Price:</strong> ${user.price}/hour</p>
+        <p><strong>📱 Mobile:</strong> {user.mobileNumber}</p>
+        <p><strong>👤 User Type:</strong> {user.userType}</p>
+        <p><strong>🌐 Service Type:</strong> {user.serviceType}</p>
+        <p><strong>🌐 Service Name:</strong> {user.serviceName}</p>
+        <p><strong>📍 Location:</strong> {user.location}</p>
+        <p><strong>📅 Available Days:</strong> {user.availableDays.join(", ")}</p>
+        <p><strong>🕒 Hours:</strong> {user.startTime} - {user.endTime}</p>
+        <p><strong>💰 Price:</strong> ${user.price}/hour</p>
         <p><strong>Languages:</strong> {user.languages.join(", ")}</p>
       </div>
       <div className="profile-resume">
