@@ -72,7 +72,7 @@ function HomePage() {
       <nav>
         <Link to="/">Home</Link>
         <Link to="/why-find-me">Why Find Me</Link>
-        <Link to="/find-talent">Find Talent</Link>
+        <Link to="/listofservices">Find Talent</Link>
         <Link to="/contact">Contact</Link>
         <Link to="/signup">Sign Up</Link>
         <Link to="/login">Login</Link>
