@@ -51,7 +51,12 @@ const ProfileDisplay = ({ user, onEdit, onDelete }) => (
   <div className="profile-display">
     <div className="profile-header">
       <h2>User Profile</h2>
-      <button onClick={onEdit}>Edit</button>
+      <button 
+        onClick={onEdit} 
+        className='edit-button'
+>
+  Edit
+</button>
     </div>
     <div className="profile-content">
       <div className="profile-avatar">
@@ -104,15 +109,15 @@ const EditForm = ({ user, onSave, onCancel }) => {
       <h2>Edit Profile</h2>
       <div className="form-group">
         <label htmlFor="username">Username</label>
-        <input id="username" name="username" value={editedUser.username} onChange={handleChange} />
+        <input id="username" name="username" className='input-field' value={editedUser.username} onChange={handleChange} />
       </div>
       <div className="form-group">
         <label htmlFor="email">Email</label>
-        <input id="email" name="email" type="email" value={editedUser.email} onChange={handleChange} />
+        <input id="email" name="email" className='input-field' type="email" value={editedUser.email} onChange={handleChange} />
       </div>
       <div className="form-group">
         <label htmlFor="mobileNumber">Mobile Number</label>
-        <input id="mobileNumber" name="mobileNumber" value={editedUser.mobileNumber} onChange={handleChange} />
+        <input id="mobileNumber" name="mobileNumber" className='input-field' value={editedUser.mobileNumber} onChange={handleChange} />
       </div>
       <div className="form-group">
         <label htmlFor="userType">User Type</label>
@@ -123,53 +128,55 @@ const EditForm = ({ user, onSave, onCancel }) => {
       </div>
       <div className="form-group">
         <label htmlFor="serviceType">Service Type</label>
-        <input id="serviceType" name="serviceType" value={editedUser.serviceType} onChange={handleChange} />
+        <input id="serviceType" name="serviceType" className='input-field' value={editedUser.serviceType} onChange={handleChange} />
       </div>
       <div className="form-group">
         <label htmlFor="serviceName">Service Name</label>
-        <input id="serviceName" name="serviceName" value={editedUser.serviceName} onChange={handleChange} />
+        <input id="serviceName" name="serviceName" className='input-field' value={editedUser.serviceName} onChange={handleChange} />
       </div>
       <div className="form-group">
         <label htmlFor="location">Location</label>
-        <input id="location" name="location" value={editedUser.location} onChange={handleChange} />
+        <input id="location" name="location" className='input-field' value={editedUser.location} onChange={handleChange} />
       </div>
       <div className="form-group">
         <label htmlFor="availableDays">Available Days (comma-separated)</label>
         <input 
           id="availableDays" 
           name="availableDays" 
+          className='input-field'
           value={editedUser.availableDays.join(', ')} 
           onChange={handleArrayChange}
         />
       </div>
       <div className="form-group">
         <label htmlFor="startTime">Start Time</label>
-        <input id="startTime" name="startTime" type="time" value={editedUser.startTime} onChange={handleChange} />
+        <input id="startTime" name="startTime" className='input-field' type="time" value={editedUser.startTime} onChange={handleChange} />
       </div>
       <div className="form-group">
         <label htmlFor="endTime">End Time</label>
-        <input id="endTime" name="endTime" type="time" value={editedUser.endTime} onChange={handleChange} />
+        <input id="endTime" name="endTime" className='input-field' type="time" value={editedUser.endTime} onChange={handleChange} />
       </div>
       <div className="form-group">
         <label htmlFor="price">Price (per hour)</label>
-        <input id="price" name="price" type="number" value={editedUser.price} onChange={handleChange} />
+        <input id="price" name="price" className='input-field' type="number" value={editedUser.price} onChange={handleChange} />
       </div>
       <div className="form-group">
         <label htmlFor="languages">Languages (comma-separated)</label>
         <input 
           id="languages" 
           name="languages" 
+          className='input-field'
           value={editedUser.languages.join(', ')} 
           onChange={handleArrayChange}
         />
       </div>
       <div className="form-group">
         <label htmlFor="resume">Resume URL</label>
-        <input id="resume" name="resume" value={editedUser.resume} onChange={handleChange} />
+        <input id="resume" name="resume" className='input-field' value={editedUser.resume} onChange={handleChange} />
       </div>
       <div className="form-actions">
         <button type="button" onClick={onCancel}>Cancel</button>
-        <button type="submit">Save Changes</button>
+        <button type="submit">Update</button>
       </div>
     </form>
   );
