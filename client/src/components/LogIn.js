@@ -1,4 +1,6 @@
 import React, { useRef, useState } from "react";
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 // import emailjs from "@emailjs/browser";
 
 const Login = () => {
@@ -8,7 +10,13 @@ const Login = () => {
     password: "",
   });
 
+   const navigate = useNavigate();
+
+  const [message, setMessage] = useState('');
+
   const [errors, setErrors] = useState({});
+
+  const [user, setUser] = useState(null);
 
   const validateForm = () => {
     const newErrors = {};
@@ -25,11 +33,20 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Login successful");
-      // Perform login functionality
+      try {
+        const response = await axios.post('http://localhost:5001/api/login', { 
+          username: formData.username,
+          password: formData.password
+           });
+        setMessage(response.data.message);
+        setUser(response.data.user);
+        navigate('/');
+      } catch (error) {
+          setMessage(error.response.data.message || 'Error logging in');
+      }
     }
   };
 
@@ -70,7 +87,9 @@ const Login = () => {
       <p style={styles.signupText}>
         Don’t have an account? <a href="/signup">Sign Up</a>
       </p>
+      {message && <div style={{ color: message.includes('successful') ? 'green' : 'red' }}>{message}</div>}
     </div>
+    
   );
 };
 

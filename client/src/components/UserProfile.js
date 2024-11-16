@@ -76,6 +76,7 @@ const ProfileDisplay = ({ user, onEdit, onDelete }) => (
       <button className="edit-button" onClick={onEdit}>Edit Profile</button>
       <button onClick={onDelete} className="delete-button">Delete Profile</button>
     </div>
+    </div>
   </div>
 );
 
