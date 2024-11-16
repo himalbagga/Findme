@@ -77,7 +77,7 @@ const ProfileDisplay = ({ user, onEdit, onDelete }) => (
       <button onClick={onDelete} className="delete-button">Delete Profile</button>
     </div>
     </div>
-  </div>
+  
 );
 
 const EditForm = ({ user, onSave, onCancel }) => {
