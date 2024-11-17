@@ -35,6 +35,8 @@ function SearchResultsPage() {
 
       const response = await fetch(url);
       const data = await response.json();
+      console.log(data.results);
+      console.log(data.results._id);
       setResults(data.results);
     } catch (error) {
       console.error("Error fetching search results:", error);
@@ -105,13 +107,15 @@ function SearchResultsPage() {
         ) : results.length > 0 ? (
           <div className="service-list">
             {results.map((result) => (
+              console.log(result._id),
               <ServiceCard
-                key={result.id}
-                id={result.id}
-                title={result.title}
+                key={result._id}
+                id={result._id}
+                //id={result.id}
+                title={result.serviceName}
                 location={result.location}
                 languages={result.languages}
-                pricePerHour={result.pricePerHour}
+                pricePerHour={result.price}
               />
             ))}
           </div>

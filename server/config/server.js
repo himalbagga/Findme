@@ -81,6 +81,20 @@ app.post('/api/users/:id/services', async (req, res) => {
   }
 });
 
+app.get('/api/services/:serviceId', async (req, res) => {
+  const { serviceId } = req.params;
+  try {
+    const service = await User.findById(serviceId); // Replace with your database query
+    if (!service) {
+      return res.status(404).json({ message: 'Service not found' });
+    }
+    res.json(service);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching service details', error });
+  }
+});
+
+
 app.use('/api', userRoutes);
 app.use('/api/services', userRoutes);
 
