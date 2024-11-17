@@ -25,7 +25,7 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const { user } = useContext(UserContext);
-
+  console.log(user);
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
   const handleSave = (editedUser) => {

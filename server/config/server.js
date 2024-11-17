@@ -57,14 +57,26 @@ app.get('/api/services/search', async (req, res) => {
   }
 });
 
-app.post('/api/add-service', async (req, res) => {
+app.post('/api/users/:id/services', async (req, res) => {
   try {
-    const { serviceName, location, languages, availableDays, startTime, endTime, price } = req.body;
-    const newService = new Service({ serviceName, location, languages, availableDays, startTime, endTime, price });
+    const userId = req.params.id;
+    const { serviceName, location, languages, price, availableDays, startTime, endTime } = req.body;
+    //const newService = new User.services({ serviceName, location, languages, price, availableDays, startTime, endTime });
 
-    await newService.save();
-    res.status(201).json({ message: 'Service added successfully' });
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const newService = { serviceName, location, languages, price, availableDays, startTime, endTime };
+    user.services.push(newService);
+
+    await user.save();
+
+    
+    res.status(201).json({ message: 'Service added successfully', user });
   } catch (error) {
+    console.error('Error adding service:', error);
     res.status(500).json({ error: 'Failed to add service' });
   }
 });

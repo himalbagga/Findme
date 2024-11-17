@@ -1,15 +1,17 @@
 const mongoose = require('mongoose');
 
 const ServiceSchema = new mongoose.Schema({
-  serviceType: String,
+  
   serviceName: String,
   location: String,
-  resume: String,
+  languages: [String],
+  price: { type: Number, min: 0 },
+  //resume: String,
   availableDays: [String],
   startTime: String,
   endTime: String,
-  price: { type: Number, min: 0 },
-  languages: [String],
+  
+  
 });
 
 const userSchema = new mongoose.Schema({
