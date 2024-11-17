@@ -73,7 +73,6 @@ function AddServicePage() {
                         type="text"
                         value={serviceName}
                         onChange={(e) => setServiceName(e.target.value)}
-                        required
                     />
                 </label>
                 <label>
