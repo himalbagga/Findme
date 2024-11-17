@@ -57,6 +57,18 @@ app.get('/api/services/search', async (req, res) => {
   }
 });
 
+app.post('/api/add-service', async (req, res) => {
+  try {
+    const { serviceName, location, languages, availableDays, startTime, endTime, price } = req.body;
+    const newService = new Service({ serviceName, location, languages, availableDays, startTime, endTime, price });
+
+    await newService.save();
+    res.status(201).json({ message: 'Service added successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to add service' });
+  }
+});
+
 app.use('/api', userRoutes);
 app.use('/api/services', userRoutes);
 

@@ -14,6 +14,7 @@ router.get('/search', searchServices);
 router.get('/user/:id', getUserProfile);
 
 router.put('/update/:id', updateUser);
+router.post('/add-service', addService);
 
 router.post('/users/:id/services', addService);
 
