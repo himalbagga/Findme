@@ -79,15 +79,16 @@ function HomePage() {
         <Link to="/contact">Contact</Link>
         {user ? (
           <>
-            <Link title="Click to show profile" to="/profile">Welcome { user?.username }</Link>
-          </> )
-           : (
+            <Link title="Click to show profile" to="/profile">Welcome {user?.username}</Link>
+            <Link to="/add-service" className="add-service-link">Add Service</Link>
+          </>)
+          : (
             <>
-            <Link to="/signup">Sign Up</Link>
-          <Link to="/login">Login</Link>
+              <Link to="/signup">Sign Up</Link>
+              <Link to="/login">Login</Link>
             </>
-           )}
-        
+          )}
+
       </nav>
       <div className="body_container">
         {/* Search Bar */}
