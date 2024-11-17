@@ -1,5 +1,17 @@
 const mongoose = require('mongoose');
 
+const ServiceSchema = new mongoose.Schema({
+  serviceType: String,
+  serviceName: String,
+  location: String,
+  resume: String,
+  availableDays: [String],
+  startTime: String,
+  endTime: String,
+  price: { type: Number, min: 0 },
+  languages: [String],
+});
+
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -56,10 +68,14 @@ const userSchema = new mongoose.Schema({
   languages: {
     type: [String],
   },
+
+  services: [ServiceSchema], // New field for multiple services
+  
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  
 });
 
 module.exports = mongoose.model('User', userSchema);
