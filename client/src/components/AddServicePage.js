@@ -33,8 +33,6 @@ function AddServicePage() {
             endTime,
         };
 
-        // Add backend integration here to submit the new service
-
         navigate('/profile');
     };
 
@@ -50,7 +48,6 @@ function AddServicePage() {
                         type="text"
                         value={serviceName}
                         onChange={(e) => setServiceName(e.target.value)}
-                        required
                     />
                 </label>
                 <label>
