@@ -1,9 +1,16 @@
 // AddServicePage Component for adding a new service
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 import "./AddServicePage.css";
+import { useContext } from 'react';
+import { UserContext } from './../UserContext';
 
 function AddServicePage() {
+    const { user } = useContext(UserContext);
+    console.log(user);
+    const userId = user?.id;
+    console.log(userId);
     const [serviceName, setServiceName] = useState("");
     const [location, setLocation] = useState("");
     const [languages, setLanguages] = useState("");
@@ -21,7 +28,8 @@ function AddServicePage() {
         );
     };
 
-    const handleSubmit = (e) => {
+    //console.log(user);
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const newService = {
             serviceName,
@@ -32,6 +40,23 @@ function AddServicePage() {
             startTime,
             endTime,
         };
+
+        // Add backend integration here to submit the new service
+        try {
+             // Replace with the actual user ID, possibly from your authentication state
+            
+            const response = await axios.post(
+                `http://localhost:5001/api/users/${userId}/services`, // Adjust the URL as per your backend route
+                newService
+            );
+    
+            console.log('Service created successfully:', response.data);
+            alert('Service created successfully');
+            navigate('/profile'); // Redirect to the profile page after successful submission
+        } catch (error) {
+            console.error('Error creating service:', error);
+            alert('Failed to create service. Please try again.');
+        }
 
         navigate('/profile');
     };

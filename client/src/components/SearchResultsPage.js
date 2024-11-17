@@ -1,8 +1,10 @@
 // SearchResultsPage.js
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import ServiceCard from './ServiceCard';  // Import ServiceCard component
 import './SearchResultsPage.css';
+import { useContext } from 'react';
+import { UserContext } from './../UserContext';
 
 function SearchResultsPage() {
   const [results, setResults] = useState([]);
@@ -11,6 +13,7 @@ function SearchResultsPage() {
   const [maxPrice, setMaxPrice] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const initialQuery = new URLSearchParams(location.search).get('q');
@@ -51,12 +54,30 @@ function SearchResultsPage() {
         <h1>Find Me</h1>
         <p>Explore thousands of services available near you!</p>
       </header>
-      <nav>
+      {/* <nav>
         <a href="/">Home</a>
         <a href="#">Why Find Me</a>
         <a href="#">Find Talent</a>
         <a href="#">Contact</a>
         <a href="/signup">Login/Sign Up</a>
+      </nav> */}
+
+<nav>
+        <Link to="/">Home</Link>
+        <Link to="/why-find-me">Why Find Me</Link>
+        <Link to="/listofservices">Find Talent</Link>
+        <Link to="/contact">Contact</Link>
+        {user ? (
+          <>
+            <Link title="Click to show profile" to="/profile">Welcome { user?.username }</Link>
+          </> )
+           : (
+            <>
+            <Link to="/signup">Sign Up</Link>
+          <Link to="/login">Login</Link>
+            </>
+           )}
+        
       </nav>
 
       <div className="search-bar">
