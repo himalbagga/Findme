@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from './../UserContext';
 // import emailjs from "@emailjs/browser";
 
 const Login = () => {
@@ -16,7 +18,7 @@ const Login = () => {
 
   const [errors, setErrors] = useState({});
 
-  const [user, setUser] = useState(null);
+  const { setUser } = useContext(UserContext);
 
   const validateForm = () => {
     const newErrors = {};
@@ -43,6 +45,7 @@ const Login = () => {
            });
         setMessage(response.data.message);
         setUser(response.data.user);
+        console.log(response.data.user)
         navigate('/');
       } catch (error) {
           setMessage(error.response.data.message || 'Error logging in');

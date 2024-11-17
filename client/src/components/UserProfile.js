@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './UserProfile.css';
 import placeholderPic from "../images/ProfilePlaceHolder.svg";
+import { useContext } from 'react';
+import { UserContext } from './../UserContext';
 
 const initialUser = {
   username: "johndoe",
@@ -19,13 +21,15 @@ const initialUser = {
 };
 
 const UserProfile = () => {
-  const [user, setUser] = useState(initialUser);
+  //const [user, setUser] = useState(initialUser);
   const [isEditing, setIsEditing] = useState(false);
+
+  const { user } = useContext(UserContext);
 
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
   const handleSave = (editedUser) => {
-    setUser(editedUser);
+    //setUser(editedUser);
     setIsEditing(false);
     // Send the updated user data to the backend
   };
@@ -55,21 +59,21 @@ const ProfileDisplay = ({ user, onEdit, onDelete }) => (
         <img src={placeholderPic} alt="User Placeholder" />
       </div>
       <div className="profile-details">
-        <h3>{user.username}</h3>
-        <p>{user.email}</p>
-        <p><strong>📱 Mobile:</strong> {user.mobileNumber}</p>
-        <p><strong>👤 User Type:</strong> {user.userType}</p>
-        <p><strong>🌐 Service Type:</strong> {user.serviceType}</p>
-        <p><strong>🌐 Service Name:</strong> {user.serviceName}</p>
-        <p><strong>📍 Location:</strong> {user.location}</p>
-        <p><strong>📅 Available Days:</strong> {user.availableDays.join(", ")}</p>
-        <p><strong>🕒 Hours:</strong> {user.startTime} - {user.endTime}</p>
-        <p><strong>💰 Price:</strong> ${user.price}/hour</p>
-        <p><strong>Languages:</strong> {user.languages.join(", ")}</p>
-      </div>
+        <h3>{user?.username}</h3>
+        <p>{user?.email}</p>
+        <p><strong>📱 Mobile:</strong> {user?.mobileNumber}</p>
+        <p><strong>👤 User Type:</strong> {user?.userType}</p>
+        <p><strong>🌐 Service Type:</strong> {user?.serviceType}</p>
+        <p><strong>🌐 Service Name:</strong> {user?.serviceName}</p>
+        <p><strong>📍 Location:</strong> {user?.location}</p>
+        {/* <p><strong>📅 Available Days:</strong> {user?.availableDays.join(", ")}</p> */}
+        <p><strong>🕒 Hours:</strong> {user?.startTime} - {user?.endTime}</p>
+        <p><strong>💰 Price:</strong> ${user?.price}/hour</p>
+        {/* <p><strong>Languages:</strong> {user.languages.join(", ")}</p> */}
+      </div>  
       <div className="profile-resume">
         <h4>Resume</h4>
-        <a href={user.resume} target="_blank" rel="noopener noreferrer">View Resume</a>
+        <a href={user?.resume} target="_blank" rel="noopener noreferrer">View Resume</a>
       </div>
     </div>
     <div className="profile-footer">
@@ -103,23 +107,183 @@ const EditForm = ({ user, onSave, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit} className="edit-form">
-      <h2>Edit Profile</h2>
+      <h2>Edit Profiles</h2>
       <div className="form-group">
         <label htmlFor="username">Username</label>
         <input
           id="username"
           name="username"
           className="input-field"
-          value={editedUser.username}
+          value={editedUser?.username}
           onChange={handleChange}
         />
       </div>
-      {/* Other form fields */}
+
+      {/* Email */}
+    <div className="form-group">
+      <label htmlFor="email">Email</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        className="input-field"
+        value={editedUser?.email}
+        onChange={handleChange}
+      />
+      </div>
+      
+      {/* Mobile Number */}
+    <div className="form-group">
+      <label htmlFor="mobileNumber">Mobile Number</label>
+      <input
+        id="mobileNumber"
+        name="mobileNumber"
+        type="text"
+        className="input-field"
+        value={editedUser?.mobileNumber}
+        onChange={handleChange}
+      />
+    </div>
+
+    {/* User Type */}
+    <div className="form-group">
+      <label htmlFor="userType">User Type</label>
+      <select
+        id="userType"
+        name="userType"
+        className="input-field"
+        value={editedUser?.userType}
+        onChange={handleChange}
+      >
+        <option value="ServiceProvider">Service Provider</option>
+        <option value="Client">Client</option>
+      </select>
+    </div>
+
+    {/* Service Type */}
+    <div className="form-group">
+      <label htmlFor="serviceType">Service Type</label>
+      <input
+        id="serviceType"
+        name="serviceType"
+        className="input-field"
+        value={editedUser?.serviceType}
+        onChange={handleChange}
+      />
+    </div>
+
+    {/* Service Name */}
+    <div className="form-group">
+      <label htmlFor="serviceName">Service Name</label>
+      <input
+        id="serviceName"
+        name="serviceName"
+        className="input-field"
+        value={editedUser?.serviceName}
+        onChange={handleChange}
+      />
+    </div>
+
+    {/* Location */}
+    <div className="form-group">
+      <label htmlFor="location">Location</label>
+      <input
+        id="location"
+        name="location"
+        className="input-field"
+        value={editedUser?.location}
+        onChange={handleChange}
+      />
+    </div>
+
+    {/* Available Days */}
+    <div className="form-group">
+      <label htmlFor="availableDays">Available Days</label>
+      <input
+        id="availableDays"
+        name="availableDays"
+        className="input-field"
+        placeholder="e.g., Monday, Tuesday"
+        value={editedUser?.availableDays?.join(', ') || ''} // Assuming `availableDays` is an array
+        onChange={handleChange}
+      />
+    </div>
+
+    {/* Start Time */}
+    <div className="form-group">
+      <label htmlFor="startTime">Start Time</label>
+      <input
+        id="startTime"
+        name="startTime"
+        type="time"
+        className="input-field"
+        value={editedUser?.startTime}
+        onChange={handleChange}
+      />
+    </div>
+
+    {/* End Time */}
+    <div className="form-group">
+      <label htmlFor="endTime">End Time</label>
+      <input
+        id="endTime"
+        name="endTime"
+        type="time"
+        className="input-field"
+        value={editedUser?.endTime}
+        onChange={handleChange}
+      />
+    </div>
+
+    {/* Price */}
+    <div className="form-group">
+      <label htmlFor="price">Price</label>
+      <input
+        id="price"
+        name="price"
+        type="number"
+        className="input-field"
+        value={editedUser?.price}
+        onChange={handleChange}
+      />
+    </div>
+
+    {/* Languages */}
+    <div className="form-group">
+      <label htmlFor="languages">Languages</label>
+      <input
+        id="languages"
+        name="languages"
+        className="input-field"
+        placeholder="e.g., English, Spanish"
+        value={editedUser?.languages?.join(', ') || ''} // Assuming `languages` is an array
+        onChange={handleChange}
+      />
+    </div>
+
+    {/* Resume */}
+    {/* <div className="form-group">
+      <label htmlFor="resume">Resume</label>
+      <input
+        id="resume"
+        name="resume"
+        type="file"
+        className="input-field"
+        onChange={(e) => handleFileChange(e)} // Assuming a handler for file uploads
+      />
+    </div> */}
+
+    
+      
       <div className="form-actions">
         <button type="button" onClick={onCancel}>Cancel</button>
         <button type="submit">Update</button>
       </div>
-    </form>
+    
+  </form>
+      
+     
+    
   );
 };
 

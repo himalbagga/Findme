@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Homepage.css";
+import { useContext } from 'react';
+import { UserContext } from './../UserContext';
 
 function HomePage() {
   const [query, setQuery] = useState("");
   const [services, setServices] = useState([]); // State to store services data
   const [maxPrice, setMaxPrice] = useState('');
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     // Simulate fetching data from an API
@@ -74,9 +77,17 @@ function HomePage() {
         <Link to="/why-find-me">Why Find Me</Link>
         <Link to="/listofservices">Find Talent</Link>
         <Link to="/contact">Contact</Link>
-        <Link to="/signup">Sign Up</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/profile">Profile</Link>
+        {user ? (
+          <>
+            <Link title="Click to show profile" to="/profile">Welcome { user?.username }</Link>
+          </> )
+           : (
+            <>
+            <Link to="/signup">Sign Up</Link>
+          <Link to="/login">Login</Link>
+            </>
+           )}
+        
       </nav>
       <div className="body_container">
         {/* Search Bar */}
