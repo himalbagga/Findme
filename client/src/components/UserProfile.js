@@ -3,14 +3,14 @@ import './UserProfile.css';
 import placeholderPic from "../images/ProfilePlaceHolder.svg";
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
-import axios from 'axios'
+
 
 const UserProfile = () => {
   //const [user, setUser] = useState(initialUser);
   const [isEditing, setIsEditing] = useState(false);
 
   const { user } = useContext(UserContext);
-
+  console.log(user);
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
   const handleSave = (editedUser) => {
@@ -61,6 +61,23 @@ const ProfileDisplay = ({ user, onEdit, onDelete }) => (
         <a href={user?.resume} target="_blank" rel="noopener noreferrer">View Resume</a>
       </div>
     </div>
+
+    <div className='profile-services'>
+      <h3>Services Offered</h3>
+        {user ? (
+          <>
+            <h5>{user.serviceName}</h5>
+            <p>{user.location}</p>
+            <p>{user.languages?.join(", ")}</p>
+            <p>Price: ${user.price}/hour</p>
+            <p>Available Days: {user.availableDays?.join(", ")}</p>
+            <p>Hours: {user.startTime} - {user.endTime}</p>
+          </>
+        ) : (
+          <p>No service available</p>
+        )}
+    </div>
+    
     <div className="profile-footer">
       <button className="edit-button" onClick={onEdit}>Edit Profile</button>
       <button onClick={onDelete} className="delete-button">Delete Profile</button>

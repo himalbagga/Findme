@@ -7,7 +7,7 @@ import { UserContext } from './../UserContext';
 function HomePage() {
   const [query, setQuery] = useState("");
   const [services, setServices] = useState([]); // State to store services data
-  const [maxPrice, setMaxPrice] = useState('');
+  //const [maxPrice, setMaxPrice] = useState('');
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
 
