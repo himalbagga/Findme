@@ -1,15 +1,36 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Star } from 'lucide-react';
+import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 
 export default function UserReviewForm() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
+  const [formData, setFormData] = useState({ title: '', review: '' });
 
-  const handleSubmit = (event) => {
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // send form data to bacend hear
-    console.log("Form submitted!");
+    try {
+      const response = await axios.post('http://localhost:5001/api/reviews', {
+        title: formData.title,
+        review: formData.review,
+        rating,
+      });
+      console.log('Review submitted successfully:', response.data);
+      alert('Review submitted!');
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      alert('Failed to submit review. Please try again.');
+    }
+
+    Navigate()
   };
 
   return (
@@ -25,11 +46,11 @@ export default function UserReviewForm() {
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label htmlFor="title" className="form-label">Review Title</label>
-                  <input type="text" className="form-control" id="title" placeholder="Summarize your experience" required />
+                  <input type="text" className="form-control" id="title" value={formData.title} onChange={handleInputChange} placeholder="Summarize your experience" required />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="review" className="form-label">Your Review</label>
-                  <textarea className="form-control" id="review" rows="3" placeholder="Tell us what you liked or disliked" required></textarea>
+                  <textarea className="form-control" id="review" value={formData.review} onChange={handleInputChange} rows="3" placeholder="Tell us what you liked or disliked" required></textarea>
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Rating</label>

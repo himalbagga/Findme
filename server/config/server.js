@@ -4,6 +4,7 @@ const cors = require('cors');
 const User = require('../User'); // Import the user model
 const userRoutes = require('../routes/userRoutes');
 const Service = require('../models/Service');
+const reviewRoutes = require('../routes/reviewRoutes');
 //const serviceRoutes = require('../routes/serviceRoutes');
 
 require('dotenv').config();
@@ -27,6 +28,7 @@ mongoose.connection.once('open', () => {
 
 app.use('/api', userRoutes);
 app.use('/api/services', userRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // API endpoint to handle signup
 app.post('/api/signup', async (req, res) => {
@@ -97,6 +99,7 @@ app.get('/api/services/:serviceId', async (req, res) => {
 
 app.use('/api', userRoutes);
 app.use('/api/services', userRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
