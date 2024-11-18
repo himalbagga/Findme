@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Star } from 'lucide-react';
 import axios from 'axios';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function UserReviewForm() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [formData, setFormData] = useState({ title: '', review: '' });
-
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
@@ -30,7 +30,7 @@ export default function UserReviewForm() {
       alert('Failed to submit review. Please try again.');
     }
 
-    Navigate()
+    navigate("/");
   };
 
   return (
