@@ -20,32 +20,32 @@ function HomePage() {
       // Demo data with updated fields
       const demoServices = [
         {
-          id: "67397b81f87998d627cfa5ec",
-          title: "BabySitter",
-          location: "Toronto",
-          languages: ["English"],
-          price: 25,
+          id: "1",
+          title: "Software Developer",
+          location: "San Francisco, CA",
+          languages: ["Java", "Python", "C++"],
+          pricePerHour: 60,
         },
         {
-          id: "6738d320754c1771d746fb5d",
-          title: "Developer",
-          location: "Toronto",
-          languages: ["English"],
-          price: 98,
+          id: "2",
+          title: "Experienced Carpenter",
+          location: "Austin, TX",
+          languages: ["English", "Spanish"],
+          pricePerHour: 40,
         },
         {
-          id: "673547b1b56491417c4b4534",
-          title: "Plumbing",
-          location: "Toronto",
-          languages: ["English"],
-          price: 36,
+          id: "3",
+          title: "Data Analyst",
+          location: "New York, NY",
+          languages: ["SQL", "Python", "R"],
+          pricePerHour: 50,
         },
         {
-          id: "67377ee7b5ab62ce82a1b957",
-          title: "Coding",
-          location: "Toronto",
+          id: "4",
+          title: "Cleaner",
+          location: "Los Angeles, CA",
           languages: ["English"],
-          pricePerHour: 97,
+          pricePerHour: 25,
         },
         // Add more demo services as needed
       ];
@@ -119,7 +119,7 @@ function HomePage() {
             {services.length > 0 ? (
               <div className="service-list">
                 {services.map((service) => (
-                  <ServiceCard key={service.id} id={service.id} title={service.title} location={service.location} languages={service.languages} price={service.price} />
+                  <ServiceCard key={service.id} id={service.id} title={service.title} location={service.location} languages={service.languages} pricePerHour={service.pricePerHour} />
                 ))}
               </div>
             ) : (
@@ -146,7 +146,7 @@ function HomePage() {
 }
 
 // ServiceCard Component for Reusability
-function ServiceCard({ id, title, location, languages, price }) {
+function ServiceCard({ id, title, location, languages, pricePerHour }) {
   return (
     <div className="service">
       <h3>{title}</h3>
@@ -157,7 +157,7 @@ function ServiceCard({ id, title, location, languages, price }) {
         <strong>Languages:</strong> {languages?.join(", ")}
       </p>
       <p>
-        <strong>Price per Hour:</strong> ${price}/Hour
+        <strong>Price per Hour:</strong> ${pricePerHour}
       </p>
       <Link to={`/services/${id}`} className="view-details-button">
         View More Details
