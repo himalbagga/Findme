@@ -3,6 +3,7 @@ import './UserProfile.css';
 import placeholderPic from "../images/ProfilePlaceHolder.svg";
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
+import axios from 'axios';
 
 
 const UserProfile = () => {
