@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import "./ServiceDetailsPage.css";
 import axios from 'axios';
 
@@ -186,6 +186,9 @@ function ServiceDetailsPage() {
             <FontAwesomeIcon icon={faDollarSign} /> <strong>Price per Hour:</strong> ${price}
           </p>
         </div>
+        <Link to={'/review'} className="btn btn-primary mt-3">
+              Write a Review
+        </Link>
       </div>
 
       <div className="booking-form">

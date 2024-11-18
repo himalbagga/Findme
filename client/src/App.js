@@ -23,7 +23,7 @@ const App = () => {
         <Route exact path="/services/:serviceId" element={<ServiceDetailsPage />} />
         <Route exact path="**" element={<HomePage />} />
         <Route exact path="/profile" element={<UserProfile />} />
-        <Route exact path="/why-find-me" element={<UserReviewForm />} />
+        <Route exact path="/review" element={<UserReviewForm />} />
       </Routes>
     </Router>
   );
