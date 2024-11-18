@@ -8,7 +8,7 @@ export default function UserReviewForm() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Here you would typically send the form data to your backend
+    // send form data to bacend hear
     console.log("Form submitted!");
   };
 
@@ -19,7 +19,7 @@ export default function UserReviewForm() {
           <div className="card">
             <div className="card-header">
               <h5 className="card-title">Write a Review</h5>
-              <h6 className="card-subtitle mb-2 text-muted">Share your experience with our product</h6>
+              <h6 className="card-subtitle mb-2 text-muted">Share your experience</h6>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
