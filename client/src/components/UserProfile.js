@@ -1,24 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './UserProfile.css';
 import placeholderPic from "../images/ProfilePlaceHolder.svg";
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
-
-const initialUser = {
-  username: "johndoe",
-  email: "john@example.com",
-  mobileNumber: "+1234567890",
-  userType: "ServiceProvider",
-  serviceType: "Plumbing",
-  serviceName: "John's Plumbing Services",
-  location: "New York, NY",
-  resume: "john_doe_resume.pdf",
-  availableDays: ["Monday", "Wednesday", "Friday"],
-  startTime: "09:00",
-  endTime: "17:00",
-  price: 50,
-  languages: ["English", "Spanish"],
-};
+import axios from 'axios'
 
 const UserProfile = () => {
   //const [user, setUser] = useState(initialUser);
@@ -66,10 +51,10 @@ const ProfileDisplay = ({ user, onEdit, onDelete }) => (
         <p><strong>🌐 Service Type:</strong> {user?.serviceType}</p>
         <p><strong>🌐 Service Name:</strong> {user?.serviceName}</p>
         <p><strong>📍 Location:</strong> {user?.location}</p>
-        {/* <p><strong>📅 Available Days:</strong> {user?.availableDays.join(", ")}</p> */}
+        <p><strong>📅 Available Days:</strong> {user?.availableDays?.map(days => days).join(', ')}</p>
         <p><strong>🕒 Hours:</strong> {user?.startTime} - {user?.endTime}</p>
         <p><strong>💰 Price:</strong> ${user?.price}/hour</p>
-        {/* <p><strong>Languages:</strong> {user.languages.join(", ")}</p> */}
+        <p><strong>Languages:</strong> {user?.languages?.map(lang => lang).join(', ')}</p>
       </div>  
       <div className="profile-resume">
         <h4>Resume</h4>
@@ -86,7 +71,12 @@ const ProfileDisplay = ({ user, onEdit, onDelete }) => (
 
 const EditForm = ({ user, onSave, onCancel }) => {
   const [editedUser, setEditedUser] = useState(user);
+    const { setUser } = useContext(UserContext);
 
+  useEffect(() => {
+  console.log('Edited User:', editedUser);
+}, [editedUser]);
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditedUser((prev) => ({ ...prev, [name]: value }));
@@ -100,9 +90,31 @@ const EditForm = ({ user, onSave, onCancel }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+
     e.preventDefault();
-    onSave(editedUser);
+    //onSave(editedUser);
+
+    if (!editedUser.id) {
+      alert('User ID is missing. Unable to update profile.');
+       return;
+    }
+
+    console.log(editedUser);
+
+    try {
+      const response = await axios.put(`http://localhost:5001/api/update/${editedUser.id}`, editedUser);
+      console.log('Profile updated successfully:', response.data);
+
+
+      setUser(response.data.user);
+      onSave(response.data.user);
+
+      alert('Profile updated successfully!');
+    } catch (error) {
+      console.error("Error updating profile", error);
+      alert('Failed to update profile. Please try again.');
+    }
   };
 
   return (
