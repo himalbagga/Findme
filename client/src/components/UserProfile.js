@@ -7,11 +7,29 @@ import axios from 'axios';
 
 
 const UserProfile = () => {
-  //const [user, setUser] = useState(initialUser);
+  const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { user } = useContext(UserContext);
+  const { user: contextUser } = useContext(UserContext);
   console.log(user);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userId = contextUser?.id;
+        if (!userId) {
+          console.error("User ID not found in context.");
+          return;
+        }
+        const response = await axios.get(`http://localhost:5001/api/user/${userId}`);
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching user profile: ", error);
+      }
+    };
+    fetchUser();
+  }, [contextUser]);
+
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
   const handleSave = (editedUser) => {
