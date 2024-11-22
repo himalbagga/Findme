@@ -4,6 +4,10 @@ const User = require('../User');
 exports.updateUser = async (req, res) => {
     try {
         const userId = req.params.id;
+        if (!userId) {
+            return res.status(400).json({message: 'User ID is missing.'});
+        }
+
         const { username, password, mobileNumber, languages } = req.body;
 
         const user = await User.findById(userId);
@@ -15,16 +19,17 @@ exports.updateUser = async (req, res) => {
         if (mobileNumber) user.mobileNumber = mobileNumber;
         if (languages) user.languages = languages;
 
-        if (password) {
-            const salt = await bcrypt.genSalt(10);
-            user.password = await bcrypt.hash(password, salt);
-        }
+        // if (password) {
+        //     const salt = await bcrypt.genSalt(10);
+        //     user.password = await bcrypt.hash(password, salt);
+        // }
 
         await user.save();
 
         res.status(200).json({
             message: 'User updated successfully',
             user: {
+                id: user._id,
                 username: user.username,
                 mobileNumber: user.mobileNumber,
                 languages: user.languages,
