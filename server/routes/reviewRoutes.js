@@ -24,9 +24,15 @@ router.post('/', async (req, res) => {
 
 // @route   GET /api/reviews
 // @desc    Get all reviews
-router.get('/', async (req, res) => {
+router.get('/reviews/:userId', async (req, res) => {
   try {
-    const reviews = await Review.find();
+    const { userId } = req.params.userId;
+    const reviews = await Review.find({ userId: req.params.userId });
+    
+    if (!reviews.length) {
+      return res.status(404).json({ message: "No reviews found for this user." });
+    }
+
     res.status(200).json(reviews);
   } catch (error) {
     console.error('Error fetching reviews:', error);

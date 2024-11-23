@@ -9,6 +9,7 @@ import axios from 'axios';
 const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [reviews, setReviews] = useState([]);
 
   const { user: contextUser } = useContext(UserContext);
   console.log(user);
@@ -27,7 +28,26 @@ const UserProfile = () => {
         console.error("Error fetching user profile: ", error);
       }
     };
-    fetchUser();
+
+    const fetchReviews = async () => {
+      try {
+        const userId = contextUser?.id;
+        if(!userId) {
+          console.error("User ID not found in context.");
+          return;
+        }
+        const response = await axios.get(`http://localhost:5001/api/reviews/${userId}`);
+        setReviews(response.data);
+      } catch (error) {
+        console.error("Error fetching reviews: ", error);
+      }
+    };
+
+    if (contextUser?.id) {  
+      fetchUser();
+      fetchReviews();
+    }
+    
   }, [contextUser]);
 
   const handleEdit = () => setIsEditing(true);
@@ -53,7 +73,7 @@ const UserProfile = () => {
   );
 };
 
-const ProfileDisplay = ({ user, onEdit, onDelete }) => (
+const ProfileDisplay = ({ user, onEdit, onDelete, reviews }) => (
   <div className="profile-display">
     <div className="profile-header">
       <h2>User Profile</h2>
@@ -79,6 +99,22 @@ const ProfileDisplay = ({ user, onEdit, onDelete }) => (
         <h4>Resume</h4>
         <a href={user?.resume} target="_blank" rel="noopener noreferrer">View Resume</a>
       </div>
+    </div>
+
+    <div className='profile-reviews'>
+        <h3>Reviews</h3>
+        {reviews?.length > 0 ? (
+          reviews.map((review) => (
+            <div key={review._id} className="review-card">
+              <h5>{review.title}</h5>
+              <p>{review.review}</p>
+              <p><strong>Rating:</strong> {review.rating} ⭐</p>
+              <p><em>{new Date(review.creatdAt).toLocaleDateString()}</em></p>
+            </div>
+          ))
+        ) : (
+          <p>No reviews available.</p>
+        )}
     </div>
 
     <div className='profile-services'>
