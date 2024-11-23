@@ -19,10 +19,10 @@ exports.updateUser = async (req, res) => {
         if (mobileNumber) user.mobileNumber = mobileNumber;
         if (languages) user.languages = languages;
 
-        if (password) {
-            const salt = await bcrypt.genSalt(10);
-            user.password = await bcrypt.hash(password, salt);
-        }
+        // if (password) {
+        //     const salt = await bcrypt.genSalt(10);
+        //     user.password = await bcrypt.hash(password, salt);
+        // }
 
         await user.save();
 

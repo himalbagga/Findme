@@ -131,15 +131,15 @@ const EditForm = ({ user, onSave, onCancel }) => {
     e.preventDefault();
     //onSave(editedUser);
 
-    if (!editedUser.id) {
+    if (!editedUser._id) {
       alert('User ID is missing. Unable to update profile.');
        return;
     }
 
-    console.log(editedUser);
+    console.log(editedUser._id);
 
     try {
-      const response = await axios.put(`http://localhost:5001/api/update/${editedUser.id}`, editedUser);
+      const response = await axios.put(`http://localhost:5001/api/update/${editedUser._id}`, editedUser);
       console.log('Profile updated successfully:', response.data);
 
 
