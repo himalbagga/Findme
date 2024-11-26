@@ -10,6 +10,8 @@ import ListOfServices from "./components/ListOfServices";
 import AddServicePage from "./components/AddServicePage";
 import UserReviewForm from "./components/ReviewForm";
 
+import PaymentSuccess from "./components/PaymentSuccess";
+
 const App = () => {
   return (
     <Router>
@@ -23,6 +25,7 @@ const App = () => {
         <Route exact path="/services/:serviceId" element={<ServiceDetailsPage />} />
         <Route exact path="**" element={<HomePage />} />
         <Route exact path="/profile" element={<UserProfile />} />
+        <Route exact path="/success" element={<PaymentSuccess />} />
         <Route exact path="/review" element={<UserReviewForm />} />
       </Routes>
     </Router>

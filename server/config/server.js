@@ -5,9 +5,12 @@ const User = require('../User'); // Import the user model
 const userRoutes = require('../routes/userRoutes');
 const Service = require('../models/Service');
 const reviewRoutes = require('../routes/reviewRoutes');
+const Stripe = require('stripe');
 //const serviceRoutes = require('../routes/serviceRoutes');
 
 require('dotenv').config();
+
+const stripe = new Stripe('sk_test_51OCe4mKFcgoflAzwSpLvuZj43Iprt97iWvPtZIGErPrm5q1agYUl0a4q2MmNijnxBayf2qipVkRmIxThnIpVqjhB008IF2mYXk'); 
 
 const app = express();
 const PORT = process.env.PORT || 5001 || 5000;
@@ -40,6 +43,24 @@ app.post('/api/signup', async (req, res) => {
     res.status(201).json({ message: 'User signed up successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to sign up' });
+  }
+});
+
+app.post('/api/create-payment-intent', async (req, res) => {
+  const { amount, currency } = req.body;
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount, // Amount in cents
+      currency, // e.g., 'usd'
+    });
+
+  
+
+    res.status(200).json({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    console.error('Error creating payment intent:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
