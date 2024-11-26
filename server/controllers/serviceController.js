@@ -1,5 +1,5 @@
 //const Service = require('../models/Service');
-const User = require('../User');
+const User = require('../models/User');
 
 // @desc    Get search results based on the query
 // @route   GET /api/services/search

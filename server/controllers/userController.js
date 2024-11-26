@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const User = require('../User');
+const User = require('../models/User');
 
 // @desc    Register new user
 // @route   POST /api/users/signup
