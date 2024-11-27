@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/UserProfile.css';
 import placeholderPic from "../images/ProfilePlaceHolder.svg";
 import { useContext } from 'react';
@@ -10,6 +11,7 @@ const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const navigate = useNavigate();
 
   const { user: contextUser } = useContext(UserContext);
   console.log(user);
@@ -64,6 +66,10 @@ const UserProfile = () => {
 
   return (
     <div className="user-profile">
+
+<button className="back-button" onClick={() => navigate('/')}>
+        &larr; Back to Home
+      </button>
       {isEditing ? (
         <EditForm user={user} onSave={handleSave} onCancel={handleCancel} />
       ) : (
