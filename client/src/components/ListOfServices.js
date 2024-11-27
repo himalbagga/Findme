@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ServiceCard from "./ServiceCard";
-import "./ListOfServices.css";
+import "../styles/ListOfServices.css";
 
 function ListOfServices() {
   const [services, setServices] = useState([]);

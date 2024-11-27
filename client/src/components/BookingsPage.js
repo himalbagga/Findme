@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import './SearchResultsPage.css';
+import '../styles/SearchResultsPage.css';
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
 

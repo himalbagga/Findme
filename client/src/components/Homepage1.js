@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import "./Homepage.css";
+import "../styles/Homepage.css";
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
 

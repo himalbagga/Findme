@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import "./AddServicePage.css";
+import "../styles/AddServicePage.css";
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
 

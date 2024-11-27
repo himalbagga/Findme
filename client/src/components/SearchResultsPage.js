@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import ServiceCard from './ServiceCard';  // Import ServiceCard component
-import './SearchResultsPage.css';
+import '../styles/SearchResultsPage.css';
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './UserProfile.css';
+import '../styles/UserProfile.css';
 import placeholderPic from "../images/ProfilePlaceHolder.svg";
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
