@@ -67,7 +67,7 @@ const UserProfile = () => {
   return (
     <div className="user-profile">
 
-<button className="back-button" onClick={() => navigate('/')}>
+      <button className="back-button" onClick={() => navigate('/')}>
         &larr; Back to Home
       </button>
       {isEditing ? (

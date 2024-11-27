@@ -1,96 +1,120 @@
-// ListOfServices.js
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import ServiceCard from "./ServiceCard";
-import "../styles/ListOfServices.css";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import './ListOfServices.css';
+import { useContext } from 'react';
+import { UserContext } from './../UserContext';
 
 function ListOfServices() {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [services, setServices] = useState([]); // Store fetched services
+  const [categorizedServices, setCategorizedServices] = useState({}); // Grouped services by category
+  const [loading, setLoading] = useState(false);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const response = await fetch("http://localhost:5001/api/services");
-        const data = await response.json();
-        setServices(data.services);  // Assuming the response has a `services` array
-      } catch (error) {
-        console.error("Error fetching services:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchServices();
+    fetchServiceDetails();
   }, []);
 
-  // Filter services based on the search query
-  const filteredServices = services.filter((service) =>
-    service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    service.location.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const fetchServiceDetails = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:5001/api/services/details');
+      if (!response.ok) {
+        console.error('API error:', response.statusText);
+        setServices([]);
+        return;
+      }
+      const data = await response.json();
+
+      // Debugging: Check the data structure
+      console.log('Fetched services:', data);
+
+      // Update services if the response contains an array
+      const results = data.results || data; // Adjust if `results` is absent
+      if (Array.isArray(results)) {
+        setServices(results);
+        setCategorizedServices(categorizeServices(results));
+      } else {
+        console.error('Unexpected API response format:', data);
+        setServices([]);
+      }
+    } catch (error) {
+      console.error('Error fetching service details:', error);
+      setServices([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const categorizeServices = (services) => {
+    const categories = {};
+    services.forEach((service) => {
+      const category = service.serviceType || 'Other'; // Default to "Other" if no category exists
+      if (!categories[category]) {
+        categories[category] = [];
+      }
+      categories[category].push(service);
+    });
+    return categories;
+  };
 
   return (
-    <div className="page-wrapper">
-      {/* Header with Navigation */}
+    <div className="list-of-services-page">
       <header>
-        <h1>Find Me</h1>
-        <p>Browse all available services.</p>
+        <h1>Services</h1>
+        <p>Explore categorized services available in your area.</p>
       </header>
 
       <nav>
         <Link to="/">Home</Link>
         <Link to="/why-find-me">Why Find Me</Link>
-        <Link to="/find-talent">Find Talent</Link>
+        <Link to="/listofservices">Find Talent</Link>
         <Link to="/contact">Contact</Link>
-        <Link to="/signup">Login/Sign Up</Link>
+        {user ? (
+          <>
+            <Link title="Click to show profile" to="/profile">
+              Welcome {user?.username}
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link to="/signup">Sign Up</Link>
+            <Link to="/login">Login</Link>
+          </>
+        )}
       </nav>
 
-      {/* Search Bar */}
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search services by keyword or location"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button type="button" onClick={() => setSearchQuery("")}>
-          Clear
-        </button>
-      </div>
-
-      {/* Services List */}
       <div className="services-container">
         {loading ? (
-          <p>Loading services...</p>
-        ) : filteredServices.length > 0 ? (
-          <div className="service-list">
-            {filteredServices.map((service) => (
-              <ServiceCard 
-                key={service.id} 
-                id={service.id} 
-                title={service.title} 
-                location={service.location} 
-                languages={service.languages} 
-                pricePerHour={service.pricePerHour} 
-              />
-            ))}
-          </div>
+          <p>Loading...</p>
+        ) : Object.keys(categorizedServices).length > 0 ? (
+          Object.entries(categorizedServices).map(([category, services]) => (
+            <div key={category} className="service-category">
+              <h2>{category}</h2>
+              <ul>
+                {services.map((service) => (
+                  <li key={service._id}>
+                    <h3>{service.serviceName}</h3>
+                    <p>Location: {service.location}</p>
+                    <p>Languages: {service.languages?.join(', ')}</p>
+                    <p>Price: ${service.price}/hour</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
         ) : (
-          <p>No services found.</p>
+          <p>No services available at the moment.</p>
         )}
       </div>
 
-      {/* Footer */}
       <footer>
         <p>&copy; 2024 Service Listings. All rights reserved.</p>
         <p>
-          <Link to="/privacy-policy" style={{ color: "#ddd" }}>
+          <Link to="/privacy-policy" style={{ color: '#ddd' }}>
             Privacy Policy
-          </Link>{" "}
-          |{" "}
-          <Link to="/terms-of-service" style={{ color: "#ddd" }}>
+          </Link>{' '}
+          |{' '}
+          <Link to="/terms-of-service" style={{ color: '#ddd' }}>
             Terms of Service
           </Link>
         </p>

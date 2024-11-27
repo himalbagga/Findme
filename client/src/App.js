@@ -22,6 +22,7 @@ const App = () => {
         <Route exact path="/signup" element={<Signup />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/search-results" element={<SearchResultsPage />} />
+        <Route exact path="/ListOfServices" element={<ListOfServices />} />
         <Route exact path="/add-service" element={<AddServicePage />} />
         <Route exact path="/services/:serviceId" element={<ServiceDetailsPage />} />
         <Route exact path="/profile" element={<UserProfile />} />
