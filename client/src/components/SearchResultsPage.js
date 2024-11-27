@@ -72,6 +72,8 @@ function SearchResultsPage() {
         {user ? (
           <>
             <Link title="Click to show profile" to="/profile">Welcome { user?.username }</Link>
+            <Link to="/add-service" className="add-service-link">Add Service</Link>
+            <Link to="/bookings">Bookings</Link>
           </> )
            : (
             <>
