@@ -13,9 +13,7 @@ function ServiceCard({ id, title, location, languages, pricePerHour }) {
       <p>
         <strong>Location:</strong> {location}
       </p>
-      <p>
-        <strong>Languages:</strong> {languages?.join(", ")}
-      </p>
+      
       <p>
         <strong>Price per Hour:</strong> ${pricePerHour}/Hour
       </p>
