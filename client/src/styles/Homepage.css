@@ -5,6 +5,7 @@ body {
   background-color: #f9f9f9;
 }
 
+
 header {
   background-color: #3b5998;
   color: #fff;
@@ -56,13 +57,45 @@ nav a {
   box-sizing: border-box;
 }
 
-.search-bar button {
+/* .search-bar button {
   padding: 10px 20px;
   background-color: #3b5998;
   color: #fff;
   border: none;
   cursor: pointer;
   border-radius: 5px;
+} */
+
+.search-bar button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.filter-options {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column; /* This ensures the filter items stack vertically */
+  gap: 10px; /* Adjust space between filter items */
+}
+
+.filter-options select,
+.filter-options input {
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.filter-options select {
+  width: 100%;
+}
+
+.filter-options input[type="date"] {
+  width: 100%;
 }
 
 .section {

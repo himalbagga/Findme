@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './ListOfServices.css';
 import ServiceCard from './listOfServicesCard';
 import { UserContext } from './../UserContext';
 
 function ListOfServices() {
   const [services, setServices] = useState([]); // Store fetched services
+  const [filteredServices, setFilteredServices] = useState([]); // Store filtered services
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState(""); // State for search query
+  const [showFilter, setShowFilter] = useState(false); // Toggle filter display
+  const [price, setPrice] = useState(""); // Filter by price
+  const [date, setDate] = useState(""); // Filter by date
+  const navigate = useNavigate();
   const { user } = useContext(UserContext); // Get logged-in user details
 
   // Fetch all services when the component mounts
@@ -35,24 +41,42 @@ function ListOfServices() {
       if (data.services) {
         console.log('Services received:', data.services);
         // Extract only the required fields (serviceName, location, and price) from each service
-        const filteredServices = data.services.map(service => ({
+        const fetchedServices = data.services.map(service => ({
           serviceName: service.serviceName,
           location: service.location,
-          price: service.price
+          price: service.price,
+          _id: service._id,
         }));
-        setServices(filteredServices); // Set the filtered services
+        setServices(fetchedServices); // Set the fetched services
+        setFilteredServices(fetchedServices); // Initialize filtered services
       } else {
-        console.log('No services found in response, setting empty list.');
-        setServices([]); // If no services, set to empty array
+        setServices([]);
+        setFilteredServices([]);
       }
     } catch (error) {
       console.error('Error fetching services:', error);
       setServices([]); // In case of error, set services to empty array
+      setFilteredServices([]);
     } finally {
       console.log('Finished fetching services.');
       setLoading(false);
     }
   };
+
+  const handleSearch = () => {
+    const results = services.filter(service => {
+      const matchesQuery =
+        query === "" || service.serviceName.toLowerCase().includes(query.toLowerCase());
+      const matchesPrice =
+        price === "" || parseFloat(service.price) <= parseFloat(price);
+      return matchesQuery && matchesPrice;
+    });
+
+    setFilteredServices(results);
+  };
+
+  const handleFilterToggle = () => setShowFilter(!showFilter);
+  
 
   return (
     <div className="list-of-services-page">
@@ -80,12 +104,46 @@ function ListOfServices() {
         )}
       </nav> 
 
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search services by keyword"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button type="button" >
+          Search
+        </button>
+        <button type="button" onClick={handleFilterToggle}>
+          Filter
+        </button>
+        {showFilter && (
+          <div className="filter-options">
+            <select
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+            >
+              <option value="">Max Price</option>
+              <option value="25">25/hour</option>
+              <option value="35">35/hour</option>
+              <option value="45">45/hour</option>
+              <option value="60">60/hour</option>
+            </select>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+        )}
+      </div>
+
       <div className="results-container">
         {loading ? (
           <p>Loading...</p>
-        ) : services.length > 0 ? (
+        ) : filteredServices.length > 0 ? (
           <div className="service-list">
-            {services.map((service, index) => (
+            {filteredServices.map((service, index) => (
               <ServiceCard
                 key={index}
                 id={service._id}  // Ensure each service has an ID or unique identifier
