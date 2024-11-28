@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './ListOfServices.css';
-import ServiceCard from './ServiceCard';
+import ServiceCard from './listOfServicesCard';
 import { UserContext } from './../UserContext';
 
 function ListOfServices() {
