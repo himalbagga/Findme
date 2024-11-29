@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 const userRoutes = require('./routes/userRoutes'); // User-related routes
 const reviewRoutes = require('./routes/reviewRoutes'); // Review-related routes
 const serviceRoutes = require('./routes/serviceRoutes'); // Service-related routes
+const bookingRoutes = require('./routes/bookingRoutes'); // Booking routes
 
 const Stripe = require('stripe');
 const stripe = new Stripe('sk_test_51OCe4mKFcgoflAzwSpLvuZj43Iprt97iWvPtZIGErPrm5q1agYUl0a4q2MmNijnxBayf2qipVkRmIxThnIpVqjhB008IF2mYXk');
@@ -32,6 +33,7 @@ mongoose.connection.once('open', () => {
 app.use('/api/users', userRoutes); // All user-related routes start with /api/users
 app.use('/api/services', serviceRoutes); // All service-related routes start with /api/services
 app.use('/api/reviews', reviewRoutes); // All review-related routes
+app.use('/api/bookings', bookingRoutes); // All booking-related routes start with /api/bookings
 
 // API endpoint to handle signup
 app.post('/api/signup', async (req, res) => {
@@ -73,7 +75,7 @@ app.post('/api/create-payment-intent', async (req, res) => {
         subject: 'Payment Confirmation',
         text: `Your payment of $${(amount / 100).toFixed(2)} was successful! Thank you for your purchase.`,
       };
-  
+
       await transporter.sendMail(mailOptions);
       console.log('Payment confirmation email send.');
     });

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const ServiceSchema = new mongoose.Schema({
-  
   serviceName: String,
   location: String,
   languages: [String],
@@ -10,8 +9,23 @@ const ServiceSchema = new mongoose.Schema({
   availableDays: [String],
   startTime: String,
   endTime: String,
-  
-  
+});
+
+// Booking Schema (Embedded in User)
+const BookingSchema = new mongoose.Schema({
+  serviceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Service', required: true },
+  serviceName: { type: String, required: true },
+  date: { type: Date, required: true },
+  timeSlot: { type: String, required: true },
+  paymentInfo: {
+    amount: { type: Number, required: true },
+    paymentMethod: { type: String, required: true },
+    paymentStatus: {
+      type: String,
+      enum: ['Not Paid', 'Paid', 'Pending'],
+      default: 'Not Paid',
+    },
+  },
 });
 
 const userSchema = new mongoose.Schema({
@@ -72,12 +86,13 @@ const userSchema = new mongoose.Schema({
   },
 
   services: [ServiceSchema], // New field for multiple services
-  
+  bookings: [BookingSchema], // New field for multiple bookings
+
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  
+
 });
 
 module.exports = mongoose.model('User', userSchema);
