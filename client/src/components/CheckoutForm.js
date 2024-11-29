@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDollarSign, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
-const PaymentComponent = ({ subtotal }) => {
+const PaymentComponent = ({ subtotal, user }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [paymentInfo, setPaymentInfo] = useState({
@@ -35,6 +35,7 @@ const PaymentComponent = ({ subtotal }) => {
       const { data } = await axios.post('http://localhost:5001/api/create-payment-intent', {
         amount: Math.round(subtotal * 100), // Convert to cents
         currency: 'usd',
+        email: user.email,
       });
 
       const clientSecret = data.clientSecret;
