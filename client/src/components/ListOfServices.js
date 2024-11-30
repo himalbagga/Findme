@@ -94,9 +94,9 @@ function ListOfServices() {
         <Link to="/contact">Contact</Link>
         {user ? (
           <>
-            <Link title="Click to show profile" to="/profile">
-              Welcome {user.username}
-            </Link>
+            <Link title="Click to show profile" to="/profile">Welcome {user?.username}</Link>
+            <Link to="/add-service" className="add-service-link">Add Service</Link>
+            <Link to="/bookings">Bookings</Link>
           </>
         ) : (
           <>
@@ -104,7 +104,7 @@ function ListOfServices() {
             <Link to="/login">Login</Link>
           </>
         )}
-      </nav> 
+      </nav>
 
       <div className="search-bar">
         <input
