@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const PaymentComponent = ({ subtotal, user }) => {
   const stripe = useStripe();
   const elements = useElements();
+  const [email, setEmail] = useState(user?.email || '');
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: '',
     expiryDate: '',
@@ -22,6 +23,8 @@ const PaymentComponent = ({ subtotal, user }) => {
     setPaymentInfo({ ...paymentInfo, [e.target.name]: e.target.value });
   };
 
+  console.log('User:', user);
+
   // Handle payment submission
   const handlePay = async () => {
     if (!stripe || !elements) {
@@ -35,7 +38,7 @@ const PaymentComponent = ({ subtotal, user }) => {
       const { data } = await axios.post('http://localhost:5001/api/create-payment-intent', {
         amount: Math.round(subtotal * 100), // Convert to cents
         currency: 'usd',
-        email: user.email,
+        email,
       });
 
       const clientSecret = data.clientSecret;
@@ -71,6 +74,18 @@ const PaymentComponent = ({ subtotal, user }) => {
       <h3>
         <FontAwesomeIcon icon={faCreditCard} /> Payment Information
       </h3>
+
+      {/* Email Input */}
+      <div className='form-group'>
+        <label>Email Address:</label>
+        <input
+          type='email'
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder='Enter your email'
+          required
+        />
+      </div>
 
       {/* Stripe Card Element */}
       <div className="form-group">
