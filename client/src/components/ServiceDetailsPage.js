@@ -228,7 +228,7 @@ function ServiceDetailsPage() {
         )}
 
         {subtotal > 0 && (
-          <CheckoutForm subtotal={400}  />
+          <CheckoutForm subtotal={subtotal}  />
         )}
       </div>
     </div>
