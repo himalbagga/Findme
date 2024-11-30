@@ -78,12 +78,12 @@ function HomePage() {
           </button>
 
           {/* Filter Button (with Font Awesome filter icon) */}
-          <button type="button" onClick={() => setShowFilter(!showFilter)}>
-            <FontAwesomeIcon icon={faFilter} /> {/* Filter settings icon */}
-          </button>
+          {/* <button type="button" onClick={() => setShowFilter(!showFilter)}> */}
+            {/* <FontAwesomeIcon icon={faFilter} /> Filter settings icon */}
+          {/* </button> */}
         </div>
 
-        {/* Filter Options */}
+        {/* Filter Options
         {showFilter && (
           <div className="filter-options">
             <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
@@ -100,7 +100,7 @@ function HomePage() {
               onChange={(e) => setSelectedDate(e.target.value)}
             />
           </div>
-        )}
+        )} */}
 
         {/* Services Sections */}
         <section className="services">

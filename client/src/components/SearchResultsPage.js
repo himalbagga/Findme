@@ -5,6 +5,8 @@ import ServiceCard from './ServiceCard';  // Import ServiceCard component
 import '../styles/SearchResultsPage.css';
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 function SearchResultsPage() {
   const [results, setResults] = useState([]);
@@ -14,22 +16,36 @@ function SearchResultsPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
+  const [showFilter, setShowFilter] = useState(false); 
+  const [selectedDate, setSelectedDate] = useState("");
+  //const [day, setDayOfWeek] = useState("");
 
   useEffect(() => {
     const initialQuery = new URLSearchParams(location.search).get('q');
     if (initialQuery) {
       setQuery(initialQuery);
-      fetchResults(initialQuery, maxPrice);
+      fetchResults(initialQuery, maxPrice, selectedDate);
     }
   }, [location.search]);
 
-  const fetchResults = async (searchQuery, priceFilter) => {
+  const fetchResults = async (searchQuery, priceFilter, sDate) => {
     setLoading(true);
     try {
       const url = new URL('http://localhost:5001/api/services/search');
       const params = new URLSearchParams();
       params.set('q', searchQuery);
       if (priceFilter) params.set('maxPrice', priceFilter);
+      console.log(sDate);
+      if (sDate) 
+        {
+          const date = new Date(sDate);
+
+
+          const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday"];
+          const day = days[date.getDay()];
+          console.log(day);
+          params.set('selectedDay', day);
+        }
 
       url.search = params.toString();
 
@@ -46,8 +62,8 @@ function SearchResultsPage() {
   };
 
   const handleSearchSubmit = () => {
-    navigate(`/search-results?q=${query}&maxPrice=${maxPrice}`);
-    fetchResults(query, maxPrice);
+    navigate(`/search-results?q=${query}&maxPrice=${maxPrice}&selectedDate=${selectedDate}`);
+    fetchResults(query, maxPrice, selectedDate);
   };
 
   return (
@@ -91,7 +107,7 @@ function SearchResultsPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
+        {/* <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
           <option value="">Max Price</option>
           <option value="25">25/hour</option>
           <option value="35">35/hour</option>
@@ -101,7 +117,35 @@ function SearchResultsPage() {
         <button type="button" onClick={handleSearchSubmit}>
           Search
         </button>
-      </div>
+      </div> */}
+      <button type="button" onClick={handleSearchSubmit}>
+            Search
+          </button>
+
+          {/* Filter Button (with Font Awesome filter icon) */}
+          <button type="button" onClick={() => setShowFilter(!showFilter)}>
+            <FontAwesomeIcon icon={faFilter} /> {/* Filter settings icon */}
+          </button>
+        </div>
+
+        {/* Filter Options */}
+        {showFilter && (
+          <div className="filter-options">
+            <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
+              <option value="">Max Price</option>
+              <option value="25">25/hour</option>
+              <option value="35">35/hour</option>
+              <option value="45">45/hour</option>
+              <option value="60">60/hour</option>
+            </select>
+
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+            />
+          </div>
+        )}
 
       <div className="results-container">
         {loading ? (

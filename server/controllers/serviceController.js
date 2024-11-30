@@ -4,7 +4,7 @@ const User = require('../models/User');
 // @route   GET /api/services/search
 // @access  Public
 exports.searchServices = async (req, res) => {
-  const { q, maxPrice } = req.query; // Extract query parameters from the URL
+  const { q, maxPrice, selectedDay} = req.query; // Extract query parameters from the URL
   const searchQuery = q ? String(q) : ''; // Default to an empty string if `q` is not provided
 
   try {
@@ -15,7 +15,8 @@ exports.searchServices = async (req, res) => {
       
       
         serviceName: { $regex: new RegExp(searchQuery, 'i') }, // Match serviceName with regex
-        ...(maxPrice && { price: { $lte: Number(maxPrice) } }) // Match maxPrice if provided
+        ...(maxPrice && { price: { $lte: Number(maxPrice) } }), // Match maxPrice if provided
+        ...(selectedDay && { availableDays: { $in: [selectedDay] } })
       
       
     });
