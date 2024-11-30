@@ -24,7 +24,7 @@ const UserProfile = () => {
           console.error("User ID not found in context.");
           return;
         }
-        const response = await axios.get(`http://localhost:5001/api/user/${userId}`);
+        const response = await axios.get(`http://localhost:5001/api/users/user/${userId}`);
         setUser(response.data);
       } catch (error) {
         console.error("Error fetching user profile: ", error);
@@ -38,7 +38,7 @@ const UserProfile = () => {
           console.error("User ID not found in context.");
           return;
         }
-        const response = await axios.get(`http://localhost:5001/api/reviews/${userId}`);
+        const response = await axios.get(`http://localhost:5001/api/reviews/reviews/${userId}`);
         setReviews(response.data);
       } catch (error) {
         console.error("Error fetching reviews: ", error);
@@ -181,7 +181,7 @@ const EditForm = ({ user, onSave, onCancel }) => {
     console.log(editedUser._id);
 
     try {
-      const response = await axios.put(`http://localhost:5001/api/update/${editedUser._id}`, editedUser);
+      const response = await axios.put(`http://localhost:5001/api/users/update/${editedUser._id}`, editedUser);
       console.log('Profile updated successfully:', response.data);
 
 

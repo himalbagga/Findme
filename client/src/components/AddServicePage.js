@@ -46,7 +46,7 @@ function AddServicePage() {
              // Replace with the actual user ID, possibly from your authentication state
             
             const response = await axios.post(
-                `http://localhost:5001/api/users/${userId}/services`, // Adjust the URL as per your backend route
+                `http://localhost:5001/api/services/users/${userId}/services`, // Adjust the URL as per your backend route
                 newService
             );
     

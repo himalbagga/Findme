@@ -28,7 +28,7 @@ function ListOfServices() {
 
     try {
       console.log('Making API request to fetch all services...');
-      const response = await fetch('http://localhost:5001/api/listofservices'); // Adjusted endpoint
+      const response = await fetch('http://localhost:5001/api/services/listofservices'); // Adjusted endpoint
 
       if (!response.ok) {
         console.error('Failed to fetch services. HTTP status:', response.status);

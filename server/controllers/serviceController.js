@@ -12,34 +12,34 @@ exports.searchServices = async (req, res) => {
 
     // Find users who have at least one service matching the criteria
     const users = await User.find({
-      services: {
-        $elemMatch: {
-          serviceName: { $regex: new RegExp(searchQuery, 'i') }, // Match serviceName with regex
-          ...(maxPrice && { price: { $lte: Number(maxPrice) } }) // Match maxPrice if provided
-        },
-      },
+      
+      
+        serviceName: { $regex: new RegExp(searchQuery, 'i') }, // Match serviceName with regex
+        ...(maxPrice && { price: { $lte: Number(maxPrice) } }) // Match maxPrice if provided
+      
+      
     });
-
+    console.log(users);
     // Debugging: Log users with matched services
     console.log('Users matching query:', JSON.stringify(users, null, 2));
 
     // Extract all matching services from users
-    const filteredServices = users.flatMap(user =>
-      user.services.filter(service =>
-        service.serviceName.match(new RegExp(searchQuery, 'i')) &&
-        (!maxPrice || service.price <= maxPrice)
-      )
-    );
+    // const filteredServices = users.flatMap(user =>
+    //   user.filter(service =>
+    //     serviceName.match(new RegExp(searchQuery, 'i')) &&
+    //     (!maxPrice || price <= maxPrice)
+    //   )
+    // );
 
     // Debugging: Log filtered services
-    console.log('Filtered services:', JSON.stringify(filteredServices, null, 2));
+    //console.log('Filtered services:', JSON.stringify(filteredServices, null, 2));
 
     // Return the filtered services
-    if (filteredServices.length === 0) {
+    if (users.length === 0) {
       return res.status(404).json({ results: [] });
     }
 
-    res.status(200).json({ results: filteredServices });
+    res.status(200).json({ results: users });
   } catch (error) {
     console.error('Error fetching search results:', error);
     res.status(500).json({ message: 'Server error' });
@@ -73,38 +73,38 @@ exports.getAllServices = async (req, res) => {
 // @desc    Search for services by name or location
 // @route   GET /api/services/search
 // @access  Public
-exports.searchServices = async (req, res) => {
-  const { q } = req.query;
+// exports.searchServices = async (req, res) => {
+//   const { q } = req.query;
 
-  try {
-    console.log('Attempting to find users with services matching the criteria...');
+//   try {
+//     console.log('ttempting to find users with services matching the criteria...');
 
-    // Find users with matching services in their `services` array
-    const users = await User.find({
-      services: {
-        $elemMatch: {
-          $or: [
-            { serviceName: { $regex: q, $options: 'i' } },
-            { location: { $regex: q, $options: 'i' } },
-          ],
-        },
-      },
-    });
+//     // Find users with matching services in their `services` array
+//     const users = await User.find({
+//       services: {
+//         $elemMatch: {
+//           $or: [
+//             { serviceName: { $regex: q, $options: 'i' } },
+//             { location: { $regex: q, $options: 'i' } },
+//           ],
+//         },
+//       },
+//     });
 
-    // Extract the matching services from those users
-    const results = users.flatMap(user =>
-      user.services.filter(service =>
-        service.serviceName.match(new RegExp(q, 'i')) ||
-        service.location.match(new RegExp(q, 'i'))
-      )
-    );
+//     // Extract the matching services from those users
+//     const results = users.flatMap(user =>
+//       user.services.filter(service =>
+//         service.serviceName.match(new RegExp(q, 'i')) ||
+//         service.location.match(new RegExp(q, 'i'))
+//       )
+//     );
 
-    res.status(200).json({ results });
-  } catch (error) {
-    console.error('Error fetching search results:', error);
-    res.status(500).json({ error: 'Error fetching search results' });
-  }
-};
+//     res.status(200).json({ results });
+//   } catch (error) {
+//     console.error('Error fetching search results:', error);
+//     res.status(500).json({ error: 'Error fetching search results' });
+//   }
+// };
 
 // @desc    Add a service for a specific user
 // @route   POST /api/users/:id/services
