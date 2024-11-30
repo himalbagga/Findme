@@ -78,12 +78,12 @@ function HomePage() {
           </button>
 
           {/* Filter Button (with Font Awesome filter icon) */}
-          {/* <button type="button" onClick={() => setShowFilter(!showFilter)}> */}
-            {/* <FontAwesomeIcon icon={faFilter} /> Filter settings icon */}
-          {/* </button> */}
+          <button type="button" onClick={() => setShowFilter(!showFilter)}>
+            <FontAwesomeIcon icon={faFilter} /> 
+          </button>
         </div>
 
-        {/* Filter Options
+        {/* Filter Options */}
         {showFilter && (
           <div className="filter-options">
             <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
@@ -97,10 +97,23 @@ function HomePage() {
             <input
               type="date"
               value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
+              onChange={(e) => {
+                const dateValue = e.target.value; // Get the selected date in YYYY-MM-DD format
+                setSelectedDate(dateValue); // Update state
+            
+                if (dateValue) {
+                  // Split the date string and construct a new Date object in local time
+                  const [year, month, day] = dateValue.split("-").map(Number);
+                  const localDate = new Date(year, month - 1, day); // JavaScript months are 0-based
+            
+                  const dayOfWeek = localDate.toLocaleString("en-US", { weekday: "long" }); // Get the day of the week
+                  console.log(`Selected Day: ${dayOfWeek}`); // Log to console
+                  alert(`You selected: ${dayOfWeek}`); // Display a popup
+                }
+              }}
             />
           </div>
-        )} */}
+        )}
 
         {/* Services Sections */}
         <section className="services">
