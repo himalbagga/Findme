@@ -12,4 +12,7 @@ router.post('/signup', registerUser);
 router.get('/user/:id', userController.getUserProfile);
 router.put('/update/:id', userController.updateUser);
 
+// Resume management
+
+
 module.exports = router;

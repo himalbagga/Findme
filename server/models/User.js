@@ -66,7 +66,9 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   resume: {
-    type: String, // Consider using Buffer if you plan to store the file directly in MongoDB
+    data: Buffer, // Use Buffer to store the actual file content
+    contentType: String, // Metadata to indicate file type
+    filename: String // Store the file name
   },
   availableDays: {
     type: [String],
@@ -84,7 +86,11 @@ const userSchema = new mongoose.Schema({
   languages: {
     type: [String],
   },
-
+  resume: {
+    data: Buffer,
+    contentType: String,
+    filename: String,
+  },
   services: [ServiceSchema], // New field for multiple services
   bookings: [BookingSchema], // New field for multiple bookings
 
