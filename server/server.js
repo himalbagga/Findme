@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config(); // Loads environment variables
 const dotenv = require('dotenv');
+const nodemailer = require('nodemailer');
 
 const userRoutes = require('./routes/userRoutes'); // User-related routes
 const reviewRoutes = require('./routes/reviewRoutes'); // Review-related routes
@@ -78,10 +79,11 @@ app.post('/api/create-payment-intent', async (req, res) => {
       from: process.env.EMAIL_USER,
       to: email,
       subject: 'Payment Confirmation',
-      text: `Your payment of $${(amount / 100).toFixed(2)} was successful! Thank you for your purchase.`,
+      text: `Your payment of $${amount.toFixed(2)} was successful! Thank you for your booking!`
     };
 
     await transporter.sendMail(mailOptions);
+    console.log(`Confirmation email sent to ${email}`)
     console.log('Payment confirmation email send.');
   } catch (error) {
     console.error('Error creating payment intent:', error);
