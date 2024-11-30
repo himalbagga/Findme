@@ -108,7 +108,7 @@ function HomePage() {
             
                   const dayOfWeek = localDate.toLocaleString("en-US", { weekday: "long" }); // Get the day of the week
                   console.log(`Selected Day: ${dayOfWeek}`); // Log to console
-                  alert(`You selected: ${dayOfWeek}`); // Display a popup
+                  // alert(`You selected: ${dayOfWeek}`); // Display a popup
                 }
               }}
             />
