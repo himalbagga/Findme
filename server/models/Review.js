@@ -18,6 +18,7 @@ const reviewSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId, // Optional: link review to a user
     ref: 'User',
+    required: true,
   },
   createdAt: {
     type: Date,

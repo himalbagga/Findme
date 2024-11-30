@@ -2,6 +2,8 @@
   "dependencies": {
     "@stripe/react-stripe-js": "^3.0.0",
     "formik": "^2.4.6",
+    "nodemailer": "^6.9.16",
+    "stripe": "^17.4.0",
     "yup": "^1.4.0"
   }
 }

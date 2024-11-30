@@ -138,7 +138,29 @@ exports.getUserProfile = async (req, res) => {
       return res.this.status(404).json({ message: 'User not found' });
     }
 
-    res.status(200).json(user);
+    // Convert the Mongoose document to a plain object
+    const userProfile = user.toObject();
+
+    // Modify the resume field to include only relevant details
+    if (userProfile.resume && userProfile.resume.data && userProfile.resume.data.buffer) {
+      // Use the buffer property directly
+      const bufferData = Buffer.from(userProfile.resume.data.buffer);
+
+
+      // Check if bufferData has content
+      if (bufferData.length > 0) {
+        // Add a snippet of the resume data
+        const snippet = bufferData.slice(0, 50); // Slice the first 50 bytes
+        userProfile.resume.snippet = snippet.toString('base64');
+      } else {
+        userProfile.resume.snippet = "";
+      }
+
+      // Remove the full binary data to prevent it from being sent
+      delete userProfile.resume.data;
+    }
+
+    res.status(200).json(userProfile);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });

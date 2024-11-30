@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { UserContext, UserProvider } from "../UserContext";
 import "../styles/ServiceDetailsPage.css";
 import axios from 'axios';
 
@@ -25,6 +26,10 @@ function ServiceDetailsPage() {
   });
 
   const pricePerHour = serviceData ? serviceData.pricePerHour : 0; // Use the price from fetched data
+
+  const { user } = useContext(UserContext);
+  //const user = UserProvider();
+  const userId = user ? user._id: null;
 
   useEffect(() => {
     // Simulate fetching data from backend
