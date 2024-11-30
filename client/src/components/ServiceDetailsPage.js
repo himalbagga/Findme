@@ -7,6 +7,8 @@ import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faMapMarkerAlt, faFileDownload, faLanguage, faCalendarAlt, faClock, faDollarSign, faCheckCircle, faCreditCard, faPerson } from "@fortawesome/free-solid-svg-icons";
 import CheckoutForm from "./CheckoutForm"
+import { useContext } from 'react';
+import { UserContext } from './../UserContext';
 
 function ServiceDetailsPage() {
   const { serviceId } = useParams(); // Get the service ID from the URL parameters
@@ -15,6 +17,7 @@ function ServiceDetailsPage() {
   const [selectedDays, setSelectedDays] = useState([]);
   const [dayTimes, setDayTimes] = useState({});
   const [subtotal, setSubtotal] = useState(0);
+  const { user } = useContext(UserContext);
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: "",
     expiryDate: "",
@@ -228,7 +231,7 @@ function ServiceDetailsPage() {
         )}
 
         {subtotal > 0 && (
-          <CheckoutForm subtotal={subtotal}  />
+          <CheckoutForm subtotal={subtotal} user={user}  />
         )}
       </div>
     </div>

@@ -53,14 +53,14 @@ exports.searchServices = async (req, res) => {
 exports.getAllServices = async (req, res) => {
   try {
     // Fetch all users who have services
-    const users = await User.find({ 'services': { $exists: true, $ne: [] } });
+    const users = await User.find({ 'serviceName': { $exists: true /*,$ne: []*/ } });
 
     if (!users.length) {
       return res.status(404).json({ message: 'No services available' });
     }
 
     // Flatten the services array from all users
-    const allServices = users.flatMap(user => user.services);
+    const allServices = users.flatMap(user => user);
 
     console.log("Log???", allServices); // Optional, for debugging
 
@@ -169,14 +169,14 @@ exports.getServiceById = async (req, res) => {
 exports.getAllServices = async (req, res) => {
   try {
     // Fetch all users who have services
-    const users = await User.find({ 'services': { $exists: true, $ne: [] } });
+    const users = await User.find({ 'serviceName': { $exists: true, $ne: '' } });
 
     if (!users.length) {
       return res.status(404).json({ message: 'No services available' });
     }
 
     // Flatten the services array from all users
-    const allServices = users.flatMap(user => user.services);
+    const allServices = users.flatMap(user => user);
 
     console.log(allServices); // Optional, for debugging
 

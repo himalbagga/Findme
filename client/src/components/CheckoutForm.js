@@ -37,6 +37,7 @@ const PaymentComponent = ({ subtotal, user }) => {
         currency: 'usd',
         email: user.email,
       });
+      console.log(user.email);
 
       const clientSecret = data.clientSecret;
 

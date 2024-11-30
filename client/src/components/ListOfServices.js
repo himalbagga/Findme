@@ -38,15 +38,17 @@ function ListOfServices() {
       const data = await response.json();
       console.log('API Response:', data);  // Log the full response for debugging
 
-      if (data.services) {
-        console.log('Services received:', data.services);
+      if (data) {
+        console.log('Services received:', data);
         // Extract only the required fields (serviceName, location, and price) from each service
-        const fetchedServices = data.services.map(service => ({
-          serviceName: service.serviceName,
-          location: service.location,
-          price: service.price,
-          _id: service._id,
-        }));
+        const fetchedServices = Array.isArray(data)
+        ? data.map(item => ({
+          serviceName: item.serviceName,
+          location: item.location,
+          price: item.price,
+          _id: item._id,
+        }))
+        :[];
         setServices(fetchedServices); // Set the fetched services
         setFilteredServices(fetchedServices); // Initialize filtered services
       } else {
