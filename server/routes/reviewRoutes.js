@@ -6,12 +6,13 @@ const Review = require('../models/Review');
 // @desc    Save a review
 router.post('/', async (req, res) => {
   try {
-    const { title, review, rating } = req.body;
+    const { title, review, rating, userId } = req.body;
 
     const newReview = new Review({
       title,
       review,
       rating,
+      userId,
     });
 
     await newReview.save();
@@ -24,10 +25,10 @@ router.post('/', async (req, res) => {
 
 // @route   GET /api/reviews
 // @desc    Get all reviews
-router.get('/reviews/:userId', async (req, res) => {
+router.get('/:userId', async (req, res) => {
   try {
     const { userId } = req.params.userId;
-    const reviews = await Review.find({ userId: req.params.userId });
+    const reviews = await Review.find({ userId });
     
     if (!reviews.length) {
       return res.status(404).json({ message: "No reviews found for this user." });
