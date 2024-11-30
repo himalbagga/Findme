@@ -1,12 +1,32 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import emailjs from '@emailjs/browser';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const CancellationFormUI = () => {
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm('service_debeiyt', 'template_3s3y15a', form.current, {
+        publicKey: '9B_G4UOwgNSsEHZiJ',
+      })
+      .then(
+        () => {
+          console.log('SUCCESS!');
+        },
+        (error) => {
+          console.log('FAILED...', error.text);
+        },
+      );
+  };
+
   return (
     <div className="container-fluid vh-100 d-flex align-items-center justify-content-center">
       <div className="card shadow-sm" style={{maxWidth: '700px', width: '100%'}}>
         <div className="card-body">
-          <form>
+          <form ref={form} onSubmit={sendEmail}>
             <div className="mb-4">
               <label htmlFor="cancellationReason" className="form-label">
                 Describe your reason for cancelling

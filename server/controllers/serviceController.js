@@ -152,13 +152,13 @@ exports.addService = async (req, res) => {
 exports.getServiceById = async (req, res) => {
   const { serviceId } = req.params;
   try {
-    const service = await User.findOne({ 'services._id': serviceId }, { 'services.$': 1 });
-
-    if (!service || !service.services.length) {
+    const service = await User.findOne({ '_id': serviceId }/*, { 'services.$': 1 }*/);
+    console.log(service);
+    if (!service) {
       return res.status(404).json({ message: 'Service not found' });
     }
 
-    res.json(service.services[0]);
+    res.json(service);
   } catch (error) {
     console.error('Error fetching service details:', error);
     res.status(500).json({ message: 'Error fetching service details', error });
