@@ -52,6 +52,10 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/create-payment-intent', async (req, res) => {
   const { amount, currency, email } = req.body;
 
+  if (!email) {
+    return res.status(400).json({error: 'Email is required for payment confirmation'});
+  }
+  
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount, // Amount in cents
@@ -60,14 +64,13 @@ app.post('/api/create-payment-intent', async (req, res) => {
 
     res.status(200).json({ clientSecret: paymentIntent.client_secret });
 
-    paymentIntent.on(`payment_intent.succeeded`, async () => {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
       const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -78,8 +81,6 @@ app.post('/api/create-payment-intent', async (req, res) => {
 
       await transporter.sendMail(mailOptions);
       console.log('Payment confirmation email send.');
-    });
-
   } catch (error) {
     console.error('Error creating payment intent:', error);
     res.status(500).json({ error: error.message });
