@@ -8,8 +8,8 @@ import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faMapMarkerAlt, faFileDownload, faLanguage, faCalendarAlt, faClock, faDollarSign, faCheckCircle, faCreditCard, faPerson } from "@fortawesome/free-solid-svg-icons";
 import CheckoutForm from "./CheckoutForm"
-//import { useContext } from 'react';
-//import { UserContext } from './../UserContext';
+//// import { useContext } from 'react';
+//// import { UserContext } from './../UserContext';
 
 function ServiceDetailsPage() {
   const { serviceId } = useParams(); // Get the service ID from the URL parameters
@@ -27,7 +27,7 @@ function ServiceDetailsPage() {
 
   const pricePerHour = serviceData ? serviceData.pricePerHour : 0; // Use the price from fetched data
 
-  //const { user } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   //const user = UserProvider();
   const userId = user ? user._id: null;
 

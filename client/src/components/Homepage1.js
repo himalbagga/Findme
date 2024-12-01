@@ -78,9 +78,9 @@ function HomePage() {
           </button>
 
           {/* Filter Button (with Font Awesome filter icon) */}
-          {/* <button type="button" onClick={() => setShowFilter(!showFilter)}> */}
-            {/* <FontAwesomeIcon icon={faFilter} /> Filter settings icon */}
-          {/* </button> */}
+          {/* <button type="button" onClick={() => setShowFilter(!showFilter)}>
+            <FontAwesomeIcon icon={faFilter} /> 
+          </button> */}
         </div>
 
         {/* Filter Options
