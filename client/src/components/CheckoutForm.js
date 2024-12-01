@@ -18,6 +18,8 @@ const PaymentComponent = ({ subtotal, user }) => {
 	const [message, setMessage] = useState('');
 	const navigate = useNavigate();
 
+  console.log('User passed to Payment Component: ', user);
+
   // Handle changes in the card element
   const handlePaymentChange = (e) => {
     setPaymentInfo({ ...paymentInfo, [e.target.name]: e.target.value });
@@ -40,8 +42,7 @@ const PaymentComponent = ({ subtotal, user }) => {
         currency: 'usd',
         email,
       });
-      console.log(user.email);
-
+      
       const clientSecret = data.clientSecret;
 
       // Confirm the payment with Stripe
