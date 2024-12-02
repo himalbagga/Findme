@@ -103,7 +103,11 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews }) => (
       </div>  
       <div className="profile-resume">
         <h4>Resume</h4>
-        <a href={user?.resume} target="_blank" rel="noopener noreferrer">View Resume</a>
+        {user?.resume ? (
+          <a href={user?.resume} target="_blank" rel="noopener noreferrer">View Resume</a>
+        ) : (
+          <p>No resume uploaded</p>
+        )}
       </div>
     </div>
 
@@ -149,7 +153,10 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews }) => (
 
 const EditForm = ({ user, onSave, onCancel }) => {
   const [editedUser, setEditedUser] = useState(user);
-    const { setUser } = useContext(UserContext);
+  const [resumeFile, setResumeFile] = useState(null);
+
+  const { setUser } = useContext(UserContext);
+
 
   useEffect(() => {
   console.log('Edited User:', editedUser);
@@ -166,6 +173,19 @@ const EditForm = ({ user, onSave, onCancel }) => {
       ...prev,
       [name]: value.split(",").map((item) => item.trim()),
     }));
+  };
+
+  const handleResumeUpload = () => {
+    if (resumeFile) {
+      setEditedUser((prev) => ({
+        ...prev,
+        resume: URL.createObjectURL(resumeFile),
+      }));
+    }
+  };
+
+  const handleResumeDelete = () => {
+    setEditedUser((prev) => ({ ...prev, resume: null }));
   };
 
   const handleSubmit = async (e) => {
@@ -352,16 +372,23 @@ const EditForm = ({ user, onSave, onCancel }) => {
     </div>
 
     {/* Resume */}
-    {/* <div className="form-group">
+    <div className="form-group">
       <label htmlFor="resume">Resume</label>
       <input
+        type="file"
         id="resume"
         name="resume"
-        type="file"
         className="input-field"
-        onChange={(e) => handleFileChange(e)} // Assuming a handler for file uploads
+        onChange={(e) => setResumeFile(e.target.files[0])} // Assuming a handler for file uploads
       />
-    </div> */}
+      <button type='button' onClick={handleResumeUpload}>Upload</button>
+      {editedUser?.resume && (
+        <>
+          <a href={editedUser.resume} target="_blank" rel="noopener noreferrer">View Current Resume</a>
+          <button type='button' onClick={handleResumeDelete}>Delete Resume</button>
+        </>
+      )}
+    </div>
 
     
       
