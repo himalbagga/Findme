@@ -44,6 +44,7 @@ const Signup = () => {
 
   const handleFileChange = (e) => {
     setFormData({ ...formData, resume: e.target.files[0] });
+    
   };
 
   const handleCheckboxChange = (e) => {

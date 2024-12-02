@@ -27,7 +27,7 @@ function ServiceDetailsPage() {
 
   const pricePerHour = serviceData ? serviceData.pricePerHour : 0; // Use the price from fetched data
 
-  const { user } = useContext(UserContext);
+  //const { user } = useContext(UserContext);
   //const user = UserProvider();
   const userId = user ? user._id: null;
 

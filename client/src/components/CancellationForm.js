@@ -1,12 +1,16 @@
 import React, { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useContext } from 'react';
+import { UserContext } from './../UserContext';
 
 const CancellationFormUI = () => {
   const form = useRef();
   const [userId, setUserId] = useState('');
   const [bookingId, setBookingId] = useState('');
   const [message, setMessage] = useState('');
+  const { user: contextUser } = useContext(UserContext);
+  console.log(contextUser.email);
 
   const sendEmail = (e) => {
     e.preventDefault();
@@ -18,9 +22,11 @@ const CancellationFormUI = () => {
       .then(
         () => {
           console.log('SUCCESS!');
+          alert("Cancellation Email sent successfully")
         },
         (error) => {
           console.log('FAILED...', error.text);
+          alert("Email failed...",error.text)
         },
       );
   };
@@ -29,6 +35,7 @@ const CancellationFormUI = () => {
     e.preventDefault();
 
     try {
+      
       const response = await fetch('/api/users/bookings/cancel', {
         method: 'DELETE',
         headers: {
@@ -56,6 +63,8 @@ const CancellationFormUI = () => {
         <div className="card-body">
           <form ref={form} onSubmit={cancelBooking}>
             <div className="mb-4">
+              <input type="hidden" name="username" value={contextUser.username} />
+              <input type="hidden" name="email" value={contextUser.email}/>
               <label htmlFor="cancellationReason" className="form-label">
                 Describe your reason for cancelling
               </label>

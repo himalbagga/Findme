@@ -4,6 +4,9 @@ const cors = require('cors');
 require('dotenv').config(); // Loads environment variables
 const dotenv = require('dotenv');
 const nodemailer = require('nodemailer');
+const multer = require('multer');
+const upload = require('./Middleware/multer');
+
 
 const userRoutes = require('./routes/userRoutes'); // User-related routes
 const reviewRoutes = require('./routes/reviewRoutes'); // Review-related routes
@@ -19,6 +22,10 @@ const PORT = process.env.PORT || 5001 || 5000;
 
 // Middleware for handling cross-origin requests and parsing JSON
 app.use(cors());
+
+// app.use(express.urlencoded({ extended: true })); // Parsing URL-encoded data (optional, can be used with 'multer')
+// app.use(upload.single('resume'));
+
 app.use(express.json());
 
 // Connect to MongoDB
@@ -39,17 +46,17 @@ app.use('/api/bookings', bookingRoutes); // All booking-related routes start wit
 app.use('/api/users', resumeRoutes); // All resume-related routes start with /api/_
 
 // API endpoint to handle signup
-app.post('/api/signup', async (req, res) => {
-  try {
-    const { username, email, password, mobileNumber, userType, serviceType, serviceName, location, resume, availableDays, startTime, endTime, price, languages } = req.body;
-    const newUser = new User({ username, email, password, mobileNumber, userType, serviceType, serviceName, location, resume, availableDays, startTime, endTime, price, languages });
+// app.post('/api/signup', async (req, res) => {
+//   try {
+//     const { username, email, password, mobileNumber, userType, serviceType, serviceName, location, resume, availableDays, startTime, endTime, price, languages } = req.body;
+//     const newUser = new User({ username, email, password, mobileNumber, userType, serviceType, serviceName, location, resume, availableDays, startTime, endTime, price, languages });
 
-    await newUser.save();
-    res.status(201).json({ message: 'User signed up successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to sign up' });
-  }
-});
+//     await newUser.save();
+//     res.status(201).json({ message: 'User signed up successfully' });
+//   } catch (error) {
+//     res.status(500).json({ error: 'Failed to sign up' });
+//   }
+// });
 
 // API endpoint for Stripe payment intent
 app.post('/api/create-payment-intent', async (req, res) => {

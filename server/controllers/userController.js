@@ -47,6 +47,11 @@ exports.registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
     console.log('Hashed Password:', hashedPassword); // Log the hashed password (ensure it's not exposed in production)
 
+    // let resumePath = null;
+    // if (req.file) {
+    //   resumePath = req.file.path; // Store the file path from multer
+    // }
+
     // Create new user
     console.log('Creating new user object...');
     const newUser = new User({
