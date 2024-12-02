@@ -19,6 +19,9 @@ function ServiceDetailsPage() {
   const [dayTimes, setDayTimes] = useState({});
   const [subtotal, setSubtotal] = useState(0);
   const { user } = useContext(UserContext);
+  const [service, setService] = useState(null);
+  const [ratings, setRatings] = useState([]); // To store existing ratings
+  const [averageRating, setAverageRating] = useState(0);
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: "",
     expiryDate: "",
@@ -68,6 +71,32 @@ function ServiceDetailsPage() {
 
     fetchServiceData();
   }, [serviceId]);
+
+  // Fetch service details and reviews
+useEffect(() => {
+  const fetchServiceDetails = async () => {
+    try {
+      // Fetch service data
+      const serviceResponse = await axios.get(`http://localhost:5001/api/services/${serviceId}`);
+      setService(serviceResponse.data);
+
+      // Fetch reviews for the specific service
+      const reviewsResponse = await axios.get(`http://localhost:5001/api/reviews/${serviceId}`);
+      setRatings(reviewsResponse.data);
+
+      // Calculate the average rating for the specific service
+      const avgRating =
+        reviewsResponse.data.reduce((acc, review) => acc + review.rating, 0) /
+        reviewsResponse.data.length || 0;
+      setAverageRating(avgRating.toFixed(1));
+    } catch (error) {
+      console.error("Error fetching service details or reviews:", error);
+    }
+  };
+
+  fetchServiceDetails();
+}, [serviceId]);
+
 
   const handleDaySelection = (day) => {
     if (selectedDays.includes(day)) {
@@ -143,7 +172,28 @@ function ServiceDetailsPage() {
 
   const { title, username,/*providerFirstName, providerLastName,*/ location, languages, availableDays, startTime, endTime, resumeUrl, price } = serviceData;
 
+ // Function to render stars based on the rating
+const renderStars = (rating) => {
+  if (rating === 0 || !rating) {
+    return "☆☆☆☆☆"; // Display empty stars when there's no rating
+  }
+
+  const fullStars = Math.floor(rating); // Number of full stars
+  const halfStar = rating % 1 >= 0.5 ? 1 : 0; // Half star logic
+  const emptyStars = 5 - fullStars - halfStar; // Remaining empty stars
+
+  // Generate the stars as a string
   return (
+    <>
+      {"★".repeat(fullStars)} {/* Full stars */}
+      {halfStar ? "⯪" : ""}   {/* Half star if applicable */}
+      {"☆".repeat(emptyStars)} {/* Empty stars */}
+    </>
+  );
+};
+  
+  return (
+
     <div className="service-details">
       <div className="back-icon" onClick={() => navigate("/")}>
         <FontAwesomeIcon icon={faArrowLeft} /> Back to Home
@@ -195,6 +245,23 @@ function ServiceDetailsPage() {
             <FontAwesomeIcon icon={faDollarSign} /> <strong>Price per Hour:</strong> ${price}
           </p>
         </div>
+        {/* Ratings Section */}
+
+        
+        <section className="ratings-section">
+        <p>Ratings & Reviews</p>
+        <p>
+          <strong>Average Rating:</strong> 
+          <span className="stars"> 
+            {renderStars(averageRating)} {/* Display the average rating stars */}
+          </span>
+        </p>
+        
+        {/* If there are no reviews, display a message */}
+        {ratings.length === 0 && (
+          <p>No ratings yet. Be the first to check back for updates!</p>
+        )}
+      </section>
         <Link to={'/review'} className="btn btn-primary mt-3">
               Write a Review
         </Link>

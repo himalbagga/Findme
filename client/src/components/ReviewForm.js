@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Star } from 'lucide-react';
 import axios from 'axios';
@@ -11,7 +11,7 @@ export default function UserReviewForm() {
   const [formData, setFormData] = useState({ title: '', review: '' });
   const navigate = useNavigate();
   
-  const { user } = UserContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;

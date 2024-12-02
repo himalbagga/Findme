@@ -8,13 +8,22 @@ body {
 .service-details {
   margin: 0px auto;
   background-color: #fff;
-  overflow: hidden;
+  overflow: auto;
   max-height: 100vh;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 20px;
   position: relative;
+}
+
+.stars {
+  color: #FFD700; /* Gold color for stars */
+  font-size: 1.2em;
+}
+
+.rating .stars {
+  margin-bottom: 0.5em;
 }
 
 /* Back Icon Styles */
