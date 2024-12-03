@@ -5,6 +5,7 @@ import placeholderPic from "../images/ProfilePlaceHolder.svg";
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
 import axios from 'axios';
+import ServiceCard from './ServiceCard';
 
 
 const UserProfile = () => {
@@ -89,7 +90,11 @@ const UserProfile = () => {
       {isEditing ? (
         <EditForm user={user} onSave={handleSave} onCancel={handleCancel} />
       ) : (
-        <ProfileDisplay user={user} onEdit={handleEdit} onDelete={handleDelete} />
+        <ProfileDisplay 
+          user={user} 
+          onEdit={handleEdit} 
+          onDelete={handleDelete} 
+        />
       )}
     </div>
   );
@@ -125,9 +130,8 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume }) => (
           <p>No resume uploaded</p>
         )}
       </div>
-    </div>
 
-    <div className='profile-reviews'>
+      <div className='profile-reviews'>
         <h3>Reviews</h3>
         {reviews?.length > 0 ? (
           reviews.map((review) => (
@@ -135,28 +139,43 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume }) => (
               <h5>{review.title}</h5>
               <p>{review.review}</p>
               <p><strong>Rating:</strong> {review.rating} ⭐</p>
-              <p><em>{new Date(review.creatdAt).toLocaleDateString()}</em></p>
+              <p><em>{new Date(review.createdAt).toLocaleDateString()}</em></p>
             </div>
           ))
         ) : (
           <p>No reviews available.</p>
         )}
-    </div>
+      </div>
 
-    <div className='profile-services'>
-      <h3>Services Offered</h3>
-        {user ? (
-          <>
-            <h5>{user.serviceName}</h5>
-            <p>{user.location}</p>
-            <p>{user.languages?.join(", ")}</p>
-            <p>Price: ${user.price}/hour</p>
-            <p>Available Days: {user.availableDays?.join(", ")}</p>
-            <p>Hours: {user.startTime} - {user.endTime}</p>
-          </>
-        ) : (
-          <p>No service available</p>
-        )}
+      <div className='profile-services'>
+        <h3>Services Offered</h3>
+        
+        {user?.serviceName && user?.location && user?.languages && user?.price ? (
+            <ServiceCard
+              id={user._id}
+              title={user.serviceName}
+              location={user.location}
+              languages={user.languages}
+              pricePerHour={user.price}
+            />
+          ) : (
+              <p>No service available</p>
+          )}
+
+        {user?.services && user?.services?.length > 0 ? (
+            user.services.map((service) => (
+              <ServiceCard 
+                id={service._id}
+                title={service.serviceName}
+                location={service.location}
+                languages={service.languages}
+                pricePerHour={service.price}
+              />
+            ))
+          ) : (
+            <p></p>
+          )}
+      </div>
     </div>
     
     <div className="profile-footer">
