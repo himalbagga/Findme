@@ -192,18 +192,33 @@ const EditForm = ({ user, onSave, onCancel }) => {
   };
 
   const handleResumeUpload = () => {
-    if (resumeFile) {
-      setEditedUser((prev) => ({
-        ...prev,
-        resume: URL.createObjectURL(resumeFile),
-      }));
-      setIsUploaded(true);
+    const confirmation = window.confirm(
+    "Are you sure you want to upload this resume? This will replace any existing resume."
+    );
+    
+    if (confirmation) {
+      if (resumeFile) {
+        setEditedUser((prev) => ({
+          ...prev,
+          resume: URL.createObjectURL(resumeFile),
+        }));
+        setIsUploaded(true);
+        alert("Resume uploaded successfully!");
+      }
+    } else {
+      alert("No file selected for upload.");
     }
   };
 
   const handleResumeDelete = () => {
-    setEditedUser((prev) => ({ ...prev, resume: null }));
-    setIsUploaded(false);
+    const confirmation = window.confirm(
+    "Are you sure you want to delete your resume? This action cannot be undone."
+    );
+    if (confirmation) {
+      setEditedUser((prev) => ({ ...prev, resume: null }));
+      setIsUploaded(false);
+      alert("Resume deleted successfully!");
+    }
   };
 
   const handleSubmit = async (e) => {
