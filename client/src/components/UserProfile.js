@@ -11,6 +11,7 @@ const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const[resume, setResume] = useState([]);
   const navigate = useNavigate();
 
   const { user: contextUser } = useContext(UserContext);
@@ -45,9 +46,24 @@ const UserProfile = () => {
       }
     };
 
+    const fetchResume = async () => {
+      try {
+        const userId = contextUser?.id;
+        if(!userId) {
+          console.error("User ID not found in context.");
+          return;
+        }
+        const response = await axios.get(`http://localhost:5001/api/users/${userId}/resume`);
+        setResume(response.data);
+      } catch (error) {
+        console.error("Error fetching reviews: ", error);
+      }
+    };
+
     if (contextUser?.id) {  
       fetchUser();
       fetchReviews();
+      fetchResume();
     }
     
   }, [contextUser]);
@@ -79,7 +95,7 @@ const UserProfile = () => {
   );
 };
 
-const ProfileDisplay = ({ user, onEdit, onDelete, reviews }) => (
+const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume }) => (
   <div className="profile-display">
     <div className="profile-header">
       <h2>User Profile</h2>
@@ -103,8 +119,8 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews }) => (
       </div>  
       <div className="profile-resume">
         <h4>Resume</h4>
-        {user?.resume ? (
-          <a href={user?.resume} target="_blank" rel="noopener noreferrer">View Resume</a>
+        {resume ? (
+          <a href={resume} target="_blank" rel="noopener noreferrer">View Resume</a>
         ) : (
           <p>No resume uploaded</p>
         )}
@@ -154,7 +170,7 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews }) => (
 const EditForm = ({ user, onSave, onCancel }) => {
   const [editedUser, setEditedUser] = useState(user);
   const [resumeFile, setResumeFile] = useState(null);
-
+  const [isUploaded, setIsUploaded] = useState(!!editedUser?.resume);
   const { setUser } = useContext(UserContext);
 
 
@@ -181,11 +197,13 @@ const EditForm = ({ user, onSave, onCancel }) => {
         ...prev,
         resume: URL.createObjectURL(resumeFile),
       }));
+      setIsUploaded(true);
     }
   };
 
   const handleResumeDelete = () => {
     setEditedUser((prev) => ({ ...prev, resume: null }));
+    setIsUploaded(false);
   };
 
   const handleSubmit = async (e) => {
@@ -381,8 +399,8 @@ const EditForm = ({ user, onSave, onCancel }) => {
         className="input-field"
         onChange={(e) => setResumeFile(e.target.files[0])} // Assuming a handler for file uploads
       />
-      <button type='button' onClick={handleResumeUpload}>Upload</button>
-      {editedUser?.resume && (
+      {!isUploaded && (<button type='button' onClick={handleResumeUpload}>Upload</button>)}
+      {isUploaded && (
         <>
           <a href={editedUser.resume} target="_blank" rel="noopener noreferrer">View Current Resume</a>
           <button type='button' onClick={handleResumeDelete}>Delete Resume</button>

@@ -9,7 +9,9 @@ exports.searchServices = async (req, res) => {
 
   try {
     console.log('Attempting to find users with services matching the criteria...');
-
+    console.log(searchQuery);
+    console.log(maxPrice);
+    console.log(selectedDay);
     // Find users who have at least one service matching the criteria
     const users = await User.find({
       
@@ -20,7 +22,7 @@ exports.searchServices = async (req, res) => {
       
       
     });
-    console.log(users);
+    //console.log(users);
     // Debugging: Log users with matched services
     console.log('Users matching query:', JSON.stringify(users, null, 2));
 
