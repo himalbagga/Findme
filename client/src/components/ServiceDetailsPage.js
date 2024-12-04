@@ -135,6 +135,24 @@ useEffect(() => {
     return hours + minutes / 60;
   };
 
+  const handleAddToFavorites = async () => {
+    if (!user) {
+      alert("You must be logged in to add favorites.");
+      return;
+    }
+
+    try {
+      await axios.post("http://localhost:5001/api/users/favorites", {
+        userId: user._id,
+        serviceId: serviceId,
+      });
+      alert("Service added to favorites!");
+    } catch (error) {
+      console.error("Error adding to favorites: ", error);
+      alert("Failed to add service to favorites.");
+    }
+  };
+
   useEffect(() => {
 
     if (!serviceData || !price) return;
@@ -265,7 +283,11 @@ const renderStars = (rating) => {
         <Link to={'/review'} className="btn btn-primary mt-3">
               Write a Review
         </Link>
+        <button className="btn btn-secondary mt-3" onClick={handleAddToFavorites}>
+          Add to Favorites
+        </button>
       </div>
+      
 
       <div className="booking-form">
         <h3>Book Service</h3>

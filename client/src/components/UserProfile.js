@@ -13,6 +13,7 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [reviews, setReviews] = useState([]);
   const[resume, setResume] = useState([]);
+  const[favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
 
   const { user: contextUser } = useContext(UserContext);
@@ -61,10 +62,25 @@ const UserProfile = () => {
       }
     };
 
+    const fetchFavorites = async () => {
+      try {
+        const userId = contextUser?.id;
+        if (!userId) {
+          console.error("User Id not found in context.");
+          return;
+        }
+        const response = await axios.get(`http://localhost:5001/api/users/${userId}/favorites`);
+        setFavorites(response.data);
+      } catch (error) {
+        console.error("Error fetching favorites: ", error);
+      }
+    };
+
     if (contextUser?.id) {  
       fetchUser();
       fetchReviews();
       fetchResume();
+      fetchFavorites();
     }
     
   }, [contextUser]);
@@ -100,7 +116,7 @@ const UserProfile = () => {
   );
 };
 
-const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume }) => (
+const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume, favorites, onFavoriteToggle }) => (
   <div className="profile-display">
     <div className="profile-header">
       <h2>User Profile</h2>
@@ -128,22 +144,6 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume }) => (
           <a href={resume} target="_blank" rel="noopener noreferrer">View Resume</a>
         ) : (
           <p>No resume uploaded</p>
-        )}
-      </div>
-
-      <div className='profile-reviews'>
-        <h3>Reviews</h3>
-        {reviews?.length > 0 ? (
-          reviews.map((review) => (
-            <div key={review._id} className="review-card">
-              <h5>{review.title}</h5>
-              <p>{review.review}</p>
-              <p><strong>Rating:</strong> {review.rating} ⭐</p>
-              <p><em>{new Date(review.createdAt).toLocaleDateString()}</em></p>
-            </div>
-          ))
-        ) : (
-          <p>No reviews available.</p>
         )}
       </div>
 
@@ -176,6 +176,42 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume }) => (
             <p></p>
           )}
       </div>
+
+      <div className='profile-favorites'>
+          <h3>Favorite Services</h3>
+          {favorites?.length > 0 ? (
+            favorites.map((service) => (
+              <div key={service._id} className='favorite-service'>
+                <ServiceCard
+                  id={service._id}
+                  title={service.serviceName}
+                  location={service.location}
+                  languages={service.languages}
+                  pricePerHour={service.price}
+                />
+              </div>
+            ))
+          ) : (
+            <p>No favorites yet.</p>
+          )}
+      </div>
+
+      <div className='profile-reviews'>
+        <h3>Reviews</h3>
+        {reviews?.length > 0 ? (
+          reviews.map((review) => (
+            <div key={review._id} className="review-card">
+              <h5>{review.title}</h5>
+              <p>{review.review}</p>
+              <p><strong>Rating:</strong> {review.rating} ⭐</p>
+              <p><em>{new Date(review.createdAt).toLocaleDateString()}</em></p>
+            </div>
+          ))
+        ) : (
+          <p>No reviews available.</p>
+        )}
+      </div>
+
     </div>
     
     <div className="profile-footer">
