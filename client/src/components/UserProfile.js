@@ -459,24 +459,42 @@ const EditForm = ({ user, onSave, onCancel }) => {
       />
     </div>
 
-    {/* Resume */}
-    <div className="form-group">
-      <label htmlFor="resume">Resume</label>
-      <input
-        type="file"
-        id="resume"
-        name="resume"
-        className="input-field"
-        onChange={(e) => setResumeFile(e.target.files[0])} // Assuming a handler for file uploads
-      />
-      {!isUploaded && (<button type='button' onClick={handleResumeUpload}>Upload</button>)}
-      {isUploaded && (
-        <>
-          <a href={editedUser.resume} target="_blank" rel="noopener noreferrer">View Current Resume</a>
-          <button type='button' onClick={handleResumeDelete}>Delete Resume</button>
-        </>
-      )}
-    </div>
+{/* Resume */}
+<div className="form-group">
+  <label htmlFor="resume">Resume</label>
+  <input
+    type="file"
+    id="resume"
+    name="resume"
+    className="input-field"
+    accept=".docx, .png, .jpeg, .pdf" // Restrict file types
+    onChange={(e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const allowedExtensions = ["docx", "png", "jpeg", "pdf"];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        if (allowedExtensions.includes(fileExtension)) {
+          setResumeFile(file); // Process the file if it's allowed
+        } else {
+          alert("Invalid file type. Please upload a .docx, .png, .jpeg, or .pdf file.");
+          e.target.value = ""; // Clear the input
+        }
+      }
+    }}
+  />
+    <small className="text-muted">
+    Allowed file types: .docx, .png, .jpeg, .pdf
+  </small> {/* Display allowed file types */}
+  {!isUploaded && (
+    <button type='button' onClick={handleResumeUpload}>Upload</button>
+  )}
+  {isUploaded && (
+    <>
+      <a href={editedUser.resume} target="_blank" rel="noopener noreferrer">View Current Resume</a>
+      <button type='button' onClick={handleResumeDelete}>Delete Resume</button>
+    </>
+  )}
+</div>
 
     
       
