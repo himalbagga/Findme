@@ -15,6 +15,8 @@ function ListOfServices() {
   const [date, setDate] = useState(""); // Filter by date
   const navigate = useNavigate();
   const { user } = useContext(UserContext); // Get logged-in user details
+  const [location, setLocation] = useState(null); // Store user's location
+  const [error, setError] = useState(null); // Store error messages
 
   // Fetch all services when the component mounts
   useEffect(() => {
@@ -91,6 +93,29 @@ function ListOfServices() {
     setFilteredServices(services); // Reset to all services
   };
 
+  // Handle Get Location
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setLocation({ latitude, longitude });
+        setError(null);
+
+        // You can call a reverse geocoding API here to get a human-readable address
+        console.log("User's location:", latitude, longitude);
+      },
+      (error) => {
+        setError("Unable to retrieve your location. Please try again.");
+        console.error("Geolocation error:", error);
+      }
+    );
+  };
+
   return (
     <div className="list-of-services-page">
       <header>
@@ -124,6 +149,9 @@ function ListOfServices() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+       
+
+      {error && <p className="error">{error}</p>}
         <button type="button" onClick={handleFilterToggle}>
           Filter
         </button>
