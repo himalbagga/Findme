@@ -5,7 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDollarSign, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
+import { useRef } from 'react';
+import emailjs from '@emailjs/browser';
+
 const PaymentComponent = ({ subtotal, user }) => {
+  const form = useRef();
   const stripe = useStripe();
   const elements = useElements();
   const [email, setEmail] = useState(user?.email || '');
@@ -25,10 +29,29 @@ const PaymentComponent = ({ subtotal, user }) => {
     setPaymentInfo({ ...paymentInfo, [e.target.name]: e.target.value });
   };
 
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm('service_qw4tqsp', 'template_2j6o6ua', form.current, {
+        publicKey: 'zomtsQF384EML4F90',
+      })
+      .then(
+        () => {
+          console.log('SUCCESS!');
+          alert('Email Confirmation Sent...');
+        },
+        (error) => {
+          console.log('FAILED...', error.text);
+          alert('Error sending Email Confirmation...');
+        },
+      );
+  };
+
   console.log('User:', user);
 
   // Handle payment submission
-  const handlePay = async () => {
+  const handlePay = async (e) => {
     if (!stripe || !elements) {
       alert('Stripe has not loaded yet.');
       return;
@@ -57,6 +80,8 @@ const PaymentComponent = ({ subtotal, user }) => {
       } else if (result.paymentIntent.status === 'succeeded') {
 		  setMessage('Payment successful!');
 		  
+      sendEmail(e);
+
 		  navigate('/success');
       }
     } catch (error) {
@@ -69,6 +94,10 @@ const PaymentComponent = ({ subtotal, user }) => {
 
   return (
     <div className="invoice">
+      <form ref={form}>
+      <input type="hidden" name="username" value={user.username} />
+      <input type="hidden" name="email" value={user.email}/>
+      </form>
       <h3>Invoice</h3>
       <p>
         <FontAwesomeIcon icon={faDollarSign} /> Subtotal: <strong>${subtotal.toFixed(2)}</strong>
