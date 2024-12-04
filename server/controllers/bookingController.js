@@ -1,6 +1,7 @@
 // controllers/bookingController.js
 const Booking = require('../models/Booking');
 const User = require('../models/User');
+const mongoose = require('mongoose');
 
 exports.createBooking = async (req, res) => {
   try {
@@ -35,22 +36,33 @@ exports.createBooking = async (req, res) => {
 
 exports.getUserBookings = async (req, res) => {
   try {
-    const userId = req.params.userId;
+    // const userId = req.params.userId;
+    const { userId } = req.params;
     console.log('Fetching bookings for user ID:', userId);
 
-    const user = await User.findById(userId);
-    if (!user) {
-      console.log('User not found');
-      return res.status(404).json({ message: 'User not found' });
-    }
+    // const user = await User.findById(userId);
+    // if (!user) {
+    //   console.log('User not found');
+    //   return res.status(404).json({ message: 'User not found' });
+    // }
 
-    const bookings = await Booking.find({ user: userId }).populate('serviceProvider', 'serviceName location price');
-    console.log('Bookings found:', bookings);
+        // Convert userId to ObjectId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+          return res.status(400).json({ message: 'Invalid user ID format' });
+        }
 
-    if (bookings.length === 0) {
-      console.log('No bookings found for user');
-    }
+    // const bookings = await Booking.find({ user: userId }).populate('serviceProvider', 'serviceName location price');
+    // console.log('Bookings found:', bookings);
 
+    // if (bookings.length === 0) {
+    //   console.log('No bookings found for user');
+    // }
+
+     // Create a new ObjectId instance
+     const objectId = new mongoose.Types.ObjectId(userId);
+
+
+    const bookings = await Booking.find({ user: objectId });
     res.status(200).json(bookings);
   } catch (error) {
     console.error('Error fetching user bookings:', error);
