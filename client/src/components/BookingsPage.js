@@ -74,9 +74,9 @@ const BookingHistoryPage = () => {
             <p>Email: {user.email}</p>
           </div>
         ) : (
-          <div className="service">
+          <div >
             {bookings.map((booking) => (
-              <div key={booking._id} className="bg-white shadow-md rounded-lg overflow-hidden">
+              <div key={booking._id} className="service">
                 <div className="p-6">
                   <h2 className="text-xl font-semibold mb-2">
                     {booking.serviceName || 'Unknown Service'}
@@ -123,7 +123,7 @@ const BookingHistoryPage = () => {
                     className="text-red-500 hover:underline "
                     style={{ marginLeft: '20px' }}
                   >
-                    Cancel
+                    Cancel Booking
                   </Link>
                 </div>
               </div>
