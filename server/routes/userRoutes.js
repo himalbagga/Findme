@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, loginUser } = require('../controllers/userController');
+const { registerUser, loginUser, toggleFavorite, getFavorites } = require('../controllers/userController');
 let userController = require('../controllers/userController');
 
 const router = express.Router();
@@ -12,7 +12,9 @@ router.post('/signup', registerUser);
 router.get('/user/:id', userController.getUserProfile);
 router.put('/update/:id', userController.updateUser);
 
-// Resume management
+// Routes for managing favorites
+router.post('/:userId/favorites/:serviceId/toggle', toggleFavorite); // Handle adding/removiong services to favorites
+router.get('/:userId/favorites', getFavorites); // Get all favorite services for a user
 
 
-module.exports = router;
+module.exports = router; 

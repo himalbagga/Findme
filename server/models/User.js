@@ -86,13 +86,9 @@ const userSchema = new mongoose.Schema({
   languages: {
     type: [String],
   },
-  resume: {
-    data: Buffer,
-    contentType: String,
-    filename: String,
-  },
   services: [ServiceSchema], // New field for multiple services
-  bookings: [BookingSchema], // New field for multiple bookings
+  bookings: [BookingSchema], // New field for multiple bookings\
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }],
 
   createdAt: {
     type: Date,
