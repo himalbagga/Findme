@@ -277,8 +277,10 @@ exports.getUserBookings = async (req, res) => {
 // @access  Public
 exports.toggleFavorite = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    const serviceId = req.params.serviceId;
+    // const userId = req.params.userId;
+    // const serviceId = req.params.serviceId;
+
+    const { userId, serviceId } = req.params;
 
     // Fetch the user
     const user = await User.findById(userId);

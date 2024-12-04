@@ -145,10 +145,13 @@ useEffect(() => {
     }
 
     try {
-      await axios.post("http://localhost:5001/api/users/favorites", {
-        userId: user._id,
-        serviceId: serviceId,
-      });
+      // const response = await axios.post('http://localhost:5001/api/users/${user._id}/favorites/${serviceId}/toggle' /*{
+      //   userId: user._id,
+      //   serviceId: serviceId,
+      // }*/);
+      console.log(user.id);
+      console.log(serviceId);
+      const response = await axios.post(`http://localhost:5001/api/users/${user.id}/favorites/${serviceId}/toggle`);
       alert("Service added to favorites!");
     } catch (error) {
       console.error("Error adding to favorites: ", error);
