@@ -67,7 +67,7 @@ const userSchema = new mongoose.Schema({
   },
   latitude: { type: Number, required: false },
   longitude: { type: Number, required: false },
-  
+
   resume: {
     data: Buffer, // Use Buffer to store the actual file content
     contentType: String, // Metadata to indicate file type
@@ -89,8 +89,8 @@ const userSchema = new mongoose.Schema({
   languages: {
     type: [String],
   },
-  services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }], \
-  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }],
+  services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }], 
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 
   createdAt: {
     type: Date,

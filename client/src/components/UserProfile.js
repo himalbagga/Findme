@@ -71,6 +71,8 @@ const UserProfile = () => {
         }
         const response = await axios.get(`http://localhost:5001/api/users/${userId}/favorites`);
         setFavorites(response.data);
+        console.log(favorites);
+        
       } catch (error) {
         console.error("Error fetching favorites: ", error);
       }
@@ -180,14 +182,14 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume, favorites, on
       <div className='profile-favorites'>
           <h3>Favorite Services</h3>
           {favorites?.length > 0 ? (
-            favorites.map((service) => (
-              <div key={service._id} className='favorite-service'>
+            favorites.map((item) => (
+              <div key={item._id} className='favorite-service'>
                 <ServiceCard
-                  id={service._id}
-                  title={service.serviceName}
-                  location={service.location}
-                  languages={service.languages}
-                  pricePerHour={service.price}
+                  id={item._id}
+                  title={item.serviceName}
+                  location={item.location}
+                  languages={item.languages}
+                  pricePerHour={item.price}
                 />
               </div>
             ))
