@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './ListOfServices.css';
 import ServiceCard from './listOfServicesCard';
 import { UserContext } from './../UserContext';
+import debounce from "lodash.debounce";
 
 function ListOfServices() {
   const [services, setServices] = useState([]); // Store fetched services
@@ -65,7 +66,7 @@ function ListOfServices() {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = debounce(() => {
     const results = services.filter(service => {
       const matchesQuery =
         query === "" || service.serviceName.toLowerCase().includes(query.toLowerCase());
@@ -75,10 +76,20 @@ function ListOfServices() {
     });
 
     setFilteredServices(results);
-  };
+  }, 300);
+
+  useEffect(() => {
+    handleSearch();
+  }, [query, price])
 
   const handleFilterToggle = () => setShowFilter(!showFilter);
   
+  const clearFilters = () => {
+    setQuery("");
+    setPrice("");
+    setDate("");
+    setFilteredServices(services); // Reset to all services
+  };
 
   return (
     <div className="list-of-services-page">
@@ -113,9 +124,6 @@ function ListOfServices() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <button type="button" >
-          Search
-        </button>
         <button type="button" onClick={handleFilterToggle}>
           Filter
         </button>
