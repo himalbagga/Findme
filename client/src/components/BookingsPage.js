@@ -6,8 +6,55 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faClock, faDollarSign, faInfoCircle, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 
+
 const BookingHistoryPage = () => {
-  const [bookings, setBookings] = useState([]);
+
+    const dummyBookings = [
+      {
+        _id: '1',
+        serviceProvider: {
+          _id: 'sp1',
+          serviceName: 'Home Cleaning',
+          location: '123 Main Street, Cityville',
+        },
+        date: '2024-12-01T10:30:00Z',
+        timeSlot: '10:30 AM - 12:30 PM',
+        paymentInfo: {
+          amount: 50,
+          paymentStatus: 'Paid',
+        },
+      },
+      {
+        _id: '2',
+        serviceProvider: {
+          _id: 'sp2',
+          serviceName: 'Gardening Service',
+          location: '45 Greenway Blvd, Gardentown',
+        },
+        date: '2024-12-02T15:00:00Z',
+        timeSlot: '3:00 PM - 5:00 PM',
+        paymentInfo: {
+          amount: 30,
+          paymentStatus: 'Pending',
+        },
+      },
+      {
+        _id: '3',
+        serviceProvider: {
+          _id: 'sp3',
+          serviceName: 'Plumbing Repair',
+          location: '78 Pipe St, Watercity',
+        },
+        date: '2024-12-03T09:00:00Z',
+        timeSlot: '9:00 AM - 10:00 AM',
+        paymentInfo: {
+          amount: 100,
+          paymentStatus: 'Paid',
+        },
+      },
+    ];
+
+  const [bookings, setBookings] = useState(dummyBookings);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useContext(UserContext);
@@ -37,7 +84,7 @@ const BookingHistoryPage = () => {
 
   const handleCancelBooking = async (bookingId) => {
     try {
-      await axios.delete(`http://localhost:5001/api/bookings/${bookingId}`);
+      // await axios.delete(`http://localhost:5001/api/bookings/${bookingId}`);
       setBookings(bookings.filter(booking => booking._id !== bookingId));
     } catch (error) {
       console.error('Error cancelling booking:', error);
