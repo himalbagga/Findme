@@ -205,7 +205,7 @@ exports.getUser = async (req, res) => {
       return res.this.status(404).json({ message: 'User not found' });
     }
 
-  
+
     res.status(200).json(user);
   } catch (err) {
     console.error(err);
@@ -257,7 +257,7 @@ exports.getUserBookings = async (req, res) => {
   try {
     const userId = req.params.userId;
     const user = await User.findById(userId).populate('bookings.serviceId');
-    
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -268,3 +268,170 @@ exports.getUserBookings = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+
+
+// @desc    Toggle a listing in user's favorites
+// @route   POST /api/users/:userId/favorites/:serviceId/toggle
+// @access  Public
+exports.toggleFavorite = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const serviceId = req.params.serviceId;
+
+    // Fetch the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the service is already in the user's favorites
+    const isFavorite = user.favorites.includes(serviceId);
+
+    if (isFavorite) {
+      // Remove the service from the user's favorites
+      user.favorites.pull(serviceId);
+      await user.save();
+      res.status(200).json({
+        success: true,
+        message: 'Service removed from favorites',
+        favorites: user.favorites,
+      });
+    } else {
+      // Add the service to the user's favorites
+      user.favorites.push(serviceId);
+      await user.save();
+      res.status(200).json({
+        success: true,
+        message: 'Service added to favorites',
+        favorites: user.favorites,
+      });
+    }
+  } catch (error) {
+    console.error('Error toggling favorite:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+
+// @desc    Add a listings to user's favorites
+// @route   POST /api/users/:userId/favorites/:serviceId
+// @access  Public
+//const mongoose = require('mongoose');
+
+// exports.addFavorite = async (req, res) => {
+//   try {
+//     const userId = req.params.userId;
+//     const serviceId = req.params.serviceId;
+
+//     // Convert serviceId to ObjectId if it's not already
+//     const objectIdServiceId = new mongoose.Types.ObjectId(serviceId);
+
+//     const user = await User.findById(userId);
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     // Add the service to favorites if it's not already in the list
+//     if (!user.favorites.some(fav => fav.equals(objectIdServiceId))) {
+//       user.favorites.push(objectIdServiceId);
+//       await user.save();
+//     }
+
+//     res.status(200).json({ message: 'Service added to favorites', favorites: user.favorites });
+//   } catch (error) {
+//     console.error('Error adding favorite:', error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
+
+
+
+// @desc    Remove a listing from user's favorites
+// @route   DELETE /api/users/:userId/favorites/:serviceId
+// @access  Public
+// exports.removeFavorite = async (req, res) => {
+//   try {
+//     const userId = req.params.userId;
+//     const serviceId = req.params.serviceId;
+
+//     const user = await User.findById(userId);
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     // Remove the service from favorites if it exists
+//     user.favorites = user.favorites.filter(fav => fav.toString() !== serviceId);
+//     await user.save();
+
+//     res.status(200).json({ message: 'Service removed from favorites', favorites: user.favorites });
+//   } catch (error) {
+//     console.error('Error removing favorite:', error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
+
+// @desc    Get user's favorites lisitng
+// @route   GET /api/users/:userId/favorites
+// @access  Public
+// exports.getFavorites = async (req, res) => {
+//   try {
+//     const userId = req.params.userId;
+
+//     // Fetch user without populating
+//     const user = await User.findById(userId);
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     // Log before populating
+//     console.log('Favorites before population:', user.favorites);
+
+//     // Populate favorites
+//     await user.populate('favorites');
+
+//     // Log after populating
+//     console.log('Favorites after population:', user.favorites);
+
+//     res.status(200).json({ favorites: user.favorites });
+//   } catch (error) {
+//     console.error('Error fetching favorites:', error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
+// @desc    Get user's favorites listings
+// @route   GET /api/users/:userId/favorites
+// @access  Public
+exports.getFavorites = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Fetch the user and populate the favorites to get detailed info about each service
+    const user = await User.findById(userId).populate('favorites');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if there are any favorites
+    if (!user.favorites || user.favorites.length === 0) {
+      return res.status(404).json({ message: 'No favorites found' });
+    }
+
+    // Log populated favorites for debugging purposes
+    console.log('Populated favorites:', user.favorites);
+
+    res.status(200).json({ favorites: user.favorites });
+  } catch (error) {
+    console.error('Error fetching favorites:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+
+
