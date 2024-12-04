@@ -91,8 +91,7 @@ const userSchema = new mongoose.Schema({
     contentType: String,
     filename: String,
   },
-  services: [ServiceSchema], // New field for multiple services
-  bookings: [BookingSchema], // New field for multiple bookings
+  services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }],
 
   createdAt: {
     type: Date,

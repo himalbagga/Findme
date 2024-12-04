@@ -1,10 +1,11 @@
+// routes/bookingRoutes.js
 const express = require('express');
-const { createBooking, cancelBooking } = require('../controllers/bookingController');
+const { createBooking, getUserBookings, cancelBooking } = require('../controllers/bookingController');
 
 const router = express.Router();
 
-router.post('/create', createBooking); // Route to create a new booking
-
-router.delete('/cancel', cancelBooking); // Delete endpoint for cancelling a booking
+router.post('/create', createBooking);
+router.get('/user/:userId', getUserBookings);
+router.delete('/:bookingId', cancelBooking);
 
 module.exports = router;

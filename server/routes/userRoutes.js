@@ -14,5 +14,6 @@ router.put('/update/:id', userController.updateUser);
 
 // Resume management
 
+router.get('/:userId/bookings', userController.getUserBookings);
 
 module.exports = router;
