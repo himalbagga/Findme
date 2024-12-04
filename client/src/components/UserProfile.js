@@ -6,7 +6,8 @@ import { useContext } from 'react';
 import { UserContext } from './../UserContext';
 import axios from 'axios';
 import ServiceCard from './ServiceCard';
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft} from "@fortawesome/free-solid-svg-icons"
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
@@ -100,9 +101,9 @@ const UserProfile = () => {
   return (
     <div className="user-profile">
 
-      <button className="back-button" onClick={() => navigate('/')}>
-        &larr; Back to Home
-      </button>
+      <div className="back-icon" onClick={() => navigate("/")}>
+        <FontAwesomeIcon icon={faArrowLeft} /> Back to Home
+      </div>
       {isEditing ? (
         <EditForm user={user} onSave={handleSave} onCancel={handleCancel} />
       ) : (

@@ -35,16 +35,6 @@ const BookingHistoryPage = () => {
     fetchBookings();
   }, [user]);
 
-  const handleCancelBooking = async (bookingId) => {
-    try {
-      // Navigate to the cancellation page and pass the booking ID as a parameter
-      navigate(`/cancel/${bookingId}`);
-    } catch (error) {
-      console.error('Error navigating to cancellation form:', error);
-      setError('Failed to navigate to cancellation form. Please try again later.');
-    }
-  };
-
   if (loading) return <div className="text-center py-4">Loading...</div>;
   if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
 
@@ -56,6 +46,24 @@ const BookingHistoryPage = () => {
           <p className="text-gray-600 mt-2">View and manage your service bookings</p>
         </div>
       </header>
+      <nav>
+        <Link to="/">Home</Link>
+        <Link to="/why-find-me">Why Find Me</Link>
+        <Link to="/listofservices">Find Talent</Link>
+        <Link to="/contact">Contact</Link>
+        {user ? (
+          <>
+            <Link title="Click to show profile" to="/profile">Welcome {user?.username}</Link>
+            <Link to="/add-service" className="add-service-link">Add Service</Link>
+            <Link to="/bookings">Bookings</Link>
+          </>
+        ) : (
+          <>
+            <Link to="/signup">Sign Up</Link>
+            <Link to="/login">Login</Link>
+          </>
+        )}
+      </nav>
 
       <div className="container mx-auto px-4 py-8">
         {bookings.length === 0 ? (
@@ -66,39 +74,39 @@ const BookingHistoryPage = () => {
             <p>Email: {user.email}</p>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="service">
             {bookings.map((booking) => (
               <div key={booking._id} className="bg-white shadow-md rounded-lg overflow-hidden">
                 <div className="p-6">
                   <h2 className="text-xl font-semibold mb-2">
                     {booking.serviceName || 'Unknown Service'}
                   </h2>
-                  <div className="text-gray-600 space-y-2">
+                  <div className="text-gray-600 space-y-2" >
                     <p>
-                      <FontAwesomeIcon icon={faCalendarAlt} className="mr-2" />
+                      <FontAwesomeIcon style={{ marginRight: '5px' }} icon={faCalendarAlt} className="mr-2" />
                       Date: {new Date(booking.date).toLocaleDateString()}
                     </p>
                     {booking.timeSlot.map((slot, index) => (
                       <div key={index}>
                         <p>
-                          <FontAwesomeIcon icon={faClock} className="mr-2" />
+                          <FontAwesomeIcon style={{ marginRight: '5px' }} icon={faClock} className="mr-2" />
                           Day: {slot.day}
                         </p>
-                        <p>
+                        <p style={{ marginLeft: '21px' }}>
                           Time: {slot.startTime} - {slot.endTime}
                         </p>
                       </div>
                     ))}
                     <p>
-                      <FontAwesomeIcon icon={faDollarSign} className="mr-2" />
+                      <FontAwesomeIcon style={{ marginRight: '5px' }}icon={faDollarSign} className="mr-2" />
                       Amount: ${booking.amount}
                     </p>
                     <p>
-                      <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
+                      <FontAwesomeIcon style={{ marginRight: '5px' }} icon={faInfoCircle} className="mr-2" />
                       Status: {booking.paymentInfo.paymentStatus}
                     </p>
                     <p>
-                      <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2" />
+                      <FontAwesomeIcon style={{ marginRight: '5px' }} icon={faMapMarkerAlt} className="mr-2" />
                       Location: {booking.location}
                     </p>
                   </div>
@@ -110,12 +118,13 @@ const BookingHistoryPage = () => {
                   >
                     View Service Provider
                   </Link>
-                  <button
-                    onClick={() => handleCancelBooking(booking._id)}
-                    className="text-red-500 hover:underline"
+                  <Link
+                    to={`/cancel/${booking._id}`}
+                    className="text-red-500 hover:underline "
+                    style={{ marginLeft: '20px' }}
                   >
                     Cancel
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}
