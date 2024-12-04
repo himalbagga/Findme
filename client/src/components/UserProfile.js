@@ -473,17 +473,22 @@ const EditForm = ({ user, onSave, onCancel }) => {
       if (file) {
         const allowedExtensions = ["docx", "png", "jpeg", "pdf"];
         const fileExtension = file.name.split('.').pop().toLowerCase();
-        if (allowedExtensions.includes(fileExtension)) {
-          setResumeFile(file); // Process the file if it's allowed
-        } else {
+        const maxSize = 2 * 1024 * 1024; // 2 MB in bytes
+
+        if (!allowedExtensions.includes(fileExtension)) {
           alert("Invalid file type. Please upload a .docx, .png, .jpeg, or .pdf file.");
           e.target.value = ""; // Clear the input
+        } else if (file.size > maxSize) {
+          alert("File size exceeds the limit of 2 MB. Please upload a smaller file.");
+          e.target.value = ""; // Clear the input
+        } else {
+          setResumeFile(file); // Process the file if it's valid
         }
       }
     }}
   />
     <small className="text-muted">
-    Allowed file types: .docx, .png, .jpeg, .pdf
+    Allowed file types: .docx, .png, .jpeg, .pdf | Max size: 2 MB
   </small> {/* Display allowed file types */}
   {!isUploaded && (
     <button type='button' onClick={handleResumeUpload}>Upload</button>
