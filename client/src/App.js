@@ -29,7 +29,7 @@ const App = () => {
         <Route exact path="/success" element={<PaymentSuccess />} />
         <Route exact path="/review" element={<UserReviewForm />} />
         <Route exact path="/bookings" element={<BookingsPage />} />
-        <Route exact path="/why-find-me" element={<CancellationForm />} />
+        <Route exact path="/cancel/:bookingId" element={<CancellationForm />} />
       </Routes>
     </Router>
   );

@@ -1,63 +1,16 @@
-// BookingHistoryPage.js
 import React, { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../UserContext';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faClock, faDollarSign, faInfoCircle, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 
-
 const BookingHistoryPage = () => {
-
-    const dummyBookings = [
-      {
-        _id: '1',
-        serviceProvider: {
-          _id: 'sp1',
-          serviceName: 'Home Cleaning',
-          location: '123 Main Street, Cityville',
-        },
-        date: '2024-12-01T10:30:00Z',
-        timeSlot: '10:30 AM - 12:30 PM',
-        paymentInfo: {
-          amount: 50,
-          paymentStatus: 'Paid',
-        },
-      },
-      {
-        _id: '2',
-        serviceProvider: {
-          _id: 'sp2',
-          serviceName: 'Gardening Service',
-          location: '45 Greenway Blvd, Gardentown',
-        },
-        date: '2024-12-02T15:00:00Z',
-        timeSlot: '3:00 PM - 5:00 PM',
-        paymentInfo: {
-          amount: 30,
-          paymentStatus: 'Pending',
-        },
-      },
-      {
-        _id: '3',
-        serviceProvider: {
-          _id: 'sp3',
-          serviceName: 'Plumbing Repair',
-          location: '78 Pipe St, Watercity',
-        },
-        date: '2024-12-03T09:00:00Z',
-        timeSlot: '9:00 AM - 10:00 AM',
-        paymentInfo: {
-          amount: 100,
-          paymentStatus: 'Paid',
-        },
-      },
-    ];
-
-  const [bookings, setBookings] = useState(dummyBookings);
+  const [bookings, setBookings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -67,7 +20,6 @@ const BookingHistoryPage = () => {
           const response = await axios.get(`http://localhost:5001/api/bookings/user/${user.id}`);
           console.log('Bookings response:', response.data);
           setBookings(response.data);
-          
         } catch (error) {
           console.error('Error fetching bookings:', error);
           setError(error.response?.data?.message || 'Failed to fetch bookings');
@@ -85,11 +37,11 @@ const BookingHistoryPage = () => {
 
   const handleCancelBooking = async (bookingId) => {
     try {
-      // await axios.delete(`http://localhost:5001/api/bookings/${bookingId}`);
-      setBookings(bookings.filter(booking => booking._id !== bookingId));
+      // Navigate to the cancellation page and pass the booking ID as a parameter
+      navigate(`/cancel/${bookingId}`);
     } catch (error) {
-      console.error('Error cancelling booking:', error);
-      setError('Failed to cancel booking. Please try again later.');
+      console.error('Error navigating to cancellation form:', error);
+      setError('Failed to navigate to cancellation form. Please try again later.');
     }
   };
 
@@ -126,10 +78,6 @@ const BookingHistoryPage = () => {
                       <FontAwesomeIcon icon={faCalendarAlt} className="mr-2" />
                       Date: {new Date(booking.date).toLocaleDateString()}
                     </p>
-                    {/* <p>
-                      <FontAwesomeIcon icon={faClock} className="mr-2" />
-                      Time: {booking.timeSlot}
-                    </p> */}
                     {booking.timeSlot.map((slot, index) => (
                       <div key={index}>
                         <p>
@@ -156,15 +104,15 @@ const BookingHistoryPage = () => {
                   </div>
                 </div>
                 <div className="bg-gray-50 px-6 py-4 flex justify-between items-center">
-                  <Link 
-                    to={`/services/${booking.serviceProvider}`} 
+                  <Link
+                    to={`/services/${booking.serviceProvider}`}
                     className="text-blue-500 hover:underline"
                   >
                     View Service Provider
                   </Link>
                   <button
                     onClick={() => handleCancelBooking(booking._id)}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-300"
+                    className="text-red-500 hover:underline"
                   >
                     Cancel
                   </button>

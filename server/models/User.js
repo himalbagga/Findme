@@ -89,7 +89,7 @@ const userSchema = new mongoose.Schema({
   languages: {
     type: [String],
   },
-  services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }], \
+  services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }], 
   favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }],
 
   createdAt: {
