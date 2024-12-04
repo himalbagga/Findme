@@ -4,9 +4,11 @@ import { UserContext, UserProvider } from "../UserContext";
 import "../styles/ServiceDetailsPage.css";
 import axios from 'axios';
 
+
 // Import Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faMapMarkerAlt, faFileDownload, faLanguage, faCalendarAlt, faClock, faDollarSign, faCheckCircle, faCreditCard, faPerson } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faMapMarkerAlt, faFileDownload, faLanguage, faCalendarAlt, faClock, faDollarSign, faCheckCircle, faCreditCard, faPerson, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
 import CheckoutForm from "./CheckoutForm"
 //// import { useContext } from 'react';
 //// import { UserContext } from './../UserContext';
@@ -22,6 +24,7 @@ function ServiceDetailsPage() {
   const [service, setService] = useState(null);
   const [ratings, setRatings] = useState([]); // To store existing ratings
   const [averageRating, setAverageRating] = useState(0);
+  const [isHeartSolid, setIsHeartSolid] = useState(false);
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: "",
     expiryDate: "",
@@ -242,6 +245,17 @@ const renderStars = (rating) => {
         <a href={resumeUrl} download className="download-resume">
           <FontAwesomeIcon icon={faFileDownload} /> Download Resume
         </a>
+        <button
+          className="btn"
+          onClick={() => setIsHeartSolid(!isHeartSolid)}
+          style={{ marginLeft: "10px", background: "none", border: "none", cursor: "pointer" }}
+        >
+          <FontAwesomeIcon
+            icon={isHeartSolid ? faHeart : faHeartOutline}
+            style={{ color: isHeartSolid ? "red" : "gray", fontSize: "1.5rem" }}
+          />
+        </button>
+        
         <div className="profile-details">
           <p>
             <FontAwesomeIcon icon={faLanguage} /> <strong>Languages:</strong> {languages.join(", ")}
@@ -290,6 +304,7 @@ const renderStars = (rating) => {
           Add to Favorites
         </button>
       </div>
+      
       
 
       <div className="booking-form">
