@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 exports.createBooking = async (req, res) => {
   try {
-    const { userId, serviceProviderId, date, timeSlot, paymentInfo } = req.body;
+    const { userId, serviceProviderId, serviceName, date, timeSlot, paymentInfo, amount, location } = req.body;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -20,13 +20,16 @@ exports.createBooking = async (req, res) => {
     const newBooking = new Booking({
       user: userId,
       serviceProvider: serviceProviderId,
+      serviceName: serviceName,
       date,
       timeSlot: Object.keys(timeSlot).map((day) => ({
         day,
         startTime: timeSlot[day].startTime,
         endTime: timeSlot[day].endTime,
       })),
-      paymentInfo
+      paymentInfo,
+      amount: amount,
+      location: location
     });
 
     await newBooking.save();

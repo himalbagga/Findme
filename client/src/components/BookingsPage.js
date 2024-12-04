@@ -67,6 +67,7 @@ const BookingHistoryPage = () => {
           const response = await axios.get(`http://localhost:5001/api/bookings/user/${user.id}`);
           console.log('Bookings response:', response.data);
           setBookings(response.data);
+          
         } catch (error) {
           console.error('Error fetching bookings:', error);
           setError(error.response?.data?.message || 'Failed to fetch bookings');
@@ -118,20 +119,31 @@ const BookingHistoryPage = () => {
               <div key={booking._id} className="bg-white shadow-md rounded-lg overflow-hidden">
                 <div className="p-6">
                   <h2 className="text-xl font-semibold mb-2">
-                    {booking.serviceProvider.serviceName || 'Unknown Service'}
+                    {booking.serviceName || 'Unknown Service'}
                   </h2>
                   <div className="text-gray-600 space-y-2">
                     <p>
                       <FontAwesomeIcon icon={faCalendarAlt} className="mr-2" />
                       Date: {new Date(booking.date).toLocaleDateString()}
                     </p>
-                    <p>
+                    {/* <p>
                       <FontAwesomeIcon icon={faClock} className="mr-2" />
                       Time: {booking.timeSlot}
-                    </p>
+                    </p> */}
+                    {booking.timeSlot.map((slot, index) => (
+                      <div key={index}>
+                        <p>
+                          <FontAwesomeIcon icon={faClock} className="mr-2" />
+                          Day: {slot.day}
+                        </p>
+                        <p>
+                          Time: {slot.startTime} - {slot.endTime}
+                        </p>
+                      </div>
+                    ))}
                     <p>
                       <FontAwesomeIcon icon={faDollarSign} className="mr-2" />
-                      Amount: ${booking.paymentInfo.amount}
+                      Amount: ${booking.amount}
                     </p>
                     <p>
                       <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
@@ -139,13 +151,13 @@ const BookingHistoryPage = () => {
                     </p>
                     <p>
                       <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2" />
-                      Location: {booking.serviceProvider.location}
+                      Location: {booking.location}
                     </p>
                   </div>
                 </div>
                 <div className="bg-gray-50 px-6 py-4 flex justify-between items-center">
                   <Link 
-                    to={`/service-provider/${booking.serviceProvider._id}`} 
+                    to={`/services/${booking.serviceProvider}`} 
                     className="text-blue-500 hover:underline"
                   >
                     View Service Provider

@@ -54,9 +54,12 @@ const PaymentComponent = ({ subtotal, user, service, dayTimes }) => {
     const bookingData = {
       userId: user.id, // Replace with actual user ID
       serviceProviderId: service._id, // Replace with actual service provider ID
+      serviceName: service.serviceName,
       date: currentDateISO, // Replace with selected date
       timeSlot: dayTimes,
       paymentInfo: paymentInfo,
+      amount: subtotal,
+      location: service.location
     };
   
     try {

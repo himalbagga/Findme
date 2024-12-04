@@ -12,6 +12,10 @@ const bookingSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  serviceName: {
+    type: String,
+    required: true
+  },
   date: {
     type: Date,
     required: true
@@ -29,8 +33,16 @@ const bookingSchema = new mongoose.Schema({
     paymentStatus: {
       type: String,
       enum: ['Not Paid', 'Paid', 'Pending'],
-      default: 'Not Paid',
+      default: 'Paid',
     },
+  },
+  amount: {
+    type: Number,
+    required: true
+  },
+  location: {
+    type: String,
+    required: true
   },
 }, { timestamps: true });
 

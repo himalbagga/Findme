@@ -11,6 +11,7 @@ router.post('/signup', registerUser);
 // User update and profile
 router.get('/user/:id', userController.getUserProfile);
 router.put('/update/:id', userController.updateUser);
+router.get('/:id', userController.getUser);
 
 // Resume management
 
