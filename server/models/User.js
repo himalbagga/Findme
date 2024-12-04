@@ -65,6 +65,9 @@ const userSchema = new mongoose.Schema({
   location: {
     type: String,
   },
+  latitude: { type: Number, required: false },
+  longitude: { type: Number, required: false },
+  
   resume: {
     data: Buffer, // Use Buffer to store the actual file content
     contentType: String, // Metadata to indicate file type

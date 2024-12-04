@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 import emailjs from "@emailjs/browser";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 const Signup = () => {
   const form = useRef();
@@ -54,6 +55,12 @@ const Signup = () => {
       availableDays: checked ? [...prev.availableDays, value] : prev.availableDays.filter((day) => day !== value),
     }));
   };
+
+  // const handleLocationChange = (selectedLocation) => {
+  //   if (selectedLocation) {
+  //     setFormData({ ...formData, location: selectedLocation.label });
+  //   }
+  // };
 
   const sendEmail = async (e) => {
     e.preventDefault();
@@ -186,14 +193,22 @@ const Signup = () => {
 
             <div style={styles.formGroup}>
               <label>Location</label>
-              <select name="location" style={styles.input} value={formData.location} onChange={handleChange}>
+              <input
+              type="text"
+              name="location"
+              placeholder="Enter your full address"
+              style={styles.input}
+              value={formData.location}
+              onChange={handleChange}
+              />
+              {/* <select name="location" style={styles.input} value={formData.location} onChange={handleChange}>
                 <option value="">Select Location</option>
                 <option value="Toronto">Toronto</option>
                 <option value="Vancouver">Vancouver</option>
                 <option value="Montreal">Montreal</option>
                 <option value="Calgary">Calgary</option>
                 <option value="Edmonton">Edmonton</option>
-              </select>
+              </select> */}
             </div>
 
             <div style={styles.formGroup}>

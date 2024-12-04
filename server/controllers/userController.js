@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const axios = require('axios');
 
 // @desc    Register new user
 // @route   POST /api/users/signup
@@ -23,6 +24,7 @@ exports.registerUser = async (req, res) => {
       price,
       languages,
     } = req.body;
+    
 
     console.log('Request Body:', req.body); // Log the entire request body to see the incoming data
 
@@ -40,6 +42,22 @@ exports.registerUser = async (req, res) => {
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
+
+    let latitude = null;
+    let longitude = null;
+
+    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=AIzaSyCm6ZwWVGotswtlCaLJkpXkBUZnVaL24Z4`;
+
+    const geocodeResponse = await axios.get(geocodeUrl);
+    if (geocodeResponse.data.status === 'OK') {
+      const { lat, lng } = geocodeResponse.data.results[0].geometry.location;
+
+      latitude= lat;
+      longitude = lng;
+      console.log('Latitude and Longitude:', lat, lng);
+
+    }
+    
 
     // Hash password
     console.log('Hashing password...');
@@ -63,6 +81,8 @@ exports.registerUser = async (req, res) => {
       serviceType,
       serviceName,
       location,
+      latitude: latitude,
+      longitude: longitude,
       resume,  // Assuming file uploads are handled separately
       availableDays,
       startTime,

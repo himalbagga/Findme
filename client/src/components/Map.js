@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { GoogleMap, Marker } from "@react-google-maps/api";
+import axios from "axios";
 
 const containerStyle = {
   width: "100%",
@@ -11,9 +12,31 @@ const defaultCenter = {
   lng: -122.4194, // Default longitude (San Francisco)
 };
 
+const calculateDistance = (lat1, lng1, lat2, lng2) => {
+  const toRad = (value) => (value * Math.PI) / 180;
+
+  const R = 6371; // Radius of the Earth in kilometers
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const distance = R * c; // Distance in kilometers
+  return distance;
+};
+
 const Map = () => {
   const [userLocation, setUserLocation] = useState(defaultCenter); // Default location
   const [error, setError] = useState(null);
+  const [serviceProviderLocation] = useState({ lat: 37.7749, lng: -122.4194 }); // Example: Service Provider's Location (San Francisco)
+  const [distance, setDistance] = useState(null);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -46,6 +69,19 @@ const Map = () => {
       setError("Geolocation is not supported by this browser.");
     }
   }, []);
+
+  useEffect(() => {
+    if (userLocation && serviceProviderLocation) {
+      // Calculate distance using Haversine formula
+      const calculatedDistance = calculateDistance(
+        userLocation.lat,
+        userLocation.lng,
+        serviceProviderLocation.lat,
+        serviceProviderLocation.lng
+      );
+      setDistance(calculatedDistance);
+    }
+  }, [userLocation, serviceProviderLocation]);
 
   return (
     <div>
