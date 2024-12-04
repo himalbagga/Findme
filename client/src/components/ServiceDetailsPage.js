@@ -325,7 +325,7 @@ const renderStars = (rating) => {
         )}
 
         {subtotal > 0 && (
-          <CheckoutForm subtotal={subtotal} user={user}  />
+          <CheckoutForm subtotal={subtotal} user={user} service={service} dayTimes={dayTimes}/>
         )}
       </div>
     </div>

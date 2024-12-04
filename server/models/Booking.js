@@ -16,13 +16,16 @@ const bookingSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  timeSlot: {
-    type: String,
-    required: true
-  },
+  timeSlot: [
+    {
+      day: { type: String, required: true }, // e.g., "Monday", "Tuesday"
+      startTime: { type: String, required: true }, // e.g., "09:00"
+      endTime: { type: String, required: true }, // e.g., "17:00"
+    },
+  ],
   paymentInfo: {
-    amount: { type: Number, required: true },
-    paymentMethod: { type: String, required: true },
+    amount: { type: Number, required: false },
+    paymentMethod: { type: String, required: false },
     paymentStatus: {
       type: String,
       enum: ['Not Paid', 'Paid', 'Pending'],

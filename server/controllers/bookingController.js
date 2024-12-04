@@ -21,7 +21,11 @@ exports.createBooking = async (req, res) => {
       user: userId,
       serviceProvider: serviceProviderId,
       date,
-      timeSlot,
+      timeSlot: Object.keys(timeSlot).map((day) => ({
+        day,
+        startTime: timeSlot[day].startTime,
+        endTime: timeSlot[day].endTime,
+      })),
       paymentInfo
     });
 
