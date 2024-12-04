@@ -23,7 +23,7 @@ const BookingSchema = new mongoose.Schema({
     paymentStatus: {
       type: String,
       enum: ['Not Paid', 'Paid', 'Pending'],
-      default: 'Not Paid',
+      default: 'Paid',
     },
   },
 });
@@ -86,8 +86,7 @@ const userSchema = new mongoose.Schema({
   languages: {
     type: [String],
   },
-  services: [ServiceSchema], // New field for multiple services
-  bookings: [BookingSchema], // New field for multiple bookings\
+  services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }], \
   favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }],
 
   createdAt: {

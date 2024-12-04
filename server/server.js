@@ -77,9 +77,9 @@ app.post('/api/create-payment-intent', async (req, res) => {
     res.status(200).json({ clientSecret: paymentIntent.client_secret });
 
     const message = `Your payment of $${(amount / 100).toFixed(2)} was successful! Thank you for booking!`;
-    sendMail(email, 'Payment Confirmation!', message)
-      .then(() => console.log(`Confimation email sent to ${email}`))
-      .catch((error) => console.error(`Error sending email: `, error));
+    // sendMail(email, 'Payment Confirmation!', message)
+    //   .then(() => console.log(`Confimation email sent to ${email}`))
+    //   .catch((error) => console.error(`Error sending email: `, error));
 
   } catch (error) {
     console.error('Error creating payment intent:', error);
@@ -90,3 +90,4 @@ app.post('/api/create-payment-intent', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+

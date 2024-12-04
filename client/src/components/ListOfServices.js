@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './ListOfServices.css';
 import ServiceCard from './listOfServicesCard';
 import { UserContext } from './../UserContext';
+import debounce from "lodash.debounce";
 
 function ListOfServices() {
   const [services, setServices] = useState([]); // Store fetched services
@@ -14,6 +15,8 @@ function ListOfServices() {
   const [date, setDate] = useState(""); // Filter by date
   const navigate = useNavigate();
   const { user } = useContext(UserContext); // Get logged-in user details
+  const [location, setLocation] = useState(null); // Store user's location
+  const [error, setError] = useState(null); // Store error messages
 
   // Fetch all services when the component mounts
   useEffect(() => {
@@ -65,7 +68,7 @@ function ListOfServices() {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = debounce(() => {
     const results = services.filter(service => {
       const matchesQuery =
         query === "" || service.serviceName.toLowerCase().includes(query.toLowerCase());
@@ -75,10 +78,43 @@ function ListOfServices() {
     });
 
     setFilteredServices(results);
-  };
+  }, 300);
+
+  useEffect(() => {
+    handleSearch();
+  }, [query, price])
 
   const handleFilterToggle = () => setShowFilter(!showFilter);
   
+  const clearFilters = () => {
+    setQuery("");
+    setPrice("");
+    setDate("");
+    setFilteredServices(services); // Reset to all services
+  };
+
+  // Handle Get Location
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setLocation({ latitude, longitude });
+        setError(null);
+
+        // You can call a reverse geocoding API here to get a human-readable address
+        console.log("User's location:", latitude, longitude);
+      },
+      (error) => {
+        setError("Unable to retrieve your location. Please try again.");
+        console.error("Geolocation error:", error);
+      }
+    );
+  };
 
   return (
     <div className="list-of-services-page">
@@ -113,9 +149,9 @@ function ListOfServices() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <button type="button" >
-          Search
-        </button>
+       
+
+      {error && <p className="error">{error}</p>}
         <button type="button" onClick={handleFilterToggle}>
           Filter
         </button>

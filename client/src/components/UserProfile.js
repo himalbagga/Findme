@@ -5,6 +5,7 @@ import placeholderPic from "../images/ProfilePlaceHolder.svg";
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
 import axios from 'axios';
+import ServiceCard from './ServiceCard';
 
 
 const UserProfile = () => {
@@ -12,6 +13,7 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [reviews, setReviews] = useState([]);
   const[resume, setResume] = useState([]);
+  const[favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
 
   const { user: contextUser } = useContext(UserContext);
@@ -60,10 +62,25 @@ const UserProfile = () => {
       }
     };
 
+    const fetchFavorites = async () => {
+      try {
+        const userId = contextUser?.id;
+        if (!userId) {
+          console.error("User Id not found in context.");
+          return;
+        }
+        const response = await axios.get(`http://localhost:5001/api/users/${userId}/favorites`);
+        setFavorites(response.data);
+      } catch (error) {
+        console.error("Error fetching favorites: ", error);
+      }
+    };
+
     if (contextUser?.id) {  
       fetchUser();
       fetchReviews();
       fetchResume();
+      fetchFavorites();
     }
     
   }, [contextUser]);
@@ -89,13 +106,17 @@ const UserProfile = () => {
       {isEditing ? (
         <EditForm user={user} onSave={handleSave} onCancel={handleCancel} />
       ) : (
-        <ProfileDisplay user={user} onEdit={handleEdit} onDelete={handleDelete} />
+        <ProfileDisplay 
+          user={user} 
+          onEdit={handleEdit} 
+          onDelete={handleDelete} 
+        />
       )}
     </div>
   );
 };
 
-const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume }) => (
+const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume, favorites, onFavoriteToggle }) => (
   <div className="profile-display">
     <div className="profile-header">
       <h2>User Profile</h2>
@@ -125,9 +146,57 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume }) => (
           <p>No resume uploaded</p>
         )}
       </div>
-    </div>
 
-    <div className='profile-reviews'>
+      <div className='profile-services'>
+        <h3>Services Offered</h3>
+        
+        {user?.serviceName && user?.location && user?.languages && user?.price ? (
+            <ServiceCard
+              id={user._id}
+              title={user.serviceName}
+              location={user.location}
+              languages={user.languages}
+              pricePerHour={user.price}
+            />
+          ) : (
+              <p>No service available</p>
+          )}
+
+        {user?.services && user?.services?.length > 0 ? (
+            user.services.map((service) => (
+              <ServiceCard 
+                id={service._id}
+                title={service.serviceName}
+                location={service.location}
+                languages={service.languages}
+                pricePerHour={service.price}
+              />
+            ))
+          ) : (
+            <p></p>
+          )}
+      </div>
+
+      <div className='profile-favorites'>
+          <h3>Favorite Services</h3>
+          {favorites?.length > 0 ? (
+            favorites.map((service) => (
+              <div key={service._id} className='favorite-service'>
+                <ServiceCard
+                  id={service._id}
+                  title={service.serviceName}
+                  location={service.location}
+                  languages={service.languages}
+                  pricePerHour={service.price}
+                />
+              </div>
+            ))
+          ) : (
+            <p>No favorites yet.</p>
+          )}
+      </div>
+
+      <div className='profile-reviews'>
         <h3>Reviews</h3>
         {reviews?.length > 0 ? (
           reviews.map((review) => (
@@ -135,28 +204,14 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume }) => (
               <h5>{review.title}</h5>
               <p>{review.review}</p>
               <p><strong>Rating:</strong> {review.rating} ⭐</p>
-              <p><em>{new Date(review.creatdAt).toLocaleDateString()}</em></p>
+              <p><em>{new Date(review.createdAt).toLocaleDateString()}</em></p>
             </div>
           ))
         ) : (
           <p>No reviews available.</p>
         )}
-    </div>
+      </div>
 
-    <div className='profile-services'>
-      <h3>Services Offered</h3>
-        {user ? (
-          <>
-            <h5>{user.serviceName}</h5>
-            <p>{user.location}</p>
-            <p>{user.languages?.join(", ")}</p>
-            <p>Price: ${user.price}/hour</p>
-            <p>Available Days: {user.availableDays?.join(", ")}</p>
-            <p>Hours: {user.startTime} - {user.endTime}</p>
-          </>
-        ) : (
-          <p>No service available</p>
-        )}
     </div>
     
     <div className="profile-footer">
@@ -192,18 +247,33 @@ const EditForm = ({ user, onSave, onCancel }) => {
   };
 
   const handleResumeUpload = () => {
-    if (resumeFile) {
-      setEditedUser((prev) => ({
-        ...prev,
-        resume: URL.createObjectURL(resumeFile),
-      }));
-      setIsUploaded(true);
+    const confirmation = window.confirm(
+    "Are you sure you want to upload this resume? This will replace any existing resume."
+    );
+    
+    if (confirmation) {
+      if (resumeFile) {
+        setEditedUser((prev) => ({
+          ...prev,
+          resume: URL.createObjectURL(resumeFile),
+        }));
+        setIsUploaded(true);
+        alert("Resume uploaded successfully!");
+      }
+    } else {
+      alert("No file selected for upload.");
     }
   };
 
   const handleResumeDelete = () => {
-    setEditedUser((prev) => ({ ...prev, resume: null }));
-    setIsUploaded(false);
+    const confirmation = window.confirm(
+    "Are you sure you want to delete your resume? This action cannot be undone."
+    );
+    if (confirmation) {
+      setEditedUser((prev) => ({ ...prev, resume: null }));
+      setIsUploaded(false);
+      alert("Resume deleted successfully!");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -389,24 +459,47 @@ const EditForm = ({ user, onSave, onCancel }) => {
       />
     </div>
 
-    {/* Resume */}
-    <div className="form-group">
-      <label htmlFor="resume">Resume</label>
-      <input
-        type="file"
-        id="resume"
-        name="resume"
-        className="input-field"
-        onChange={(e) => setResumeFile(e.target.files[0])} // Assuming a handler for file uploads
-      />
-      {!isUploaded && (<button type='button' onClick={handleResumeUpload}>Upload</button>)}
-      {isUploaded && (
-        <>
-          <a href={editedUser.resume} target="_blank" rel="noopener noreferrer">View Current Resume</a>
-          <button type='button' onClick={handleResumeDelete}>Delete Resume</button>
-        </>
-      )}
-    </div>
+{/* Resume */}
+<div className="form-group">
+  <label htmlFor="resume">Resume</label>
+  <input
+    type="file"
+    id="resume"
+    name="resume"
+    className="input-field"
+    accept=".docx, .png, .jpeg, .pdf" // Restrict file types
+    onChange={(e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const allowedExtensions = ["docx", "png", "jpeg", "pdf"];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+        const maxSize = 2 * 1024 * 1024; // 2 MB in bytes
+
+        if (!allowedExtensions.includes(fileExtension)) {
+          alert("Invalid file type. Please upload a .docx, .png, .jpeg, or .pdf file.");
+          e.target.value = ""; // Clear the input
+        } else if (file.size > maxSize) {
+          alert("File size exceeds the limit of 2 MB. Please upload a smaller file.");
+          e.target.value = ""; // Clear the input
+        } else {
+          setResumeFile(file); // Process the file if it's valid
+        }
+      }
+    }}
+  />
+    <small className="text-muted">
+    Allowed file types: .docx, .png, .jpeg, .pdf | Max size: 2 MB
+  </small> {/* Display allowed file types */}
+  {!isUploaded && (
+    <button type='button' onClick={handleResumeUpload}>Upload</button>
+  )}
+  {isUploaded && (
+    <>
+      <a href={editedUser.resume} target="_blank" rel="noopener noreferrer">View Current Resume</a>
+      <button type='button' onClick={handleResumeDelete}>Delete Resume</button>
+    </>
+  )}
+</div>
 
     
       

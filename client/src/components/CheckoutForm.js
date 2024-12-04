@@ -5,7 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDollarSign, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
-const PaymentComponent = ({ subtotal, user }) => {
+import { useRef } from 'react';
+import emailjs from '@emailjs/browser';
+
+const PaymentComponent = ({ subtotal, user, service, dayTimes }) => {
+  const form = useRef();
   const stripe = useStripe();
   const elements = useElements();
   const [email, setEmail] = useState(user?.email || '');
@@ -17,6 +21,8 @@ const PaymentComponent = ({ subtotal, user }) => {
   const [loading, setLoading] = useState(false);
 	const [message, setMessage] = useState('');
 	const navigate = useNavigate();
+  const currentDate = new Date(); 
+  const currentDateISO = currentDate.toISOString().split('T')[0];
 
   console.log('User passed to Payment Component: ', user);
 
@@ -25,10 +31,65 @@ const PaymentComponent = ({ subtotal, user }) => {
     setPaymentInfo({ ...paymentInfo, [e.target.name]: e.target.value });
   };
 
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm('service_qw4tqsp', 'template_2j6o6ua', form.current, {
+        publicKey: 'zomtsQF384EML4F90',
+      })
+      .then(
+        () => {
+          console.log('SUCCESS!');
+          alert('Email Confirmation Sent...');
+        },
+        (error) => {
+          console.log('FAILED...', error.text);
+          alert('Error sending Email Confirmation...');
+        },
+      );
+  };
+
+  const createBooking = async () => {
+    const bookingData = {
+      userId: user.id, // Replace with actual user ID
+      serviceProviderId: service._id, // Replace with actual service provider ID
+      serviceName: service.serviceName,
+      date: currentDateISO, // Replace with selected date
+      timeSlot: dayTimes,
+      paymentInfo: paymentInfo,
+      amount: subtotal,
+      location: service.location
+    };
+  
+    try {
+      console.log(bookingData);
+      const response = await fetch("http://localhost:5001/api/bookings/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookingData),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const result = await response.json();
+      console.log("Booking created successfully:", result);
+      alert("Booking created successfully!");
+    } catch (error) {
+      console.error("Error creating booking:", error);
+      alert("Failed to create booking. Please try again.");
+    }
+  };
+  
+
   console.log('User:', user);
 
   // Handle payment submission
-  const handlePay = async () => {
+  const handlePay = async (e) => {
     if (!stripe || !elements) {
       alert('Stripe has not loaded yet.');
       return;
@@ -56,7 +117,9 @@ const PaymentComponent = ({ subtotal, user }) => {
         setMessage(`Payment failed: ${result.error.message}`);
       } else if (result.paymentIntent.status === 'succeeded') {
 		  setMessage('Payment successful!');
-		  
+      createBooking();
+      sendEmail(e);
+
 		  navigate('/success');
       }
     } catch (error) {
@@ -69,6 +132,10 @@ const PaymentComponent = ({ subtotal, user }) => {
 
   return (
     <div className="invoice">
+      <form ref={form}>
+      <input type="hidden" name="username" value={user.username} />
+      <input type="hidden" name="email" value={user.email}/>
+      </form>
       <h3>Invoice</h3>
       <p>
         <FontAwesomeIcon icon={faDollarSign} /> Subtotal: <strong>${subtotal.toFixed(2)}</strong>

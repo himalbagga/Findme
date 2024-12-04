@@ -11,10 +11,12 @@ router.post('/signup', registerUser);
 // User update and profile
 router.get('/user/:id', userController.getUserProfile);
 router.put('/update/:id', userController.updateUser);
+router.get('/:id', userController.getUser);
 
 // Routes for managing favorites
 router.post('/:userId/favorites/:serviceId/toggle', toggleFavorite); // Handle adding/removiong services to favorites
 router.get('/:userId/favorites', getFavorites); // Get all favorite services for a user
 
+router.get('/:userId/bookings', userController.getUserBookings);
 
 module.exports = router; 
