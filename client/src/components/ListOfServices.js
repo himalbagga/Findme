@@ -176,7 +176,7 @@ function ListOfServices() {
         )}
       </div>
 
-      <div className="results-container">
+      <div className="body_container">
         {loading ? (
           <p>Loading...</p>
         ) : filteredServices.length > 0 ? (
@@ -192,7 +192,11 @@ function ListOfServices() {
             ))}
           </div>
         ) : (
-          <p>No services available at the moment.</p>
+          <p style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}>No services available at the moment.</p>
         )}
       </div>
 

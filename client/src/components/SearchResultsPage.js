@@ -149,7 +149,7 @@ function SearchResultsPage() {
           </div>
         )}
 
-      <div className="results-container">
+      <div className="body_container">
         {loading ? (
           <p>Loading...</p>
         ) : results.length > 0 ? (
@@ -168,7 +168,11 @@ function SearchResultsPage() {
             ))}
           </div>
         ) : (
-          <p>No results found</p>
+          <p style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>No results found</p>
         )}
       </div>
     </div>
