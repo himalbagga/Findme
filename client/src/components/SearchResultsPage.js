@@ -144,6 +144,8 @@ function SearchResultsPage() {
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
             />
+
+              <input type="text" placeholder="Enter location" />
           </div>
         )}
 
