@@ -177,28 +177,33 @@ function ListOfServices() {
       </div>
 
       <div className="body_container">
-        {loading ? (
-          <p>Loading...</p>
-        ) : filteredServices.length > 0 ? (
-          <div className="service-list">
-            {filteredServices.map((service, index) => (
-              <ServiceCard
-                key={index}
-                id={service._id}  // Ensure each service has an ID or unique identifier
-                title={service.serviceName}
-                location={service.location}
-                pricePerHour={service.price}
-              />
-            ))}
-          </div>
-        ) : (
-          <p style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-          }}>No services available at the moment.</p>
-        )}
-      </div>
+  {loading ? (
+    <p>Loading...</p>
+  ) : services.length > 0 ? ( // Check if there are any services first
+    <div className="service-list">
+      {(query || price ? filteredServices : services).map((service, index) => (
+        <ServiceCard
+          key={index}
+          id={service._id} // Ensure each service has an ID or unique identifier
+          title={service.serviceName}
+          location={service.location}
+          pricePerHour={service.price}
+        />
+      ))}
+    </div>
+  ) : (
+    <p
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      No services available at the moment.
+    </p>
+  )}
+</div>
+
 
       <footer>
         <p>&copy; 2024 Service Listings. All rights reserved.</p>
