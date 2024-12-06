@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { UserContext, UserProvider } from "../UserContext";
 import "../styles/ServiceDetailsPage.css";
 import axios from 'axios';
+import Modal from "react-modal";
 
 
 // Import Font Awesome
@@ -33,6 +34,34 @@ function ServiceDetailsPage() {
 
   const pricePerHour = serviceData ? serviceData.pricePerHour : 0; // Use the price from fetched data
 
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportType, setReportType] = useState("");
+  const [reportComment, setReportComment] = useState("");
+
+  const handleOpenReportModal = () => setIsReportModalOpen(true);
+  const handleCloseReportModal = () => {
+    setIsReportModalOpen(false);
+    setReportType("");
+    setReportComment("");
+  };
+
+  const handleReportSubmit = async () => {
+    if (!reportType) {
+      alert("Please select a report type.");
+      return;
+    }
+
+    const reportData = {
+      serviceId,
+      userId: user ? user._id : null,
+      reportType,
+      comment: reportComment,
+    };
+
+    alert("Your report has been submitted successfully.");
+  handleCloseReportModal();
+  
+  };
   //const { user } = useContext(UserContext);
   //const user = UserProvider();
   const userId = user ? user._id: null;
@@ -280,6 +309,60 @@ const renderStars = (rating) => {
             <FontAwesomeIcon icon={faDollarSign} /> <strong>Price per Hour:</strong> ${price}
           </p>
         </div>
+
+        {/* Report Button */}
+      <button className="btn btn-danger mt-3" onClick={handleOpenReportModal}>
+        Report
+      </button>
+
+      {/* Report Modal */}
+      <Modal
+        isOpen={isReportModalOpen}
+        onRequestClose={handleCloseReportModal}
+        contentLabel="Report Malicious Activity"
+        style={{
+          overlay: { backgroundColor: 'rgba(0, 0, 0, 0.75)' },
+          content: { color: 'black', padding: '20px', borderRadius: '10px' }
+        }}
+      >
+        <h2>Report Malicious Activity</h2>
+        <div className="form-group">
+          <label htmlFor="reportType">Type of Activity:</label>
+          <select
+            id="reportType"
+            value={reportType}
+            onChange={(e) => setReportType(e.target.value)}
+            className="form-control"
+          >
+            <option value="">Select...</option>
+            <option value="Fraud">Fraud</option>
+            <option value="Spam">Spam</option>
+            <option value="Hate Speech">Hate Speech</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label htmlFor="reportComment">Comments:</label>
+          <textarea
+            id="reportComment"
+            value={reportComment}
+            onChange={(e) => setReportComment(e.target.value)}
+            className="form-control"
+            rows="4"
+            placeholder="Describe the issue..."
+          ></textarea>
+        </div>
+        <div className="modal-actions">
+          <button className="btn btn-secondary" onClick={handleCloseReportModal}>
+            Cancel
+          </button>
+          <button className="btn btn-primary" onClick={handleReportSubmit}>
+            Submit
+          </button>
+        </div>
+      </Modal>
+
+              
         {/* Ratings Section */}
 
         

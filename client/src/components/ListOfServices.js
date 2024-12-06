@@ -179,7 +179,7 @@ function ListOfServices() {
       <div className="body_container">
   {loading ? (
     <p>Loading...</p>
-  ) : services.length > 0 ? ( 
+  ) : (query || price ? filteredServices.length > 0 : services.length > 0) ? ( 
     <div className="service-list">
       {(query || price ? filteredServices : services).map((service, index) => (
         <ServiceCard
