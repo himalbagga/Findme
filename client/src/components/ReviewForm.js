@@ -32,7 +32,7 @@ export default function UserReviewForm() {
         title: formData.title,
         review: formData.review,
         rating,
-        userId: user._id,
+        userId: user.id,
       });
 
       console.log('Review submitted successfully:', response.data);

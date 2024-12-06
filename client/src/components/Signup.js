@@ -213,7 +213,7 @@ const Signup = () => {
 
             <div style={styles.formGroup}>
               <label>Upload Resume</label>
-              <input type="file" name="resume" style={styles.input} onChange={handleFileChange} />
+              <input type="file"   style={styles.input} onChange={handleFileChange} />
             </div>
 
             {/* Available Days */}

@@ -297,7 +297,12 @@ const renderStars = (rating) => {
           <p>No ratings yet. Be the first to check back for updates!</p>
         )}
       </section>
-        <Link to={'/review'} className="btn btn-primary mt-3">
+        <Link 
+        
+        to={{
+            pathname: '/review',
+            state: { serviceId: serviceId},
+          }} className="btn btn-primary mt-3">
               Write a Review
         </Link>
         <button className="btn btn-secondary mt-3" onClick={handleAddToFavorites}>
