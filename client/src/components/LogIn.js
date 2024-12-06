@@ -3,6 +3,9 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
+import emailjs from '@emailjs/browser';
+import Modal from 'react-modal';
+import "./popup.css"; 
 // import emailjs from "@emailjs/browser";
 
 const Login = () => {
@@ -11,6 +14,8 @@ const Login = () => {
     username: "",
     password: "",
   });
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
    const navigate = useNavigate();
 
@@ -19,7 +24,10 @@ const Login = () => {
   const [errors, setErrors] = useState({});
 
   const { setUser } = useContext(UserContext);
-
+  //const [user, settheUser] = useState({});
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+ 
   const validateForm = () => {
     const newErrors = {};
     if (!formData.username) newErrors.username = "Username is required";
@@ -31,8 +39,55 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const sendEmail = (e) => {
+    e.preventDefault();
+    console.log(email);
+    const templateParams = {
+      
+      email: "tanu@gmail.com",
+      username: "tanu"
+      
+    };
+
+    emailjs
+      .send('service_qw4tqsp', 'template_j5xmruk', templateParams, {
+        publicKey: 'zomtsQF384EML4F90',
+      })
+      .then(
+        () => {
+          console.log('SUCCESS!');
+          
+        },
+        (error) => {
+          console.log('FAILED...', error.text);
+          
+        },
+      );
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleOpenPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+
+  const handleSubmit = () => {
+    if(inputValue === "398451")
+    {
+      alert('OTP Matched')
+      setIsPopupOpen(false); 
+      navigate('/');
+    }
+    else{
+      alert('Invalid OTP');
+    }
+    // Close popup after submission
   };
 
   const handleLogin = async (e) => {
@@ -43,12 +98,19 @@ const Login = () => {
           username: formData.username,
           password: formData.password
            });
+        console.log(response.data.user.email);
+        setEmail(response.data.user.email);
+        console.log(email);
+        setUsername(response.data.user.username);
         setMessage(response.data.message);
         setUser(response.data.user);
+        //settheUser(response.data.user);
+        sendEmail(e);
+        handleOpenPopup();
         
-        console.log(response.data.user)
-        navigate('/');
+        
       } catch (error) {
+          console.log(error);
           setMessage(error.response.data.message || 'Error logging in');
       }
     }
@@ -59,6 +121,7 @@ const Login = () => {
       <h3>Login</h3>
       <form ref={form} onSubmit={handleLogin} className="login-form">
         <div style={styles.formGroup}>
+          
           <label>Username</label>
           <input
             type="text"
@@ -87,6 +150,20 @@ const Login = () => {
         <button type="submit" style={styles.button}>
           Login
         </button>
+        <Modal isOpen={isPopupOpen} onRequestClose={handleClosePopup}>
+          <div className="popup-overlay">
+            <div className="popup-content">
+          <h2>Please enter the OTP sent to your Email:</h2>
+          <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+          <div className="popup-actions">
+          <button onClick={handleSubmit}>Submit</button>
+          <button onClick={handleClosePopup}>Cancel</button>
+          </div>
+            
+          
+            </div>
+          </div>
+        </Modal>
       </form>
       <p style={styles.signupText}>
         Don’t have an account? <a href="/signup">Sign Up</a>
