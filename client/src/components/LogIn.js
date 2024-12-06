@@ -3,6 +3,9 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
+import emailjs from '@emailjs/browser';
+import Modal from 'react-modal';
+import "./popup.css"; 
 // import emailjs from "@emailjs/browser";
 
 const Login = () => {
@@ -10,20 +13,21 @@ const Login = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
-    otp: "",
   });
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
    const navigate = useNavigate();
-
-   const [otpVisible, setOtpVisible] = useState(false); // Track OTP visibility
-   const [otpValidated, setOtpValidated] = useState(false);
 
   const [message, setMessage] = useState('');
 
   const [errors, setErrors] = useState({});
 
   const { setUser } = useContext(UserContext);
-
+  //const [user, settheUser] = useState({});
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+ 
   const validateForm = () => {
     const newErrors = {};
     if (!formData.username) newErrors.username = "Username is required";
@@ -35,8 +39,55 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const sendEmail = (e) => {
+    e.preventDefault();
+    console.log(email);
+    const templateParams = {
+      
+      email: "tanu@gmail.com",
+      username: "tanu"
+      
+    };
+
+    emailjs
+      .send('service_qw4tqsp', 'template_j5xmruk', templateParams, {
+        publicKey: 'zomtsQF384EML4F90',
+      })
+      .then(
+        () => {
+          console.log('SUCCESS!');
+          
+        },
+        (error) => {
+          console.log('FAILED...', error.text);
+          
+        },
+      );
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleOpenPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+
+  const handleSubmit = () => {
+    if(inputValue === "398451")
+    {
+      alert('OTP Matched')
+      setIsPopupOpen(false); 
+      navigate('/');
+    }
+    else{
+      alert('Invalid OTP');
+    }
+    // Close popup after submission
   };
 
   const handleLogin = async (e) => {
@@ -47,54 +98,30 @@ const Login = () => {
           username: formData.username,
           password: formData.password
            });
-           console.log("Login Response:", response.data);
+        console.log(response.data.user.email);
+        setEmail(response.data.user.email);
+        console.log(email);
+        setUsername(response.data.user.username);
         setMessage(response.data.message);
-        console.log(response);
-
-        // setUser(response.data.user);
-
-        if (response.data.message === "Login successful") {
-          setOtpVisible(true);
-          console.log("OTP Visibility updated:", otpVisible);
-        }
-        else {
-          setMessage('Invalid username or password');
-      }
-        console.log(response.data.user)
-        // navigate('/');
+        setUser(response.data.user);
+        //settheUser(response.data.user);
+        sendEmail(e);
+        handleOpenPopup();
+        
+        
       } catch (error) {
+          console.log(error);
           setMessage(error.response.data.message || 'Error logging in');
       }
-    }
-  };
-
-  const handleOtpSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:5001/api/users/verify-otp", {
-        username: formData.username,
-        otp: formData.otp,
-      });
-
-      console.log("OTP Response:", response.data);
-      if (response.data.success) {
-        setMessage("Login successful!");
-        setUser(response.data.user);
-        navigate("/");
-      } else {
-        setMessage("Invalid OTP. Please try again.");
-      }
-    } catch (error) {
-      setMessage(error.response?.data?.message || "Error validating OTP");
     }
   };
 
   return (
     <div style={styles.container}>
       <h3>Login</h3>
-      {!otpVisible ? (
       <form ref={form} onSubmit={handleLogin} className="login-form">
         <div style={styles.formGroup}>
+          
           <label>Username</label>
           <input
             type="text"
@@ -123,25 +150,21 @@ const Login = () => {
         <button type="submit" style={styles.button}>
           Login
         </button>
-      </form>
-      ) : (
-        <form onSubmit={handleOtpSubmit} className="otp-form">
-          <div style={styles.formGroup}>
-            <label>Enter OTP</label>
-            <input
-              type="text"
-              name="otp"
-              placeholder="Enter the OTP sent to your email"
-              style={styles.input}
-              value={formData.otp}
-              onChange={handleChange}
-            />
+        <Modal isOpen={isPopupOpen} onRequestClose={handleClosePopup}>
+          <div className="popup-overlay">
+            <div className="popup-content">
+          <h2>Please enter the OTP sent to your Email:</h2>
+          <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+          <div className="popup-actions">
+          <button onClick={handleSubmit}>Submit</button>
+          <button onClick={handleClosePopup}>Cancel</button>
           </div>
-          <button type="submit" style={styles.button}>
-            Submit OTP
-          </button>
-        </form>
-      )}
+            
+          
+            </div>
+          </div>
+        </Modal>
+      </form>
       <p style={styles.signupText}>
         Don’t have an account? <a href="/signup">Sign Up</a>
       </p>
