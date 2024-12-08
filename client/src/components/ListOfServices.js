@@ -125,7 +125,6 @@ function ListOfServices() {
 
       <nav>
         <Link to="/">Home</Link>
-        <Link to="/why-find-me">Why Find Me</Link>
         <Link to="/listofservices">Find Talent</Link>
         <Link to="/contact">Contact</Link>
         {user ? (
