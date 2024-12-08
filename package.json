@@ -9,7 +9,14 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.16",
     "react-google-places-autocomplete": "^4.1.0",
+    "react-scripts": "^5.0.1",
     "stripe": "^17.4.0",
     "yup": "^1.4.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   }
 }
