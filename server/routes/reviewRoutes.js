@@ -25,11 +25,12 @@ router.post('/', async (req, res) => {
 
 // @route   GET /api/reviews
 // @desc    Get all reviews
-router.get('/:userId', async (req, res) => {
+router.get('/find/:userId', async (req, res) => {
   try {
-    const { userId } = req.params.userId;
+    const { userId } = req.params;
+    console.log(userId);
     const reviews = await Review.find({ userId });
-    
+    console.log(reviews);
     if (!reviews.length) {
       return res.status(404).json({ message: "No reviews found for this user." });
     }
@@ -46,7 +47,8 @@ router.get('/:userId', async (req, res) => {
 router.get('/:serviceId', async (req, res) => {
   try {
     const { serviceId } = req.params;  // Get serviceId from the URL parameter
-    const reviews = await Review.find({ serviceId });  // Filter reviews by serviceId
+    const userId = serviceId;
+    const reviews = await Review.find({ userId });  // Filter reviews by serviceId
     
     if (!reviews.length) {
       return res.status(404).json({ message: "No reviews found for this service." });

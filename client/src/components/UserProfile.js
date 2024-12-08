@@ -42,8 +42,10 @@ const UserProfile = () => {
           console.error("User ID not found in context.");
           return;
         }
-        const response = await axios.get(`http://localhost:5001/api/reviews/reviews/${userId}`);
+        console.log(userId);
+        const response = await axios.get(`http://localhost:5001/api/reviews/find/${userId}`);
         setReviews(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching reviews: ", error);
       }
@@ -59,7 +61,7 @@ const UserProfile = () => {
         const response = await axios.get(`http://localhost:5001/api/users/${userId}/resume`);
         setResume(response.data);
       } catch (error) {
-        console.error("Error fetching reviews: ", error);
+        console.error("Error fetching resume: ", error);
       }
     };
 
@@ -71,8 +73,8 @@ const UserProfile = () => {
           return;
         }
         const response = await axios.get(`http://localhost:5001/api/users/${userId}/favorites`);
-        setFavorites(response.data);
-        console.log(favorites);
+        setFavorites(response.data.favorites);
+        console.log(response);
         
       } catch (error) {
         console.error("Error fetching favorites: ", error);
@@ -113,10 +115,15 @@ const UserProfile = () => {
           user={user} 
           onEdit={handleEdit} 
           onDelete={handleDelete} 
+          reviews={reviews}
+          resume={resume}
+          favorites={favorites}
+
         />
       )}
     </div>
   );
+  
 };
 
 const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume, favorites, onFavoriteToggle }) => (
@@ -183,7 +190,8 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume, favorites, on
       <div className='profile-favorites'>
           <h3>Favorite Services</h3>
           {favorites?.length > 0 ? (
-            favorites.map((item) => (
+            favorites.map((item
+            ) => (
               <div key={item._id} className='favorite-service'>
                 <ServiceCard
                   id={item._id}

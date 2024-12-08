@@ -178,6 +178,7 @@ useEffect(() => {
       //   userId: user._id,
       //   serviceId: serviceId,
       // }*/);
+      setIsHeartSolid(!isHeartSolid)
       console.log(user.id);
       console.log(serviceId);
       const response = await axios.post(`http://localhost:5001/api/users/${user.id}/favorites/${serviceId}/toggle`);
@@ -244,7 +245,7 @@ const renderStars = (rating) => {
     </>
   );
 };
-  
+  console.log(serviceId);
   return (
 
     <div className="service-details">
@@ -276,7 +277,7 @@ const renderStars = (rating) => {
         </a>
         <button
           className="btn"
-          onClick={() => setIsHeartSolid(!isHeartSolid)}
+          onClick={handleAddToFavorites }
           style={{ marginLeft: "10px", background: "none", border: "none", cursor: "pointer" }}
         >
           <FontAwesomeIcon
@@ -382,10 +383,11 @@ const renderStars = (rating) => {
       </section>
         <Link 
         
-        to={{
-            pathname: '/review',
-            state: { serviceId: serviceId},
-          }} className="btn btn-primary mt-3">
+        to=
+          
+            '/review'
+            state= {{serviceId}}
+          className="btn btn-primary mt-3">
               Write a Review
         </Link>
         <button className="btn btn-secondary mt-3" onClick={handleAddToFavorites}>

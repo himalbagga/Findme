@@ -85,7 +85,7 @@ function AddServicePage() {
                     />
                 </label>
                 <label>
-                    Languages (comma-separated):
+                    Languages:
                     <input
                         type="text"
                         value={languages}

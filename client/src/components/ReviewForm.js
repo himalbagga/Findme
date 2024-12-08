@@ -4,6 +4,8 @@ import { Star } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../UserContext';
+import { useLocation } from "react-router-dom";
+
 
 export default function UserReviewForm() {
   const [rating, setRating] = useState(0);
@@ -12,7 +14,9 @@ export default function UserReviewForm() {
   const navigate = useNavigate();
   
   const { user } = useContext(UserContext);
-
+  const location = useLocation();
+  const { serviceId} = location.state || {};
+ console.log(serviceId);
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
@@ -32,7 +36,7 @@ export default function UserReviewForm() {
         title: formData.title,
         review: formData.review,
         rating,
-        userId: user.id,
+        userId: serviceId,
       });
 
       console.log('Review submitted successfully:', response.data);

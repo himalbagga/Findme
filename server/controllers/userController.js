@@ -410,7 +410,6 @@ exports.toggleFavorite = async (req, res) => {
 exports.getFavorites = async (req, res) => {
   try {
     const userId = req.params.userId;
-
     // Fetch the user and populate the favorites to get detailed info about each service
     const user = await User.findById(userId).populate('favorites');
 
