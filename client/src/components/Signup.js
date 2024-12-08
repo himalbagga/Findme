@@ -69,7 +69,7 @@ const Signup = () => {
     if (validateForm()) {
       try {
         //console.log("submit successful");
-        const response = await fetch('http://localhost:5001/api/users/signup', {
+        const response = await fetch('https://findme-1-77d9.onrender.com/api/users/signup', {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",

@@ -17,7 +17,7 @@ const BookingHistoryPage = () => {
       if (user && user.id) {
         try {
           console.log('Fetching bookings for user:', user.id);
-          const response = await axios.get(`http://localhost:5001/api/bookings/user/${user.id}`);
+          const response = await axios.get(`https://findme-1-77d9.onrender.com/api/bookings/user/${user.id}`);
           console.log('Bookings response:', response.data);
           setBookings(response.data);
         } catch (error) {

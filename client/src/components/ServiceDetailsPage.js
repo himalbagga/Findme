@@ -91,7 +91,7 @@ function ServiceDetailsPage() {
 
       try {
         console.log(serviceId);
-        const response = await axios.get(`http://localhost:5001/api/services/${serviceId}`);
+        const response = await axios.get(`https://findme-1-77d9.onrender.com/api/services/${serviceId}`);
         console.log(response.data);
         setServiceData(response.data);
       } catch (error) {
@@ -109,11 +109,11 @@ useEffect(() => {
   const fetchServiceDetails = async () => {
     try {
       // Fetch service data
-      const serviceResponse = await axios.get(`http://localhost:5001/api/services/${serviceId}`);
+      const serviceResponse = await axios.get(`https://findme-1-77d9.onrender.com/api/services/${serviceId}`);
       setService(serviceResponse.data);
 
       // Fetch reviews for the specific service
-      const reviewsResponse = await axios.get(`http://localhost:5001/api/reviews/${serviceId}`);
+      const reviewsResponse = await axios.get(`https://findme-1-77d9.onrender.com/api/reviews/${serviceId}`);
       setRatings(reviewsResponse.data);
 
       // Calculate the average rating for the specific service
@@ -174,14 +174,14 @@ useEffect(() => {
     }
 
     try {
-      // const response = await axios.post('http://localhost:5001/api/users/${user._id}/favorites/${serviceId}/toggle' /*{
+      // const response = await axios.post('https://findme-1-77d9.onrender.com/api/users/${user._id}/favorites/${serviceId}/toggle' /*{
       //   userId: user._id,
       //   serviceId: serviceId,
       // }*/);
       setIsHeartSolid(!isHeartSolid)
       console.log(user.id);
       console.log(serviceId);
-      const response = await axios.post(`http://localhost:5001/api/users/${user.id}/favorites/${serviceId}/toggle`);
+      const response = await axios.post(`https://findme-1-77d9.onrender.com/api/users/${user.id}/favorites/${serviceId}/toggle`);
       alert("Service added to favorites!");
     } catch (error) {
       console.error("Error adding to favorites: ", error);

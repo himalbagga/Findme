@@ -31,7 +31,7 @@ function SearchResultsPage() {
   const fetchResults = async (searchQuery, priceFilter, sDate) => {
     setLoading(true);
     try {
-      const url = new URL('http://localhost:5001/api/services/search');
+      const url = new URL('https://findme-1-77d9.onrender.com/api/services/search');
       const params = new URLSearchParams();
       params.set('q', searchQuery);
       if (priceFilter) params.set('maxPrice', priceFilter);

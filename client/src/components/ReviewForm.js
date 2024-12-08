@@ -32,7 +32,7 @@ export default function UserReviewForm() {
 
     // send form data to backend along with userId
     try {
-      const response = await axios.post('http://localhost:5001/api/reviews', {
+      const response = await axios.post('https://findme-1-77d9.onrender.com/api/reviews', {
         title: formData.title,
         review: formData.review,
         rating,

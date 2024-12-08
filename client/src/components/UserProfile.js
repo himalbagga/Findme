@@ -28,7 +28,7 @@ const UserProfile = () => {
           console.error("User ID not found in context.");
           return;
         }
-        const response = await axios.get(`http://localhost:5001/api/users/user/${userId}`);
+        const response = await axios.get(`https://findme-1-77d9.onrender.com/api/users/user/${userId}`);
         setUser(response.data);
       } catch (error) {
         console.error("Error fetching user profile: ", error);
@@ -43,7 +43,7 @@ const UserProfile = () => {
           return;
         }
         console.log(userId);
-        const response = await axios.get(`http://localhost:5001/api/reviews/find/${userId}`);
+        const response = await axios.get(`https://findme-1-77d9.onrender.com/api/reviews/find/${userId}`);
         setReviews(response.data);
         console.log(response.data);
       } catch (error) {
@@ -58,7 +58,7 @@ const UserProfile = () => {
           console.error("User ID not found in context.");
           return;
         }
-        const response = await axios.get(`http://localhost:5001/api/users/${userId}/resume`);
+        const response = await axios.get(`https://findme-1-77d9.onrender.com/api/users/${userId}/resume`);
         setResume(response.data);
       } catch (error) {
         console.error("Error fetching resume: ", error);
@@ -72,7 +72,7 @@ const UserProfile = () => {
           console.error("User Id not found in context.");
           return;
         }
-        const response = await axios.get(`http://localhost:5001/api/users/${userId}/favorites`);
+        const response = await axios.get(`https://findme-1-77d9.onrender.com/api/users/${userId}/favorites`);
         setFavorites(response.data.favorites);
         console.log(response);
         
@@ -300,7 +300,7 @@ const EditForm = ({ user, onSave, onCancel }) => {
     console.log(editedUser._id);
 
     try {
-      const response = await axios.put(`http://localhost:5001/api/users/update/${editedUser._id}`, editedUser);
+      const response = await axios.put(`https://findme-1-77d9.onrender.com/api/users/update/${editedUser._id}`, editedUser);
       console.log('Profile updated successfully:', response.data);
 
 

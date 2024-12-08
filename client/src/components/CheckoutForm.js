@@ -64,7 +64,7 @@ const PaymentComponent = ({ subtotal, user, service, dayTimes }) => {
   
     try {
       console.log(bookingData);
-      const response = await fetch("http://localhost:5001/api/bookings/create", {
+      const response = await fetch("https://findme-1-77d9.onrender.com/api/bookings/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,7 +98,7 @@ const PaymentComponent = ({ subtotal, user, service, dayTimes }) => {
     setLoading(true);
     try {
       // Call your backend to create a PaymentIntent
-      const { data } = await axios.post('http://localhost:5001/api/create-payment-intent', {
+      const { data } = await axios.post('https://findme-1-77d9.onrender.com/api/create-payment-intent', {
         amount: Math.round(subtotal * 100), // Convert to cents
         currency: 'usd',
         email,

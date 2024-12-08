@@ -33,7 +33,7 @@ const CancellationFormUI = () => {
       alert('Cancellation email sent successfully.');
 
       // Make API call to cancel the booking
-      await axios.delete(`http://localhost:5001/api/bookings/${bookingId}`);
+      await axios.delete(`https://findme-1-77d9.onrender.com/api/bookings/${bookingId}`);
       alert('Booking cancelled successfully.');
       navigate('/bookings');
     } catch (error) {
