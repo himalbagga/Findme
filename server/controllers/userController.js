@@ -43,20 +43,20 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    let latitude = null;
-    let longitude = null;
+    // let latitude = null;
+    // let longitude = null;
 
-    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=AIzaSyCm6ZwWVGotswtlCaLJkpXkBUZnVaL24Z4`;
+    // //const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=AIzaSyCm6ZwWVGotswtlCaLJkpXkBUZnVaL24Z4`;
 
-    const geocodeResponse = await axios.get(geocodeUrl);
-    if (geocodeResponse.data.status === 'OK') {
-      const { lat, lng } = geocodeResponse.data.results[0].geometry.location;
+    // const geocodeResponse = await axios.get(geocodeUrl);
+    // if (geocodeResponse.data.status === 'OK') {
+    //   const { lat, lng } = geocodeResponse.data.results[0].geometry.location;
 
-      latitude= lat;
-      longitude = lng;
-      console.log('Latitude and Longitude:', lat, lng);
+    //   latitude= lat;
+    //   longitude = lng;
+    //   console.log('Latitude and Longitude:', lat, lng);
 
-    }
+    // }
     
 
     // Hash password
@@ -81,8 +81,8 @@ exports.registerUser = async (req, res) => {
       serviceType,
       serviceName,
       location,
-      latitude: latitude,
-      longitude: longitude,
+      // latitude: latitude,
+      // longitude: longitude,
       resume,  // Assuming file uploads are handled separately
       availableDays,
       startTime,
