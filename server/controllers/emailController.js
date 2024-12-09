@@ -1,6 +1,13 @@
 const nodemailer = require('nodemailer');
 
+/**
+ * Sends an email using the Gmail service.
+ * @param {string} email - The recipient's email address.
+ * @param {string} subject - The subject of the email.
+ * @param {string} message - The body/content of the email.
+ */
 const sendMail = async (email, subject, message) => {
+    // Create a transporter object using Gmail's SMTP service
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {

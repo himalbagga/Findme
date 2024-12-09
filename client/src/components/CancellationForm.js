@@ -5,16 +5,26 @@ import { useParams, useNavigate  } from 'react-router-dom';
 import { UserContext } from './../UserContext';
 import axios from 'axios';
 
+
+/**
+ * CancellationFormUI component allows the user to provide a reason for canceling the booking and sends an email, then cancels the booking.
+ */
 const CancellationFormUI = () => {
-  const { bookingId } = useParams();
-  const form = useRef();
-  const [message, setMessage] = useState('');
-  const { user: contextUser } = useContext(UserContext);
-  const navigate = useNavigate();
+  const { bookingId } = useParams(); // Retrieve the booking ID from URL parameters
+  const form = useRef(); // Reference to the form element
+  const [message, setMessage] = useState(''); // Local state for handling any additional messages (optional)
+  const { user: contextUser } = useContext(UserContext); // Access the logged-in user's data from context
+  const navigate = useNavigate(); // Hook for navigation
 
+
+   /**
+   * Handles the cancellation of the booking by sending an email and making an API call to cancel the booking.
+   * @param {Object} e - The event object from form submission.
+   */
   const cancelBooking = async (e) => {
-    e.preventDefault();
+    e.preventDefault();// Prevent the default form submission behavior
 
+    // Check if bookingId exists before proceeding
     if (!bookingId) {
       alert('Booking ID not found.');
       return;
@@ -23,18 +33,18 @@ const CancellationFormUI = () => {
     try {
       // Send the cancellation email
       await emailjs.sendForm(
-        'service_debeiyt',
-        'template_3s3y15a',
-        form.current,
-        {
-          publicKey: '9B_G4UOwgNSsEHZiJ',
-        }
+        'service_debeiyt', // EmailJS service ID
+        'template_3s3y15a', // EmailJS template ID
+        form.current, // Form reference to send the form data
+        { publicKey: '9B_G4UOwgNSsEHZiJ' } // EmailJS public key
       );
       alert('Cancellation email sent successfully.');
 
       // Make API call to cancel the booking
-      await axios.delete(`http://localhost:5001/api/bookings/${bookingId}`);
+      await axios.delete(`https://findme-1-77d9.onrender.com/api/bookings/${bookingId}`);
       alert('Booking cancelled successfully.');
+
+      // Navigate to the bookings page after cancellation
       navigate('/bookings');
     } catch (error) {
       console.error('Error cancelling booking:', error);
@@ -50,6 +60,8 @@ const CancellationFormUI = () => {
             <div className="mb-4">
               <input type="hidden" name="username" value={contextUser.username} />
               <input type="hidden" name="email" value={contextUser.email} />
+              
+              {/* Reason for cancellation text area */}
               <label htmlFor="cancellationReason" className="form-label">
                 Describe your reason for cancelling
               </label>

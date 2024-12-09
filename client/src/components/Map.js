@@ -12,6 +12,17 @@ const defaultCenter = {
   lng: -122.4194, // Default longitude (San Francisco)
 };
 
+
+/**
+ * Function to calculate the distance between two geographical points
+ * using the Haversine formula.
+ * 
+ * @param {number} lat1 - Latitude of the first point.
+ * @param {number} lng1 - Longitude of the first point.
+ * @param {number} lat2 - Latitude of the second point.
+ * @param {number} lng2 - Longitude of the second point.
+ * @returns {number} The distance in kilometers.
+ */
 const calculateDistance = (lat1, lng1, lat2, lng2) => {
   const toRad = (value) => (value * Math.PI) / 180;
 
@@ -34,11 +45,12 @@ const calculateDistance = (lat1, lng1, lat2, lng2) => {
 
 const Map = () => {
   const [userLocation, setUserLocation] = useState(defaultCenter); // Default location
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null);// Error handling state
   const [serviceProviderLocation] = useState({ lat: 37.7749, lng: -122.4194 }); // Example: Service Provider's Location (San Francisco)
-  const [distance, setDistance] = useState(null);
+  const [distance, setDistance] = useState(null); // Distance between user and service provider
 
   useEffect(() => {
+    // Attempt to fetch the user's current location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -71,6 +83,7 @@ const Map = () => {
   }, []);
 
   useEffect(() => {
+    // Only calculate distance if both user and service provider locations are available
     if (userLocation && serviceProviderLocation) {
       // Calculate distance using Haversine formula
       const calculatedDistance = calculateDistance(
@@ -85,6 +98,7 @@ const Map = () => {
 
   return (
     <div>
+      {/* Display error message if there is an error */}
       {error && (
         <div>
           <p className="error-message">{error}</p>
@@ -93,6 +107,8 @@ const Map = () => {
           </button>
         </div>
       )}
+
+      {/* Google Map displaying the user's current location */}
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={userLocation} // Dynamically update map center

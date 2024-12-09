@@ -2,9 +2,15 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const axios = require('axios');
 
-// @desc    Register new user
-// @route   POST /api/users/signup
-// @access  Public
+/**
+ * @desc    Register new user
+ * @route   POST /api/users/signup
+ * @access  Public
+ * 
+ * This endpoint registers a new user by accepting user details from the request body, 
+ * validating the required fields, checking if the user already exists, hashing the password,
+ * creating a new user document, and saving it to the database.
+ */
 exports.registerUser = async (req, res) => {
   try {
     // Destructure the request body
@@ -43,20 +49,7 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    let latitude = null;
-    let longitude = null;
-
-    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=AIzaSyCm6ZwWVGotswtlCaLJkpXkBUZnVaL24Z4`;
-
-    const geocodeResponse = await axios.get(geocodeUrl);
-    if (geocodeResponse.data.status === 'OK') {
-      const { lat, lng } = geocodeResponse.data.results[0].geometry.location;
-
-      latitude= lat;
-      longitude = lng;
-      console.log('Latitude and Longitude:', lat, lng);
-
-    }
+    
     
 
     // Hash password
@@ -65,10 +58,7 @@ exports.registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
     console.log('Hashed Password:', hashedPassword); // Log the hashed password (ensure it's not exposed in production)
 
-    // let resumePath = null;
-    // if (req.file) {
-    //   resumePath = req.file.path; // Store the file path from multer
-    // }
+    
 
     // Create new user
     console.log('Creating new user object...');
@@ -81,8 +71,7 @@ exports.registerUser = async (req, res) => {
       serviceType,
       serviceName,
       location,
-      latitude: latitude,
-      longitude: longitude,
+      
       resume,  // Assuming file uploads are handled separately
       availableDays,
       startTime,
@@ -112,9 +101,15 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// @desc    Login user
-// @route   POST /api/users/login
-// @access  Public
+
+/**
+ * @desc    Login user
+ * @route   POST /api/users/login
+ * @access  Public
+ * 
+ * This endpoint logs in a user by verifying the provided username and password.
+ * If the credentials are valid, a success message and user details are returned.
+ */
 exports.loginUser = async (req, res) => {
   console.log("Start logging");
   const { username, password } = req.body;
@@ -148,9 +143,14 @@ exports.loginUser = async (req, res) => {
   }
 }
 
-// @desc    Get user profile
-// @route   GET /api/users/:id
-// @access  Public
+/**
+ * @desc    Get user profile
+ * @route   GET /api/users/:id
+ * @access  Public
+ * 
+ * This endpoint retrieves the profile of a specific user by ID.
+ * It modifies the resume field to include only a snippet of the data.
+ */
 exports.getUserProfile = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -193,6 +193,14 @@ exports.getUserProfile = async (req, res) => {
 }
 
 
+/**
+ * @desc    Get user by ID
+ * @route   GET /api/users/:id
+ * @access  Public
+ * 
+ * This endpoint retrieves the user by ID, including basic details like username,
+ * mobile number, etc. Useful for getting specific user information.
+ */
 exports.getUser = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -213,9 +221,14 @@ exports.getUser = async (req, res) => {
   }
 }
 
-// @desc    Update user details
-// @route   PUT /api/users/update/:id
-// @access  Public
+/**
+ * @desc    Update user details
+ * @route   PUT /api/users/update/:id
+ * @access  Public
+ * 
+ * This endpoint updates user details such as `username`, `mobileNumber`, and `languages`.
+ * The details are updated and saved to the database.
+ */
 exports.updateUser = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -253,6 +266,15 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+
+/**
+ * @desc    Get user's bookings
+ * @route   GET /api/users/:userId/bookings
+ * @access  Public
+ * 
+ * This endpoint fetches all bookings for a specific user by populating the `bookings` field
+ * with service details.
+ */
 exports.getUserBookings = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -272,13 +294,17 @@ exports.getUserBookings = async (req, res) => {
 
 
 
-// @desc    Toggle a listing in user's favorites
-// @route   POST /api/users/:userId/favorites/:serviceId/toggle
-// @access  Public
+/**
+ * @desc    Toggle a listing in user's favorites
+ * @route   POST /api/users/:userId/favorites/:serviceId/toggle
+ * @access  Public
+ * 
+ * This endpoint toggles a service in the user's favorites. If the service is already favorited, 
+ * it is removed; otherwise, it is added.
+ */
 exports.toggleFavorite = async (req, res) => {
   try {
-    // const userId = req.params.userId;
-    // const serviceId = req.params.serviceId;
+    
 
     const { userId, serviceId } = req.params;
 
@@ -317,100 +343,17 @@ exports.toggleFavorite = async (req, res) => {
 };
 
 
-
-
-// @desc    Add a listings to user's favorites
-// @route   POST /api/users/:userId/favorites/:serviceId
-// @access  Public
-//const mongoose = require('mongoose');
-
-// exports.addFavorite = async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     const serviceId = req.params.serviceId;
-
-//     // Convert serviceId to ObjectId if it's not already
-//     const objectIdServiceId = new mongoose.Types.ObjectId(serviceId);
-
-//     const user = await User.findById(userId);
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-
-//     // Add the service to favorites if it's not already in the list
-//     if (!user.favorites.some(fav => fav.equals(objectIdServiceId))) {
-//       user.favorites.push(objectIdServiceId);
-//       await user.save();
-//     }
-
-//     res.status(200).json({ message: 'Service added to favorites', favorites: user.favorites });
-//   } catch (error) {
-//     console.error('Error adding favorite:', error);
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };
-
-
-
-// @desc    Remove a listing from user's favorites
-// @route   DELETE /api/users/:userId/favorites/:serviceId
-// @access  Public
-// exports.removeFavorite = async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     const serviceId = req.params.serviceId;
-
-//     const user = await User.findById(userId);
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-
-//     // Remove the service from favorites if it exists
-//     user.favorites = user.favorites.filter(fav => fav.toString() !== serviceId);
-//     await user.save();
-
-//     res.status(200).json({ message: 'Service removed from favorites', favorites: user.favorites });
-//   } catch (error) {
-//     console.error('Error removing favorite:', error);
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };
-
-// @desc    Get user's favorites lisitng
-// @route   GET /api/users/:userId/favorites
-// @access  Public
-// exports.getFavorites = async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-
-//     // Fetch user without populating
-//     const user = await User.findById(userId);
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-
-//     // Log before populating
-//     console.log('Favorites before population:', user.favorites);
-
-//     // Populate favorites
-//     await user.populate('favorites');
-
-//     // Log after populating
-//     console.log('Favorites after population:', user.favorites);
-
-//     res.status(200).json({ favorites: user.favorites });
-//   } catch (error) {
-//     console.error('Error fetching favorites:', error);
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };
-// @desc    Get user's favorites listings
-// @route   GET /api/users/:userId/favorites
-// @access  Public
+/**
+ * @desc    Get user's favorites listings
+ * @route   GET /api/users/:userId/favorites
+ * @access  Public
+ * 
+ * This endpoint retrieves all services marked as favorites by the user.
+ * It populates the `favorites` field to return detailed information about each service.
+ */
 exports.getFavorites = async (req, res) => {
   try {
     const userId = req.params.userId;
-
     // Fetch the user and populate the favorites to get detailed info about each service
     const user = await User.findById(userId).populate('favorites');
 

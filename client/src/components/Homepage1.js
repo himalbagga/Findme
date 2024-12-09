@@ -7,15 +7,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons'; // Import filter icon
 import Map from './Map';
 
-function HomePage() {
-  const [query, setQuery] = useState("");
-  const [services, setServices] = useState([]); // State to store services data
-  const [showFilter, setShowFilter] = useState(false); // State to toggle filter options
-  const [maxPrice, setMaxPrice] = useState(""); // State for max price filter
-  const [selectedDate, setSelectedDate] = useState(""); // State for selected date filter
-  const navigate = useNavigate();
-  const { user } = useContext(UserContext);
 
+/**
+ * HomePage component for displaying available services and search functionality.
+ * It uses the `UserContext` to check if a user is logged in and provides the ability 
+ * to filter/search services based on price and date.
+ */
+function HomePage() {
+  const [query, setQuery] = useState(""); // State to store search query
+  const [services, setServices] = useState([]); // State to store list of available services
+  const [showFilter, setShowFilter] = useState(false); // State to toggle filter options
+  const [maxPrice, setMaxPrice] = useState(""); // State for the maximum price filter
+  const [selectedDate, setSelectedDate] = useState(""); // State for the selected date filter
+  const navigate = useNavigate(); // Hook to programmatically navigate between pages
+  const { user } = useContext(UserContext); // Access user data from context
+
+  /**
+   * Fetches services data (simulated here with demo data) and sets the services state.
+   * This hook runs once when the component is mounted.
+   */
   useEffect(() => {
     const fetchServices = async () => {
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -27,17 +37,21 @@ function HomePage() {
         { id: "67377ee7b5ab62ce82a1b957", title: "Coding", location: "Toronto", languages: ["English"], pricePerHour: 97 },
       ];
 
-      setServices(demoServices);
+      setServices(demoServices);// Sets the services to be displayed
     };
 
     fetchServices();
   }, []);
 
+
+  /**
+   * Handles the search button click and navigates to the search results page with query parameters.
+   */
   const handleSearch = () => {
-    let url = `/search-results?q=${query}`;
-    if (maxPrice) url += `&maxPrice=${maxPrice}`;
-    if (selectedDate) url += `&date=${selectedDate}`;
-    navigate(url);
+    let url = `/search-results?q=${query}`; // Start with the base search URL
+    if (maxPrice) url += `&maxPrice=${maxPrice}`; // Add maxPrice filter if provided
+    if (selectedDate) url += `&date=${selectedDate}`; // Add date filter if provided
+    navigate(url); // Navigate to the search results page
   };
 
   return (
@@ -48,7 +62,6 @@ function HomePage() {
       </header>
       <nav>
         <Link to="/">Home</Link>
-        {/* <Link to="/why-find-me">Why Find Me</Link> */}
         <Link to="/listofservices">Find Talent</Link>
         <Link to="/contact">Contact</Link>
         {user ? (
@@ -78,30 +91,10 @@ function HomePage() {
             Search
           </button>
 
-          {/* Filter Button (with Font Awesome filter icon) */}
-          {/* <button type="button" onClick={() => setShowFilter(!showFilter)}>
-            <FontAwesomeIcon icon={faFilter} /> 
-          </button> */}
+          
         </div>
 
-        {/* Filter Options
-        {showFilter && (
-          <div className="filter-options">
-            <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
-              <option value="">Max Price</option>
-              <option value="25">25/hour</option>
-              <option value="35">35/hour</option>
-              <option value="45">45/hour</option>
-              <option value="60">60/hour</option>
-            </select>
-
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-            />
-          </div>
-        )} */}
+        
 
         {/* Services Sections */}
         <section className="services">
@@ -114,11 +107,11 @@ function HomePage() {
                 ))}
               </div>
             ) : (
-              <p>Loading services...</p>
+              <p>Loading services...</p>// Shows loading text if no services are available
             )}
           </div>
         </section>
-        <Map />
+        <Map />{/* Map component to show the location of services */}
       </div>
 
       <footer>
@@ -137,7 +130,15 @@ function HomePage() {
   );
 }
 
-// ServiceCard Component for Reusability
+/**
+ * ServiceCard component displays individual service details.
+ * @param {Object} props - The properties passed down to this component.
+ * @param {string} props.id - The unique identifier for the service.
+ * @param {string} props.title - The title of the service.
+ * @param {string} props.location - The location where the service is offered.
+ * @param {Array} props.languages - List of languages offered by the service.
+ * @param {number} props.price - The price per hour of the service.
+ */
 function ServiceCard({ id, title, location, languages, price }) {
   return (
     <div className="service">

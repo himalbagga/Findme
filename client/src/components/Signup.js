@@ -3,6 +3,13 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate from react
 import emailjs from "@emailjs/browser";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
+/**
+ * Signup component handles the user registration process.
+ * It collects necessary information from the user, validates the form, 
+ * sends a signup request to the backend, and sends an email confirmation.
+ * 
+ * @component
+ */
 const Signup = () => {
   const form = useRef();
   const navigate = useNavigate(); // Initialize navigate hook
@@ -25,6 +32,13 @@ const Signup = () => {
   });
   const [errors, setErrors] = useState({});
 
+
+  /**
+   * Validates the form inputs.
+   * Ensures required fields are filled and passwords match.
+   * 
+   * @returns {boolean} true if no validation errors, false otherwise
+   */
   const validateForm = () => {
     const newErrors = {};
     if (!formData.username) newErrors.username = "Username is required";
@@ -38,16 +52,32 @@ const Signup = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  /**
+   * Handles input field changes and updates form data.
+   * 
+   * @param {object} e - The event object
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  /**
+   * Handles file input changes, specifically for uploading the resume.
+   * 
+   * @param {object} e - The event object
+   */
   const handleFileChange = (e) => {
     setFormData({ ...formData, resume: e.target.files[0] });
     
   };
 
+
+  /**
+   * Handles checkbox selection for available days and updates form data accordingly.
+   * 
+   * @param {object} e - The event object
+   */
   const handleCheckboxChange = (e) => {
     const { value, checked } = e.target;
     setFormData((prev) => ({
@@ -56,20 +86,22 @@ const Signup = () => {
     }));
   };
 
-  // const handleLocationChange = (selectedLocation) => {
-  //   if (selectedLocation) {
-  //     setFormData({ ...formData, location: selectedLocation.label });
-  //   }
-  // };
 
+
+  /**
+   * Sends the form data to the backend and triggers email confirmation via EmailJS.
+   * Navigates the user to the homepage after successful signup.
+   * 
+   * @param {object} e - The event object
+   */
   const sendEmail = async (e) => {
     e.preventDefault();
 
     console.log("inside sendEmail");
     if (validateForm()) {
       try {
-        //console.log("submit successful");
-        const response = await fetch('http://localhost:5001/api/users/signup', {
+       
+        const response = await fetch('https://findme-1-77d9.onrender.com/api/users/signup', {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
@@ -97,6 +129,7 @@ const Signup = () => {
             languages: [],
           });
 
+          // Send email confirmation via EmailJS
           emailjs
             .sendForm("service_debeiyt", "template_4wzuql7", form.current, {
               publicKey: "9B_G4UOwgNSsEHZiJ",
@@ -134,12 +167,14 @@ const Signup = () => {
           {errors.username && <p style={styles.error}>{errors.username}</p>}
         </div>
 
+        {/* Email Input */}
         <div style={styles.formGroup}>
           <label>Email Address</label>
           <input type="email" name="email" placeholder="Enter your email" style={styles.input} value={formData.email} onChange={handleChange} />
           {errors.email && <p style={styles.error}>{errors.email}</p>}
         </div>
 
+        {/* Mobile Number Input */}
         <div style={styles.formGroup}>
           <label>Mobile Number</label>
           <input
@@ -170,6 +205,7 @@ const Signup = () => {
           </div>
         </div>
 
+        {/* Service Provider Fields */}
         {formData.userType === "ServiceProvider" && (
           <>
             <div style={styles.formGroup}>
@@ -201,19 +237,12 @@ const Signup = () => {
               value={formData.location}
               onChange={handleChange}
               />
-              {/* <select name="location" style={styles.input} value={formData.location} onChange={handleChange}>
-                <option value="">Select Location</option>
-                <option value="Toronto">Toronto</option>
-                <option value="Vancouver">Vancouver</option>
-                <option value="Montreal">Montreal</option>
-                <option value="Calgary">Calgary</option>
-                <option value="Edmonton">Edmonton</option>
-              </select> */}
+              
             </div>
 
             <div style={styles.formGroup}>
               <label>Upload Resume</label>
-              <input type="file" name="resume" style={styles.input} onChange={handleFileChange} />
+              <input type="file"   style={styles.input} onChange={handleFileChange} />
             </div>
 
             {/* Available Days */}
@@ -266,6 +295,7 @@ const Signup = () => {
           </>
         )}
 
+        {/* Password Inputs */}
         <div style={styles.formGroup}>
           <label>Password</label>
           <input type="password" name="password" placeholder="Enter your password" style={styles.input} value={formData.password} onChange={handleChange} />

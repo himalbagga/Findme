@@ -1,3 +1,8 @@
+/**
+ * BookingHistoryPage Component: Displays the booking history for the logged-in user.
+ * Users can view details about their bookings, including the service name, time slots, 
+ * amount paid, status, and location.
+ */
 import React, { useState, useEffect, useContext } from 'react';
 import { UserContext } from '../UserContext';
 import axios from 'axios';
@@ -6,18 +11,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarAlt, faClock, faDollarSign, faInfoCircle, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 
 const BookingHistoryPage = () => {
-  const [bookings, setBookings] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { user } = useContext(UserContext);
-  const navigate = useNavigate();
+  const [bookings, setBookings] = useState(null); // Stores user's booking data
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
+  const { user } = useContext(UserContext); // User context
+  const navigate = useNavigate(); // Navigation function
 
+  /**
+   * Fetches the bookings for the logged-in user from the server.
+   * Executed on component mount and whenever the user context changes.
+   */
   useEffect(() => {
     const fetchBookings = async () => {
       if (user && user.id) {
         try {
           console.log('Fetching bookings for user:', user.id);
-          const response = await axios.get(`http://localhost:5001/api/bookings/user/${user.id}`);
+          const response = await axios.get(`https://findme-1-77d9.onrender.com/api/bookings/user/${user.id}`);
           console.log('Bookings response:', response.data);
           setBookings(response.data);
         } catch (error) {
@@ -35,17 +44,22 @@ const BookingHistoryPage = () => {
     fetchBookings();
   }, [user]);
 
+
+  // Display loading or error states
   if (loading) return <div className="text-center py-4">Loading...</div>;
   if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
 
   return (
     <div className="booking-history-page">
+      {/* Page Header */}
       <header className="bg-gray-100 py-6">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold">Booking History</h1>
           <p className="text-gray-600 mt-2">View and manage your service bookings</p>
         </div>
       </header>
+
+      {/* Navigation Menu */}
       <nav>
         <Link to="/">Home</Link>
         <Link to="/why-find-me">Why Find Me</Link>

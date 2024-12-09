@@ -1,25 +1,52 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from './../UserContext';
-// import emailjs from "@emailjs/browser";
+import emailjs from '@emailjs/browser';
+import Modal from 'react-modal';
+import "./popup.css"; 
 
+
+/**
+ * Login component for user authentication.
+ * Allows the user to login using their username and password. After successful login,
+ * the user will receive an OTP via email to confirm the login.
+ * 
+ * @returns {JSX.Element} The Login component.
+ */
 const Login = () => {
   const form = useRef();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+  const [isPopupOpen, setIsPopupOpen] = useState(false);  // State to control OTP popup visibility
+  const [inputValue, setInputValue] = useState("");  // OTP input value
+  const [message, setMessage] = useState('');  // Response message
+  const [errors, setErrors] = useState({});  // Validation errors
+  const { setUser } = useContext(UserContext);  // Access user context to update user data
+  const [email, setEmail] = useState("");  // User email
+  const [username, setUsername] = useState("");  // User username
+  
+  const navigate = useNavigate();  // Navigation hook to redirect after login
+ 
 
-   const navigate = useNavigate();
+  // UseEffect hook to send email after email and username are updated
+  useEffect(() => {
+    if (email && username) {
+      sendEmail();  // Send the email once the email and username are set
+      handleOpenPopup();
+    }
+  }, [email, username]);
 
-  const [message, setMessage] = useState('');
 
-  const [errors, setErrors] = useState({});
-
-  const { setUser } = useContext(UserContext);
-
+  /**
+   * Validates the login form to ensure the username and password are provided.
+   * Ensures password is at least 6 characters long.
+   * 
+   * @returns {boolean} Returns true if form is valid, otherwise false.
+   */
   const validateForm = () => {
     const newErrors = {};
     if (!formData.username) newErrors.username = "Username is required";
@@ -31,24 +58,110 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+
+  /**
+   * Sends an email notification using EmailJS when the user logs in.
+   * 
+   * @param {Event} e - The form submission event.
+   */
+  const sendEmail = () => {
+    //e.preventDefault();
+    console.log(email);
+    console.log(username);
+    const templateParams = {
+      
+      email: email,
+      username: username
+      
+    };
+
+    emailjs
+      .send('service_qw4tqsp', 'template_j5xmruk', templateParams, {
+        publicKey: 'zomtsQF384EML4F90',
+      })
+      .then(
+        () => {
+          console.log('SUCCESS!');
+          
+        },
+        (error) => {
+          console.log('FAILED...', error.text);
+          
+        },
+      );
+  };
+
+  /**
+   * Handles changes to the form input fields.
+   * 
+   * @param {Event} e - The input change event.
+   */
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+
+  /**
+   * Opens the OTP popup modal.
+   */
+  const handleOpenPopup = () => {
+    setIsPopupOpen(true);
+  };
+
+
+  /**
+   * Closes the OTP popup modal.
+   */
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+
+
+  /**
+   * Submits the OTP entered by the user. If the OTP is correct, navigates to the home page.
+   * 
+   * @param {Event} e - The submit event.
+   */
+  const handleSubmit = () => {
+    if(inputValue === "398451")
+    {
+      alert('OTP Matched')
+      setIsPopupOpen(false); 
+      navigate('/');
+    }
+    else{
+      alert('Invalid OTP');
+    }
+    
+  };
+
+
+   /**
+   * Handles the form submission for login.
+   * If the form is valid, sends a request to the backend to authenticate the user.
+   * If the login is successful, sends an OTP email and opens the OTP popup.
+   * 
+   * @param {Event} e - The form submission event.
+   */
   const handleLogin = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await axios.post('http://localhost:5001/api/users/login', { 
+        const response = await axios.post('https://findme-1-77d9.onrender.com/api/users/login', { 
           username: formData.username,
           password: formData.password
            });
-        setMessage(response.data.message);
-        setUser(response.data.user);
+        console.log(response.data.user.email);
+        setEmail(response.data.user.email);
         
-        console.log(response.data.user)
-        navigate('/');
+        setUsername(response.data.user.username);
+        setMessage(response.data.message);
+        setUser(response.data.user);  // Update user context
+        
+        
+        
       } catch (error) {
+          console.log(error);
           setMessage(error.response.data.message || 'Error logging in');
       }
     }
@@ -59,6 +172,7 @@ const Login = () => {
       <h3>Login</h3>
       <form ref={form} onSubmit={handleLogin} className="login-form">
         <div style={styles.formGroup}>
+          
           <label>Username</label>
           <input
             type="text"
@@ -87,6 +201,20 @@ const Login = () => {
         <button type="submit" style={styles.button}>
           Login
         </button>
+        <Modal isOpen={isPopupOpen} onRequestClose={handleClosePopup}>
+          <div className="popup-overlay">
+            <div className="popup-content">
+          <h2>Please enter the OTP sent to your Email:</h2>
+          <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+          <div className="popup-actions">
+          <button onClick={handleSubmit}>Submit</button>
+          <button onClick={handleClosePopup}>Cancel</button>
+          </div>
+            
+          
+            </div>
+          </div>
+        </Modal>
       </form>
       <p style={styles.signupText}>
         Don’t have an account? <a href="/signup">Sign Up</a>

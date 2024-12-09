@@ -1,8 +1,13 @@
 const User = require('../models/User');
 
-// @desc    Get search results based on the query
-// @route   GET /api/services/search
-// @access  Public
+/**
+ * @desc    Get search results based on the query
+ * @route   GET /api/services/search
+ * @access  Public
+ * 
+ * This endpoint retrieves services based on query parameters such as 
+ * service name, maximum price, and available day.
+ */
 exports.searchServices = async (req, res) => {
   const { q, maxPrice, selectedDay} = req.query; // Extract query parameters from the URL
   const searchQuery = q ? String(q) : ''; // Default to an empty string if `q` is not provided
@@ -22,20 +27,9 @@ exports.searchServices = async (req, res) => {
       
       
     });
-    //console.log(users);
+   
     // Debugging: Log users with matched services
     console.log('Users matching query:', JSON.stringify(users, null, 2));
-
-    // Extract all matching services from users
-    // const filteredServices = users.flatMap(user =>
-    //   user.filter(service =>
-    //     serviceName.match(new RegExp(searchQuery, 'i')) &&
-    //     (!maxPrice || price <= maxPrice)
-    //   )
-    // );
-
-    // Debugging: Log filtered services
-    //console.log('Filtered services:', JSON.stringify(filteredServices, null, 2));
 
     // Return the filtered services
     if (users.length === 0) {
@@ -49,9 +43,14 @@ exports.searchServices = async (req, res) => {
   }
 };
 
-// @desc    Fetch all services from all users
-// @route   GET /api/services/listofservices
-// @access  Public
+/**
+ * @desc    Fetch all services from all users
+ * @route   GET /api/services/listofservices
+ * @access  Public
+ * 
+ * This endpoint returns all services from all users that have a non-empty 
+ * `serviceName` field. It flattens and returns a list of services.
+ */
 exports.getAllServices = async (req, res) => {
   try {
     // Fetch all users who have services
@@ -73,45 +72,14 @@ exports.getAllServices = async (req, res) => {
   }
 };
 
-// @desc    Search for services by name or location
-// @route   GET /api/services/search
-// @access  Public
-// exports.searchServices = async (req, res) => {
-//   const { q } = req.query;
-
-//   try {
-//     console.log('ttempting to find users with services matching the criteria...');
-
-//     // Find users with matching services in their `services` array
-//     const users = await User.find({
-//       services: {
-//         $elemMatch: {
-//           $or: [
-//             { serviceName: { $regex: q, $options: 'i' } },
-//             { location: { $regex: q, $options: 'i' } },
-//           ],
-//         },
-//       },
-//     });
-
-//     // Extract the matching services from those users
-//     const results = users.flatMap(user =>
-//       user.services.filter(service =>
-//         service.serviceName.match(new RegExp(q, 'i')) ||
-//         service.location.match(new RegExp(q, 'i'))
-//       )
-//     );
-
-//     res.status(200).json({ results });
-//   } catch (error) {
-//     console.error('Error fetching search results:', error);
-//     res.status(500).json({ error: 'Error fetching search results' });
-//   }
-// };
-
-// @desc    Add a service for a specific user
-// @route   POST /api/users/:id/services
-// @access  Public
+/**
+ * @desc    Add a service for a specific user
+ * @route   POST /api/users/:id/services
+ * @access  Public
+ * 
+ * This endpoint allows a user to add a new service. The service data is 
+ * stored in the user's `services` array.
+ */
 exports.addService = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -149,13 +117,18 @@ exports.addService = async (req, res) => {
   }
 };
 
-// @desc    Get details for a specific service by ID
-// @route   GET /api/services/:serviceId
-// @access  Public
+/**
+ * @desc    Get details for a specific service by ID
+ * @route   GET /api/services/:serviceId
+ * @access  Public
+ * 
+ * This endpoint retrieves the details of a service based on its ID.
+ * The service is retrieved from the user's services array.
+ */
 exports.getServiceById = async (req, res) => {
   const { serviceId } = req.params;
   try {
-    const service = await User.findOne({ '_id': serviceId }/*, { 'services.$': 1 }*/);
+    const service = await User.findOne({ '_id': serviceId });
     console.log(service);
     if (!service) {
       return res.status(404).json({ message: 'Service not found' });

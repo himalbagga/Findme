@@ -2,6 +2,11 @@ const Favorite = require('../models/Favorite')
 
 const mongoose = require('mongoose');
 
+/**
+ * Fetches the list of favorite services for a given user.
+ * @param {Object} req - The request object, containing the user ID in the URL params.
+ * @param {Object} res - The response object, used to send the result or error back to the client.
+ */
 exports.getFavorite = async (req, res) => {
 	const { userId } = req.params;
 

@@ -12,7 +12,12 @@ import UserReviewForm from "./components/ReviewForm";
 import BookingsPage from "./components/BookingsPage"
 import CancellationForm from "./components/CancellationForm"
 import PaymentSuccess from "./components/PaymentSuccess";
+import Contact from "./components/Contact";
 
+/**
+ * Main Application component that manages routing.
+ * All route definitions are listed here.
+ */
 const App = () => {
   return (
     <Router>
@@ -30,6 +35,7 @@ const App = () => {
         <Route exact path="/review" element={<UserReviewForm />} />
         <Route exact path="/bookings" element={<BookingsPage />} />
         <Route exact path="/cancel/:bookingId" element={<CancellationForm />} />
+        <Route exact path="/contact" element={< Contact />} />
       </Routes>
     </Router>
   );

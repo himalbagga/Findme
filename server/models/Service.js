@@ -9,7 +9,7 @@ const serviceSchema = new mongoose.Schema({
     type: String,
   },
   resume: {
-    type: String, // Consider using Buffer if you plan to store the file directly in MongoDB
+    type: String, 
   },
   availableDays: {
     type: [String],

@@ -1,4 +1,4 @@
-// AddServicePage Component for adding a new service
+// AddServicePage Component: Allows users to add a new service
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -7,19 +7,21 @@ import { useContext } from 'react';
 import { UserContext } from './../UserContext';
 
 function AddServicePage() {
-    const { user } = useContext(UserContext);
-    console.log(user);
-    const userId = user?.id;
-    console.log(userId);
-    const [serviceName, setServiceName] = useState("");
-    const [location, setLocation] = useState("");
-    const [languages, setLanguages] = useState("");
-    const [price, setPrice] = useState("");
-    const [availableDays, setAvailableDays] = useState([]);
-    const [startTime, setStartTime] = useState("09:00 AM");
-    const [endTime, setEndTime] = useState("05:00 PM");
+    const { user } = useContext(UserContext); // Retrieve user context
+    const userId = user?.id;// Safely access user ID
+    const [serviceName, setServiceName] = useState("");// State for service name
+    const [location, setLocation] = useState("");// State for location
+    const [languages, setLanguages] = useState("");// State for languages
+    const [price, setPrice] = useState("");// State for price
+    const [availableDays, setAvailableDays] = useState([]);// State for available days
+    const [startTime, setStartTime] = useState("09:00 AM");// Default start time
+    const [endTime, setEndTime] = useState("05:00 PM");// Default end time
     const navigate = useNavigate();
 
+    /**
+     * Toggles the selection of a day in the availableDays state.
+     * @param {string} day - The day to toggle.
+     */
     const handleDayChange = (day) => {
         setAvailableDays((prevDays) =>
             prevDays.includes(day)
@@ -28,31 +30,37 @@ function AddServicePage() {
         );
     };
 
-    //console.log(user);
+    
+    /**
+     * Handles form submission to create a new service.
+     * @param {Event} e - Form submit event.
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Construct the new service object
         const newService = {
             serviceName,
             location,
-            languages: languages.split(","),
-            price: parseFloat(price),
+            languages: languages.split(","),// Convert string to array
+            price: parseFloat(price),// Convert price to a number
             availableDays,
             startTime,
             endTime,
         };
 
-        // Add backend integration here to submit the new service
+        
         try {
-             // Replace with the actual user ID, possibly from your authentication state
-            
+             
+            // API call to create a new service
             const response = await axios.post(
-                `http://localhost:5001/api/services/users/${userId}/services`, // Adjust the URL as per your backend route
+                `https://findme-1-77d9.onrender.com/api/services/users/${userId}/services`, 
                 newService
             );
     
             console.log('Service created successfully:', response.data);
             alert('Service created successfully');
-            navigate('/profile'); // Redirect to the profile page after successful submission
+            navigate('/profile'); // Redirect to profile page
         } catch (error) {
             console.error('Error creating service:', error);
             alert('Failed to create service. Please try again.');
@@ -67,6 +75,7 @@ function AddServicePage() {
                 <h1>Add a New Service</h1>
             </header>
             <form onSubmit={handleSubmit} className="add-service-form">
+                {/* Service Name Input */}
                 <label>
                     Service Name:
                     <input
@@ -75,6 +84,8 @@ function AddServicePage() {
                         onChange={(e) => setServiceName(e.target.value)}
                     />
                 </label>
+
+                {/* Location Input */}
                 <label>
                     Location:
                     <input
@@ -84,8 +95,10 @@ function AddServicePage() {
                         required
                     />
                 </label>
+
+                {/* Languages Input */}
                 <label>
-                    Languages (comma-separated):
+                    Languages:
                     <input
                         type="text"
                         value={languages}
@@ -93,6 +106,8 @@ function AddServicePage() {
                         required
                     />
                 </label>
+
+                {/* Price Input */}
                 <label>
                     Rate ($/hour):
                     <input
@@ -102,6 +117,8 @@ function AddServicePage() {
                         required
                     />
                 </label>
+
+                {/* Available Days Selection */}
                 <div className="available-days">
                     <p>Available Days:</p>
                     {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
@@ -115,6 +132,8 @@ function AddServicePage() {
                         </label>
                     ))}
                 </div>
+
+                {/* Start and End Time Inputs */}
                 <label>
                     Start Time:
                     <input
@@ -133,6 +152,8 @@ function AddServicePage() {
                         required
                     />
                 </label>
+
+                {/* Form Buttons */}
                 <div className="form-buttons">
                     <button type="button" className="cancel-button" onClick={() => navigate('/')}>Cancel</button>
                     <button type="submit" className="submit-button">Create Service</button>

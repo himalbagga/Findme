@@ -3,10 +3,16 @@ const Booking = require('../models/Booking');
 const User = require('../models/User');
 const mongoose = require('mongoose');
 
+/**
+ * Creates a new booking for a user with a specified service provider.
+ * @param {Object} req - The request object containing booking details.
+ * @param {Object} res - The response object to send back the result of the operation.
+ */
 exports.createBooking = async (req, res) => {
   try {
     const { userId, serviceProviderId, serviceName, date, timeSlot, paymentInfo, amount, location } = req.body;
 
+     // Validate if the user exists
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -41,29 +47,26 @@ exports.createBooking = async (req, res) => {
   }
 };
 
+
+/**
+ * Fetches all bookings made by a specific user.
+ * @param {Object} req - The request object containing the user ID as a parameter.
+ * @param {Object} res - The response object to send back the list of bookings.
+ */
 exports.getUserBookings = async (req, res) => {
   try {
-    // const userId = req.params.userId;
+    
     const { userId } = req.params;
     console.log('Fetching bookings for user ID:', userId);
 
-    // const user = await User.findById(userId);
-    // if (!user) {
-    //   console.log('User not found');
-    //   return res.status(404).json({ message: 'User not found' });
-    // }
+    
 
         // Convert userId to ObjectId
         if (!mongoose.Types.ObjectId.isValid(userId)) {
           return res.status(400).json({ message: 'Invalid user ID format' });
         }
 
-    // const bookings = await Booking.find({ user: userId }).populate('serviceProvider', 'serviceName location price');
-    // console.log('Bookings found:', bookings);
-
-    // if (bookings.length === 0) {
-    //   console.log('No bookings found for user');
-    // }
+    
 
      // Create a new ObjectId instance
      const objectId = new mongoose.Types.ObjectId(userId);
@@ -77,6 +80,12 @@ exports.getUserBookings = async (req, res) => {
   }
 };
 
+
+/**
+ * Cancels a specific booking based on the booking ID.
+ * @param {Object} req - The request object containing the booking ID to be canceled.
+ * @param {Object} res - The response object to send back the result of the cancellation.
+ */
 exports.cancelBooking = async (req, res) => {
   try {
     const { bookingId } = req.params;

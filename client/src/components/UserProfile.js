@@ -9,7 +9,12 @@ import ServiceCard from './ServiceCard';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft} from "@fortawesome/free-solid-svg-icons"
 
+/**
+ * UserProfile component fetches and displays user profile data.
+ * It supports editing, saving, and deleting user profiles.
+ */
 const UserProfile = () => {
+  // State variables to manage user data, editing status, reviews, resume, and favorites
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [reviews, setReviews] = useState([]);
@@ -20,7 +25,13 @@ const UserProfile = () => {
   const { user: contextUser } = useContext(UserContext);
   console.log(user);
 
+
+  /**
+   * Fetches user, reviews, resume, and favorites from the server using Axios.
+   * This effect runs whenever the contextUser changes (i.e., user login).
+   */
   useEffect(() => {
+    // Fetch user data from backend
     const fetchUser = async () => {
       try {
         const userId = contextUser?.id;
@@ -28,13 +39,14 @@ const UserProfile = () => {
           console.error("User ID not found in context.");
           return;
         }
-        const response = await axios.get(`http://localhost:5001/api/users/user/${userId}`);
+        const response = await axios.get(`https://findme-1-77d9.onrender.com/api/users/user/${userId}`);
         setUser(response.data);
       } catch (error) {
         console.error("Error fetching user profile: ", error);
       }
     };
 
+    // Fetch reviews for the current user
     const fetchReviews = async () => {
       try {
         const userId = contextUser?.id;
@@ -42,8 +54,10 @@ const UserProfile = () => {
           console.error("User ID not found in context.");
           return;
         }
-        const response = await axios.get(`http://localhost:5001/api/reviews/reviews/${userId}`);
+        console.log(userId);
+        const response = await axios.get(`https://findme-1-77d9.onrender.com/api/reviews/find/${userId}`);
         setReviews(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching reviews: ", error);
       }
@@ -56,13 +70,14 @@ const UserProfile = () => {
           console.error("User ID not found in context.");
           return;
         }
-        const response = await axios.get(`http://localhost:5001/api/users/${userId}/resume`);
+        const response = await axios.get(`https://findme-1-77d9.onrender.com/api/users/${userId}/resume`);
         setResume(response.data);
       } catch (error) {
-        console.error("Error fetching reviews: ", error);
+        console.error("Error fetching resume: ", error);
       }
     };
 
+    // Fetch user's favorite services
     const fetchFavorites = async () => {
       try {
         const userId = contextUser?.id;
@@ -70,15 +85,16 @@ const UserProfile = () => {
           console.error("User Id not found in context.");
           return;
         }
-        const response = await axios.get(`http://localhost:5001/api/users/${userId}/favorites`);
-        setFavorites(response.data);
-        console.log(favorites);
+        const response = await axios.get(`https://findme-1-77d9.onrender.com/api/users/${userId}/favorites`);
+        setFavorites(response.data.favorites);
+        console.log(response);
         
       } catch (error) {
         console.error("Error fetching favorites: ", error);
       }
     };
 
+    // Fetch all data if contextUser exists
     if (contextUser?.id) {  
       fetchUser();
       fetchReviews();
@@ -102,10 +118,12 @@ const UserProfile = () => {
 
   return (
     <div className="user-profile">
-
+      {/* Navigation button to go back to the home page */}
       <div className="back-icon" onClick={() => navigate("/")}>
         <FontAwesomeIcon icon={faArrowLeft} /> Back to Home
       </div>
+
+      {/* Render edit form if user is in editing mode, else show profile display */}
       {isEditing ? (
         <EditForm user={user} onSave={handleSave} onCancel={handleCancel} />
       ) : (
@@ -113,12 +131,22 @@ const UserProfile = () => {
           user={user} 
           onEdit={handleEdit} 
           onDelete={handleDelete} 
+          reviews={reviews}
+          resume={resume}
+          favorites={favorites}
+
         />
       )}
     </div>
   );
+  
 };
 
+
+/**
+ * ProfileDisplay component is responsible for rendering the user's profile information.
+ * It also displays reviews, services, resume, and favorites.
+ */
 const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume, favorites, onFavoriteToggle }) => (
   <div className="profile-display">
     <div className="profile-header">
@@ -141,6 +169,8 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume, favorites, on
         <p><strong>💰 Price:</strong> ${user?.price}/hour</p>
         <p><strong>Languages:</strong> {user?.languages?.map(lang => lang).join(', ')}</p>
       </div>  
+
+      {/* Resume section */}
       <div className="profile-resume">
         <h4>Resume</h4>
         {resume ? (
@@ -149,7 +179,8 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume, favorites, on
           <p>No resume uploaded</p>
         )}
       </div>
-
+      
+      {/* Services Offered */}
       <div className='profile-services'>
         <h3>Services Offered</h3>
         
@@ -180,10 +211,12 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume, favorites, on
           )}
       </div>
 
+      {/* Favorite services */}
       <div className='profile-favorites'>
           <h3>Favorite Services</h3>
           {favorites?.length > 0 ? (
-            favorites.map((item) => (
+            favorites.map((item
+            ) => (
               <div key={item._id} className='favorite-service'>
                 <ServiceCard
                   id={item._id}
@@ -199,6 +232,7 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume, favorites, on
           )}
       </div>
 
+      {/* Reviews */}
       <div className='profile-reviews'>
         <h3>Reviews</h3>
         {reviews?.length > 0 ? (
@@ -225,6 +259,11 @@ const ProfileDisplay = ({ user, onEdit, onDelete, reviews, resume, favorites, on
   
 );
 
+
+/**
+ * EditForm component handles the editing of user profile.
+ * It allows the user to update their profile information, including uploading and deleting a resume.
+ */
 const EditForm = ({ user, onSave, onCancel }) => {
   const [editedUser, setEditedUser] = useState(user);
   const [resumeFile, setResumeFile] = useState(null);
@@ -282,7 +321,7 @@ const EditForm = ({ user, onSave, onCancel }) => {
   const handleSubmit = async (e) => {
 
     e.preventDefault();
-    //onSave(editedUser);
+   
 
     if (!editedUser._id) {
       alert('User ID is missing. Unable to update profile.');
@@ -292,7 +331,7 @@ const EditForm = ({ user, onSave, onCancel }) => {
     console.log(editedUser._id);
 
     try {
-      const response = await axios.put(`http://localhost:5001/api/users/update/${editedUser._id}`, editedUser);
+      const response = await axios.put(`https://findme-1-77d9.onrender.com/api/users/update/${editedUser._id}`, editedUser);
       console.log('Profile updated successfully:', response.data);
 
 

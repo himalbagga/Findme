@@ -1,7 +1,11 @@
 const fs = require('fs');
 const User = require('../models/User');
 
-// Upload Resume
+/**
+ * Uploads a resume for a user.
+ * @param {Object} req - The request object, containing the userId in the URL params and the file in the request body.
+ * @param {Object} res - The response object, used to send the result or error back to the client.
+ */
 exports.uploadResume = async (req, res) => {
     try {
         const userId = req.params.userId;
@@ -34,7 +38,11 @@ exports.uploadResume = async (req, res) => {
     }
 };
 
-// Delete Resume
+/**
+ * Deletes a resume for a user.
+ * @param {Object} req - The request object, containing the userId in the URL params.
+ * @param {Object} res - The response object, used to send the result or error back to the client.
+ */
 exports.deleteResume = async (req, res) => {
     try {
         const userId = req.params.userId;
@@ -58,7 +66,11 @@ exports.deleteResume = async (req, res) => {
     }
 };
 
-// Update Resume
+/**
+ * Updates an existing resume for a user.
+ * @param {Object} req - The request object, containing the userId in the URL params and the new file in the request body.
+ * @param {Object} res - The response object, used to send the result or error back to the client.
+ */
 exports.updateResume = async (req, res) => {
     try {
         const userId = req.params.userId;
@@ -91,7 +103,11 @@ exports.updateResume = async (req, res) => {
     }
 };
 
-// Download Resume
+/**
+ * Downloads the resume of a user.
+ * @param {Object} req - The request object, containing the userId in the URL params.
+ * @param {Object} res - The response object, used to send the resume data back to the client.
+ */
 exports.downloadResume = async (req, res) => {
     try {
         const userId = req.params.userId;
@@ -105,15 +121,7 @@ exports.downloadResume = async (req, res) => {
             return res.status(404).json({ message: 'Resume not found' });
         }
 
-        // // Trim the resume data for privacy reasons
-        // const trimmedResumeData = user.resume.data.toString('base64').slice(0, 50) + '...';
-        // // Use trimmed data for display purposes
-        // res.status(200).json({
-        //     message: 'Resume found',
-        //     contentType: user.resume.contentType,
-        //     filename: user.resume.filename,
-        //     trimmedResumeData,  // Send trimmed version for display
-        // });
+        
 
         // Set the content type and send the resume data
         res.contentType(user.resume.contentType);

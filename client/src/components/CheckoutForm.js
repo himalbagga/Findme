@@ -9,28 +9,27 @@ import { useRef } from 'react';
 import emailjs from '@emailjs/browser';
 
 const PaymentComponent = ({ subtotal, user, service, dayTimes }) => {
-  const form = useRef();
+  const form = useRef();// Form reference for email confirmation
   const stripe = useStripe();
   const elements = useElements();
-  const [email, setEmail] = useState(user?.email || '');
+  const [email, setEmail] = useState(user?.email || '');// Email state
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: '',
     expiryDate: '',
     cvv: '',
   });
-  const [loading, setLoading] = useState(false);
-	const [message, setMessage] = useState('');
-	const navigate = useNavigate();
+  const [loading, setLoading] = useState(false); // Loading state for the payment button
+  const [message, setMessage] = useState(''); // Message state for displaying payment status
+  const navigate = useNavigate(); // Navigation hook
   const currentDate = new Date(); 
-  const currentDateISO = currentDate.toISOString().split('T')[0];
-
-  console.log('User passed to Payment Component: ', user);
+  const currentDateISO = currentDate.toISOString().split('T')[0];// Current date in ISO format
 
   // Handle changes in the card element
   const handlePaymentChange = (e) => {
     setPaymentInfo({ ...paymentInfo, [e.target.name]: e.target.value });
   };
 
+  // Function to send email confirmation via EmailJS
   const sendEmail = (e) => {
     e.preventDefault();
 
@@ -49,13 +48,13 @@ const PaymentComponent = ({ subtotal, user, service, dayTimes }) => {
         },
       );
   };
-
+// Function to create a booking entry after payment is successful
   const createBooking = async () => {
     const bookingData = {
-      userId: user.id, // Replace with actual user ID
-      serviceProviderId: service._id, // Replace with actual service provider ID
+      userId: user.id, 
+      serviceProviderId: service._id, 
       serviceName: service.serviceName,
-      date: currentDateISO, // Replace with selected date
+      date: currentDateISO, 
       timeSlot: dayTimes,
       paymentInfo: paymentInfo,
       amount: subtotal,
@@ -64,7 +63,7 @@ const PaymentComponent = ({ subtotal, user, service, dayTimes }) => {
   
     try {
       console.log(bookingData);
-      const response = await fetch("http://localhost:5001/api/bookings/create", {
+      const response = await fetch("https://findme-1-77d9.onrender.com/api/bookings/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,9 +85,9 @@ const PaymentComponent = ({ subtotal, user, service, dayTimes }) => {
   };
   
 
-  console.log('User:', user);
+  
 
-  // Handle payment submission
+  // Function to handle payment submission via Stripe
   const handlePay = async (e) => {
     if (!stripe || !elements) {
       alert('Stripe has not loaded yet.');
@@ -97,8 +96,8 @@ const PaymentComponent = ({ subtotal, user, service, dayTimes }) => {
 
     setLoading(true);
     try {
-      // Call your backend to create a PaymentIntent
-      const { data } = await axios.post('http://localhost:5001/api/create-payment-intent', {
+      // Call to backend to create a PaymentIntent
+      const { data } = await axios.post('https://findme-1-77d9.onrender.com/api/create-payment-intent', {
         amount: Math.round(subtotal * 100), // Convert to cents
         currency: 'usd',
         email,
@@ -116,11 +115,10 @@ const PaymentComponent = ({ subtotal, user, service, dayTimes }) => {
       if (result.error) {
         setMessage(`Payment failed: ${result.error.message}`);
       } else if (result.paymentIntent.status === 'succeeded') {
-		  setMessage('Payment successful!');
-      createBooking();
-      sendEmail(e);
-
-		  navigate('/success');
+		    setMessage('Payment successful!');
+        createBooking(); // Create booking record
+        sendEmail(e); // Send email confirmation
+        navigate('/success'); // Redirect to success page
       }
     } catch (error) {
       console.error('Payment Error:', error);

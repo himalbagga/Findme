@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { UserContext, UserProvider } from "../UserContext";
 import "../styles/ServiceDetailsPage.css";
 import axios from 'axios';
+import Modal from "react-modal";
 
 
 // Import Font Awesome
@@ -10,21 +11,34 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faMapMarkerAlt, faFileDownload, faLanguage, faCalendarAlt, faClock, faDollarSign, faCheckCircle, faCreditCard, faPerson, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
 import CheckoutForm from "./CheckoutForm"
-//// import { useContext } from 'react';
-//// import { UserContext } from './../UserContext';
 
+
+/**
+ * ServiceDetailsPage Component
+ *
+ * This page displays the detailed information about a service, including:
+ * - The service provider's information.
+ * - Ratings and reviews for the service.
+ * - Available days and time slots for booking.
+ * - Ability to report an issue with the service.
+ * - The ability to add the service to favorites.
+ *
+ * The component also handles booking a service by selecting days and times, calculating the subtotal, and proceeding to payment.
+ *
+ * @returns {JSX.Element} The rendered service details page.
+ */
 function ServiceDetailsPage() {
   const { serviceId } = useParams(); // Get the service ID from the URL parameters
   const navigate = useNavigate(); // Initialize navigate function
   const [serviceData, setServiceData] = useState(null); // State to store fetched service data
-  const [selectedDays, setSelectedDays] = useState([]);
-  const [dayTimes, setDayTimes] = useState({});
-  const [subtotal, setSubtotal] = useState(0);
-  const { user } = useContext(UserContext);
-  const [service, setService] = useState(null);
+  const [selectedDays, setSelectedDays] = useState([]); // Selected days for booking
+  const [dayTimes, setDayTimes] = useState({}); // Selected time slots for each day
+  const [subtotal, setSubtotal] = useState(0); // Total price for selected booking
+  const { user } = useContext(UserContext); // Access the current logged-in user from context
+  const [service, setService] = useState(null); // Store detailed service data
   const [ratings, setRatings] = useState([]); // To store existing ratings
-  const [averageRating, setAverageRating] = useState(0);
-  const [isHeartSolid, setIsHeartSolid] = useState(false);
+  const [averageRating, setAverageRating] = useState(0); // Store average rating
+  const [isHeartSolid, setIsHeartSolid] = useState(false); // Toggle heart for favorites
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: "",
     expiryDate: "",
@@ -33,36 +47,46 @@ function ServiceDetailsPage() {
 
   const pricePerHour = serviceData ? serviceData.pricePerHour : 0; // Use the price from fetched data
 
-  //const { user } = useContext(UserContext);
-  //const user = UserProvider();
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportType, setReportType] = useState("");
+  const [reportComment, setReportComment] = useState("");
+
+  const handleOpenReportModal = () => setIsReportModalOpen(true);
+  const handleCloseReportModal = () => {
+    setIsReportModalOpen(false);
+    setReportType("");
+    setReportComment("");
+  };
+
+  const handleReportSubmit = async () => {
+    if (!reportType) {
+      alert("Please select a report type.");
+      return;
+    }
+
+    const reportData = {
+      serviceId,
+      userId: user ? user._id : null,
+      reportType,
+      comment: reportComment,
+    };
+
+    alert("Your report has been submitted successfully.");
+  handleCloseReportModal();
+  
+  };
+  
   const userId = user ? user._id: null;
 
+  // Fetch service data on component mount
   useEffect(() => {
     // Simulate fetching data from backend
     const fetchServiceData = async () => {
-      // Simulate an API call delay
-      //await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Demo data
-      // const demoData = {
-      //   id: serviceId,
-      //   title: "Baby Sitter",
-      //   providerFirstName: "John",
-      //   providerLastName: "Doe",
-      //   location: "New York, NY",
-      //   languages: ["English", "Spanish"],
-      //   availableDays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      //   startTime: "09:00 AM",
-      //   endTime: "05:00 PM",
-      //   pricePerHour: 50,
-      //   resumeUrl: "resume.pdf",
-      // };
-
-      // setServiceData(demoData);
+      
 
       try {
         console.log(serviceId);
-        const response = await axios.get(`http://localhost:5001/api/services/${serviceId}`);
+        const response = await axios.get(`https://findme-1-77d9.onrender.com/api/services/${serviceId}`);
         console.log(response.data);
         setServiceData(response.data);
       } catch (error) {
@@ -80,11 +104,11 @@ useEffect(() => {
   const fetchServiceDetails = async () => {
     try {
       // Fetch service data
-      const serviceResponse = await axios.get(`http://localhost:5001/api/services/${serviceId}`);
+      const serviceResponse = await axios.get(`https://findme-1-77d9.onrender.com/api/services/${serviceId}`);
       setService(serviceResponse.data);
 
       // Fetch reviews for the specific service
-      const reviewsResponse = await axios.get(`http://localhost:5001/api/reviews/${serviceId}`);
+      const reviewsResponse = await axios.get(`https://findme-1-77d9.onrender.com/api/reviews/${serviceId}`);
       setRatings(reviewsResponse.data);
 
       // Calculate the average rating for the specific service
@@ -145,13 +169,11 @@ useEffect(() => {
     }
 
     try {
-      // const response = await axios.post('http://localhost:5001/api/users/${user._id}/favorites/${serviceId}/toggle' /*{
-      //   userId: user._id,
-      //   serviceId: serviceId,
-      // }*/);
+      
+      setIsHeartSolid(!isHeartSolid)
       console.log(user.id);
       console.log(serviceId);
-      const response = await axios.post(`http://localhost:5001/api/users/${user.id}/favorites/${serviceId}/toggle`);
+      const response = await axios.post(`https://findme-1-77d9.onrender.com/api/users/${user.id}/favorites/${serviceId}/toggle`);
       alert("Service added to favorites!");
     } catch (error) {
       console.error("Error adding to favorites: ", error);
@@ -194,7 +216,7 @@ useEffect(() => {
     return <div>Loading...</div>;
   }
 
-  const { title, username,/*providerFirstName, providerLastName,*/ location, languages, availableDays, startTime, endTime, resumeUrl, price } = serviceData;
+  const { title, username, location, languages, availableDays, startTime, endTime, resumeUrl, price } = serviceData;
 
  // Function to render stars based on the rating
 const renderStars = (rating) => {
@@ -215,7 +237,7 @@ const renderStars = (rating) => {
     </>
   );
 };
-  
+  console.log(serviceId);
   return (
 
     <div className="service-details">
@@ -235,7 +257,7 @@ const renderStars = (rating) => {
           <div className="profile-info">
             <h2>{title}</h2>
             <p className="service-type">
-              <FontAwesomeIcon icon={faPerson} /> {username}{/*{providerFirstName} {providerLastName}*/}
+              <FontAwesomeIcon icon={faPerson} /> {username}
             </p>
             <p className="location">
               <FontAwesomeIcon icon={faMapMarkerAlt} /> {location}
@@ -247,7 +269,7 @@ const renderStars = (rating) => {
         </a>
         <button
           className="btn"
-          onClick={() => setIsHeartSolid(!isHeartSolid)}
+          onClick={handleAddToFavorites }
           style={{ marginLeft: "10px", background: "none", border: "none", cursor: "pointer" }}
         >
           <FontAwesomeIcon
@@ -280,6 +302,60 @@ const renderStars = (rating) => {
             <FontAwesomeIcon icon={faDollarSign} /> <strong>Price per Hour:</strong> ${price}
           </p>
         </div>
+
+        {/* Report Button */}
+      <button className="btn btn-danger mt-3" onClick={handleOpenReportModal}>
+        Report
+      </button>
+
+      {/* Report Modal */}
+      <Modal
+        isOpen={isReportModalOpen}
+        onRequestClose={handleCloseReportModal}
+        contentLabel="Report Malicious Activity"
+        style={{
+          overlay: { backgroundColor: 'rgba(0, 0, 0, 0.75)' },
+          content: { color: 'black', padding: '20px', borderRadius: '10px' }
+        }}
+      >
+        <h2>Report Malicious Activity</h2>
+        <div className="form-group">
+          <label htmlFor="reportType">Type of Activity:</label>
+          <select
+            id="reportType"
+            value={reportType}
+            onChange={(e) => setReportType(e.target.value)}
+            className="form-control"
+          >
+            <option value="">Select...</option>
+            <option value="Fraud">Fraud</option>
+            <option value="Spam">Spam</option>
+            <option value="Hate Speech">Hate Speech</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label htmlFor="reportComment">Comments:</label>
+          <textarea
+            id="reportComment"
+            value={reportComment}
+            onChange={(e) => setReportComment(e.target.value)}
+            className="form-control"
+            rows="4"
+            placeholder="Describe the issue..."
+          ></textarea>
+        </div>
+        <div className="modal-actions">
+          <button className="btn btn-secondary" onClick={handleCloseReportModal}>
+            Cancel
+          </button>
+          <button className="btn btn-primary" onClick={handleReportSubmit}>
+            Submit
+          </button>
+        </div>
+      </Modal>
+
+              
         {/* Ratings Section */}
 
         
@@ -297,7 +373,13 @@ const renderStars = (rating) => {
           <p>No ratings yet. Be the first to check back for updates!</p>
         )}
       </section>
-        <Link to={'/review'} className="btn btn-primary mt-3">
+        <Link 
+        
+        to=
+          
+            '/review'
+            state= {{serviceId}}
+          className="btn btn-primary mt-3">
               Write a Review
         </Link>
         <button className="btn btn-secondary mt-3" onClick={handleAddToFavorites}>

@@ -8,33 +8,53 @@ import { UserContext } from './../UserContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
-function SearchResultsPage() {
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { user } = useContext(UserContext);
-  const [showFilter, setShowFilter] = useState(false); 
-  const [selectedDate, setSelectedDate] = useState("");
-  //const [day, setDayOfWeek] = useState("");
 
+/**
+ * SearchResultsPage Component
+ *
+ * This component displays the results of a search query for services, with filters for price and date. 
+ * It fetches and displays service data based on the search query and applies filters to the results.
+ *
+ * @returns {JSX.Element} The rendered search results page.
+ */
+function SearchResultsPage() {
+  const [results, setResults] = useState([]); // State to hold the search results
+  const [loading, setLoading] = useState(false); // State to manage loading status
+  const [query, setQuery] = useState(''); // State to hold the search query
+  const [maxPrice, setMaxPrice] = useState(''); // State to hold the maximum price filter
+  const [selectedDate, setSelectedDate] = useState(""); // State to hold the selected date for filtering
+  const location = useLocation(); // Hook to access the location object
+  const navigate = useNavigate(); // Hook to navigate between pages
+  const { user } = useContext(UserContext); // Accessing the current logged-in user from context
+  const [showFilter, setShowFilter] = useState(false); // State to control the visibility of the filter options
+
+
+  /**
+   * UseEffect hook to initialize the search query from the URL and fetch the results
+   */
   useEffect(() => {
     const initialQuery = new URLSearchParams(location.search).get('q');
     if (initialQuery) {
       setQuery(initialQuery);
-      fetchResults(initialQuery, maxPrice, selectedDate);
+      fetchResults(initialQuery, maxPrice, selectedDate); // Fetch results when query changes
     }
   }, [location.search]);
 
+
+  /**
+   * Fetches search results from the backend API based on the provided filters.
+   * 
+   * @param {string} searchQuery - The search query entered by the user.
+   * @param {string} priceFilter - The maximum price filter.
+   * @param {string} sDate - The selected date for filtering the results.
+   */
   const fetchResults = async (searchQuery, priceFilter, sDate) => {
     setLoading(true);
     try {
-      const url = new URL('http://localhost:5001/api/services/search');
+      const url = new URL('https://findme-1-77d9.onrender.com/api/services/search');
       const params = new URLSearchParams();
       params.set('q', searchQuery);
-      if (priceFilter) params.set('maxPrice', priceFilter);
+      if (priceFilter) params.set('maxPrice', priceFilter);// Set the price filter if provided
       console.log(sDate);
       if (sDate) 
         {
@@ -51,8 +71,7 @@ function SearchResultsPage() {
 
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data.results);
-      console.log(data.results._id);
+      
       setResults(data.results);
     } catch (error) {
       console.error("Error fetching search results:", error);
@@ -61,7 +80,12 @@ function SearchResultsPage() {
     }
   };
 
+
+  /**
+   * Handles the form submission for the search query and filters.
+   */
   const handleSearchSubmit = () => {
+    // Navigate to the search results page with query parameters
     navigate(`/search-results?q=${query}&maxPrice=${maxPrice}&selectedDate=${selectedDate}`);
     fetchResults(query, maxPrice, selectedDate);
   };
@@ -72,17 +96,10 @@ function SearchResultsPage() {
         <h1>Find Me</h1>
         <p>Explore thousands of services available near you!</p>
       </header>
-      {/* <nav>
-        <a href="/">Home</a>
-        <a href="#">Why Find Me</a>
-        <a href="#">Find Talent</a>
-        <a href="#">Contact</a>
-        <a href="/signup">Login/Sign Up</a>
-      </nav> */}
+     
 
-<nav>
+      <nav>
         <Link to="/">Home</Link>
-        <Link to="/why-find-me">Why Find Me</Link>
         <Link to="/listofservices">Find Talent</Link>
         <Link to="/contact">Contact</Link>
         {user ? (
@@ -107,18 +124,8 @@ function SearchResultsPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        {/* <select value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)}>
-          <option value="">Max Price</option>
-          <option value="25">25/hour</option>
-          <option value="35">35/hour</option>
-          <option value="45">45/hour</option>
-          <option value="60">60/hour</option>
-        </select>
-        <button type="button" onClick={handleSearchSubmit}>
-          Search
-        </button>
-      </div> */}
-      <button type="button" onClick={handleSearchSubmit}>
+        
+          <button type="button" onClick={handleSearchSubmit}>
             Search
           </button>
 
@@ -159,7 +166,7 @@ function SearchResultsPage() {
               <ServiceCard
                 key={result._id}
                 id={result._id}
-                //id={result.id}
+                
                 title={result.serviceName}
                 location={result.location}
                 languages={result.languages}

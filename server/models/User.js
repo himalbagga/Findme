@@ -5,7 +5,7 @@ const ServiceSchema = new mongoose.Schema({
   location: String,
   languages: [String],
   price: { type: Number, min: 0 },
-  //resume: String,
+  
   availableDays: [String],
   startTime: String,
   endTime: String,
@@ -89,7 +89,7 @@ const userSchema = new mongoose.Schema({
   languages: {
     type: [String],
   },
-  services: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }], 
+  services: [ServiceSchema ], 
   favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 
   createdAt: {
